@@ -13,7 +13,7 @@ const port = process.env.PORT || 3000;
 
 // Initialize Gemini API
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
 app.post('/chat', async(req, res) => {
     try {
