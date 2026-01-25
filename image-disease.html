@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Image Disease Detection</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --honey-gold: #f4b400;
+            --pure-white: #ffffff;
+            --text-main: #4a3a00;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            /* Honeycomb gradient background */
+            background: linear-gradient(135deg, #ffffff 0%, #ffcc33 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://www.transparenttextures.com/patterns/hexellence.png');
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .app-shell {
+            width: 100%;
+            max-width: 480px;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 { font-weight: 700; font-size: 1.8rem; margin: 10px 0 0; }
+        .header p { font-size: 0.75rem; font-weight: 600; color: #7a6300; text-transform: uppercase; margin: 5px 0 20px; }
+
+        .preview-card {
+            background: var(--pure-white);
+            border-radius: 30px;
+            padding: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+            border: 5px solid rgba(255,255,255,0.7);
+        }
+
+        .viewport {
+            width: 100%;
+            aspect-ratio: 1;
+            background: #fffef7;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        #preview { width: 100%; height: 100%; object-fit: cover; display: none; }
+
+        /* Scanning Laser Animation */
+        .scan-bar {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: var(--honey-gold);
+            box-shadow: 0 0 15px var(--honey-gold);
+            z-index: 10;
+            animation: moveScan 2s linear infinite;
+        }
+
+        @keyframes moveScan { 0% { top: 0%; } 100% { top: 100%; } }
+
+        .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+
+        .btn-action {
+            background: var(--pure-white);
+            border: none;
+            padding: 16px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .btn-main {
+            width: 100%;
+            background: linear-gradient(to bottom, #f4b400, #e0a500);
+            color: var(--text-main);
+            border: none;
+            padding: 20px;
+            border-radius: 18px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(244, 180, 0, 0.3);
+            text-transform: uppercase;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 25px;
+            text-align: left;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            animation: slideUp 0.4s ease-out;
+        }
+
+        .download-btn {
+            width: 100%;
+            background: #2d3436;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 700;
+            margin-top: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        input[type="file"] { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="app-shell">
+    <div class="header">
+        <h1>BeeScan <span style="color:var(--honey-gold)">AI</span></h1>
+        <p>Advanced Apiculture Diagnostics</p>
+    </div>
+
+    <div class="preview-card">
+        <div class="viewport">
+            <div id="scanner" class="scan-bar"></div>
+            <div id="status">
+                <div style="font-size: 2rem; margin-bottom: 10px;">📸</div>
+                <div style="font-weight: 700; color: #999; font-size: 0.8rem;">AWAITING IMAGE</div>
+            </div>
+            <img id="preview">
+        </div>
+    </div>
+
+    <div class="button-grid">
+        <label for="imgInputCam" class="btn-action">📷 CAMERA</label>
+        <input type="file" id="imgInputCam" accept="image/*" capture="environment">
+        
+        <label for="imgInputGal" class="btn-action">🖼️ GALLERY</label>
+        <input type="file" id="imgInputGal" accept="image/*">
+    </div>
+
+    <button class="btn-main" id="analyzeBtn" onclick="runScan()">Identify Disease</button>
+
+    <div id="result" class="result-box">
+        <div id="resultContent"></div>
+        <button class="download-btn" onclick="generateReport()">
+            <span>📥</span> Download Report
+        </button>
+    </div>
+</div>
+
+<canvas id="reportCanvas" style="display:none;"></canvas>
+
+<script>
+    const camInput = document.getElementById("imgInputCam");
+    const galInput = document.getElementById("imgInputGal");
+    const preview = document.getElementById("preview");
+    const scanner = document.getElementById("scanner");
+    const status = document.getElementById("status");
+    const resultDiv = document.getElementById("result");
+    const resultContent = document.getElementById("resultContent");
+    const analyzeBtn = document.getElementById("analyzeBtn");
+
+    const handleFile = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = "block";
+            status.style.display = "none";
+            resultDiv.style.display = "none";
+            scanner.style.display = "none";
+        }
+    };
+
+    camInput.onchange = handleFile;
+    galInput.onchange = handleFile;
+
+    async function runScan() {
+        if (!preview.src) {
+            alert("Please upload or capture an image");
+            return;
+        }
+
+        scanner.style.display = "block";
+        analyzeBtn.innerText = "Analyzing Hive...";
+        resultDiv.style.display = "none";
+
+        await new Promise(r => setTimeout(r, 2500));
+
+        scanner.style.display = "none";
+        analyzeBtn.innerText = "Identify Disease";
+        resultDiv.style.display = "block";
+
+        // Exact content from original project files
+        resultContent.innerHTML = `
+        <hr style="border:0; border-top:1px solid #eee; margin-bottom:15px;">
+        <b>🧠 Prediction:</b> Possible Varroa Mite (Prototype)<br>
+        <b>Confidence:</b> Low – Model under training<br><br>
+        <b>Recommended Actions:</b>
+        <ul style="padding-left: 20px; line-height: 1.6;">
+            <li>Inspect hive manually for mites</li>
+            <li>Confirm using sound + image correlation</li>
+            <li>Apply integrated pest management</li>
+            <li>Consult local apiculture officer</li>
+        </ul>
+        `;
+        resultDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function generateReport() {
+        const canvas = document.getElementById('reportCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 800;
+        canvas.height = 1100;
+
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "#f4b400";
+        ctx.fillRect(0, 0, canvas.width, 100);
+        
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 40px Montserrat, Arial";
+        ctx.fillText("BEESCAN AI REPORT", 50, 65);
+
+        ctx.fillStyle = "#4a3a00";
+        ctx.font = "600 20px Montserrat, Arial";
+        const dateStr = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString();
+        ctx.fillText("Generated: " + dateStr, 50, 150);
+
+        // Include the captured hive image in the report
+        ctx.drawImage(preview, 50, 180, 700, 450);
+
+        ctx.fillStyle = "#4a3a00";
+        ctx.font = "bold 28px Montserrat, Arial";
+        ctx.fillText("ANALYSIS RESULTS:", 50, 700);
+        
+        ctx.font = "24px Montserrat, Arial";
+        ctx.fillText("Prediction: Possible Varroa Mite", 50, 750);
+        ctx.fillText("Confidence: Low (Model under training)", 50, 790);
+
+        ctx.font = "bold 28px Montserrat, Arial";
+        ctx.fillText("RECOMMENDED STEPS:", 50, 860);
+        
+        ctx.font = "20px Montserrat, Arial";
+        const actions = [
+            "- Inspect hive manually for mites",
+            "- Confirm using sound + image correlation",
+            "- Apply integrated pest management",
+            "- Consult local apiculture officer"
+        ];
+        
+        actions.forEach((action, index) => {
+            ctx.fillText(action, 60, 910 + (index * 40));
+        });
+
+        const link = document.createElement('a');
+        link.download = `BeeScan_Report_${new Date().getTime()}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    }
+</script>
+
+</body>
+</html>

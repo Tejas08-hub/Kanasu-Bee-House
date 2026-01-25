@@ -3,17 +3,20 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Kanasu Bee House</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanasu Bee House | Secure Access</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
          :root {
             --honey: #f4b400;
-            --light-honey: #fff6d6;
-            --card: #ffffff;
-            --text: #2d2d2d;
-            --muted: #666;
+            --honey-dark: #d49a00;
+            --honey-glass: rgba(244, 180, 0, 0.1);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #2d2d2d;
+            --text-muted: #666;
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
         
         * {
@@ -25,114 +28,126 @@
         
         body {
             min-height: 100vh;
-            background: linear-gradient(180deg, #fff9e6, #fff2c7);
+            background: linear-gradient(135deg, #fff9e6 0%, #fff2c7 100%);
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
         /* PAGE CONTENT */
         
         .page {
             flex: 1;
             display: flex;
+            align-items: center;
             justify-content: center;
+            padding: 20px;
         }
-        /* MAIN GRID */
         
         .container {
             width: 100%;
-            max-width: 1400px;
+            max-width: 1100px;
             display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 80px;
-            padding: 40px 60px;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 60px;
+            align-items: center;
         }
-        /* LEFT SIDE */
+        /* LEFT SIDE INFO */
         
         .info {
-            display: flex;
-            flex-direction: column;
-        }
-        /* TITLE BLOCK */
-        
-        .header {
-            margin-bottom: 40px;
+            animation: fadeIn 0.8s ease-out;
         }
         
         .header h1 {
-            font-size: 44px;
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.2;
         }
         
         .header span {
             color: var(--honey);
+            position: relative;
         }
         
         .subtitle {
-            margin-top: 10px;
-            font-size: 16px;
+            margin: 15px 0 35px;
+            font-size: 18px;
             color: #5a4a2f;
+            font-weight: 500;
         }
-        /* FEATURES */
+        /* FEATURE GRID */
         
         .features {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 22px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
         }
-        /* FEATURE CARD */
         
         .feature {
-            background: var(--card);
-            border-radius: 18px;
-            padding: 24px;
-            text-align: center;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, .08);
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+            background: white;
+            box-shadow: var(--shadow);
         }
         
         .feature img {
-            width: 46px;
+            width: 40px;
             margin-bottom: 12px;
         }
         
         .feature h3 {
-            color: var(--honey);
-            font-size: 16px;
-            margin-bottom: 6px;
+            color: var(--honey-dark);
+            font-size: 14px;
+            margin-bottom: 5px;
+            font-weight: 700;
         }
         
         .feature p {
-            font-size: 14px;
-            color: var(--muted);
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
         }
-        /* RIGHT AUTH — ALIGNED WITH FEATURES */
+        /* RIGHT AUTH CARD */
         
         .auth {
             display: flex;
-            align-items: flex-start;
-            padding-top: 115px;
-            /* 🔑 aligns with feature boxes, not title */
+            justify-content: center;
+            animation: slideUp 0.6s ease-out;
         }
-        /* LOGIN CARD */
         
         .auth-card {
-            width: 380px;
-            background: #ffffff;
-            padding: 36px;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, .2);
+            width: 100%;
+            max-width: 400px;
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 32px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
         
         .auth-card h2 {
             text-align: center;
-            margin-bottom: 22px;
+            margin-bottom: 25px;
+            font-weight: 800;
+            color: var(--text-main);
         }
         /* TABS */
         
         .tabs {
             display: flex;
-            background: #eee;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 22px;
+            background: #f0f0f0;
+            border-radius: 14px;
+            padding: 5px;
+            margin-bottom: 25px;
         }
         
         .tabs button {
@@ -140,86 +155,147 @@
             border: none;
             background: none;
             padding: 12px;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 14px;
             cursor: pointer;
+            border-radius: 10px;
+            transition: 0.3s;
+            color: var(--text-muted);
         }
         
         .tabs .active {
             background: var(--honey);
-            color: #000;
+            color: white;
+            box-shadow: 0 4px 12px rgba(244, 180, 0, 0.3);
         }
-        /* INPUTS */
+        /* FORMS */
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
         
         input {
             width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-            margin-bottom: 14px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            background: #f8f8f8;
             font-size: 14px;
+            font-weight: 500;
+            transition: 0.3s;
         }
         
         input:focus {
             outline: none;
+            background: white;
             border-color: var(--honey);
+            box-shadow: 0 0 0 4px var(--honey-glass);
         }
-        /* BUTTON */
         
         .btn {
             width: 100%;
-            padding: 13px;
+            padding: 15px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             background: var(--honey);
+            color: white;
+            font-size: 16px;
             font-weight: 700;
             cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
         }
-        /* FORGOT */
+        
+        .btn:hover {
+            background: var(--honey-dark);
+            transform: scale(1.02);
+        }
         
         .forgot {
-            text-align: right;
-            margin-top: 8px;
-            font-size: 12px;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 13px;
         }
         
         .forgot a {
-            color: var(--honey);
+            color: var(--honey-dark);
+            text-decoration: none;
+            font-weight: 600;
             cursor: pointer;
         }
-        /* RESET MESSAGE */
         
         #resetMsg {
             font-size: 12px;
-            color: green;
-            margin-top: 8px;
+            color: #2e7d32;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: 600;
         }
-        /* FORMS */
         
         .signup {
-            display: none
+            display: none;
         }
         /* FOOTER */
         
         .footer {
             text-align: center;
-            font-size: 12px;
-            color: #777;
-            padding: 16px 0;
+            padding: 25px;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
         }
         
         .footer span {
-            color: var(--honey);
+            color: var(--honey-dark);
+            font-weight: 700;
         }
-        /* MOBILE */
+        /* ANIMATIONS */
         
-        @media(max-width:1000px) {
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* MOBILE OPTIMIZATION */
+        
+        @media (max-width: 1000px) {
             .container {
                 grid-template-columns: 1fr;
-                gap: 50px;
+                gap: 40px;
+                text-align: center;
+            }
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 600px;
+                margin: 0 auto;
             }
             .auth {
                 padding-top: 0;
-                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 500px) {
+            .features {
+                grid-template-columns: 1fr;
+            }
+            .auth-card {
+                padding: 30px 20px;
             }
         }
     </style>
@@ -230,48 +306,44 @@
     <div class="page">
         <div class="container">
 
-            <!-- LEFT -->
             <div class="info">
                 <div class="header">
                     <h1>Kanasu <span>Bee House</span></h1>
                     <div class="subtitle">
-                        IoT Beehive Analytics & ML-Based Health Detection
-
+                        IoT Beehive Analytics & AI-Powered Health Detection
                     </div>
                 </div>
 
                 <div class="features">
                     <div class="feature">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2920/2920244.png">
-                        <h3>Sensors</h3>
-                        <p>Temperature · Humidity · Sound · Weight</p>
+                        <img src="https://cdn-icons-png.flaticon.com/512/2920/2920244.png" alt="Sensors">
+                        <h3>Smart Sensors</h3>
+                        <p>Real-time monitoring of Temp, Humidity, and Hive Weight.</p>
                     </div>
 
                     <div class="feature">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1048/1048927.png">
-                        <h3>IoT Platform</h3>
-                        <p>Live data connectivity</p>
+                        <img src="https://cdn-icons-png.flaticon.com/512/1048/1048927.png" alt="IoT">
+                        <h3>Cloud Sync</h3>
+                        <p>Live data streaming via Firebase RTDB connectivity.</p>
                     </div>
 
                     <div class="feature">
-                        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712106.png">
-                        <h3>AI Analytics</h3>
-                        <p>Hive health insights</p>
+                        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712106.png" alt="AI">
+                        <h3>AI Diagnosis</h3>
+                        <p>Machine Learning models identifying colony stress levels.</p>
                     </div>
 
                     <div class="feature">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2103/2103651.png">
-                        <h3>Disease Detection</h3>
-                        <p>Machine learning models</p>
+                        <img src="https://cdn-icons-png.flaticon.com/512/2103/2103651.png" alt="Disease">
+                        <h3>Early Alerts</h3>
+                        <p>Acoustic analysis to detect diseases before they spread.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- RIGHT -->
             <div class="auth">
                 <div class="auth-card">
-
-                    <h2>System Access</h2>
+                    <h2>Welcome Back</h2>
 
                     <div class="tabs">
                         <button id="loginTab" class="active" onclick="showLogin()">Login</button>
@@ -279,50 +351,56 @@
                     </div>
 
                     <div class="login">
-                        <input type="email" id="loginEmail" placeholder="Email">
-                        <input type="password" id="loginPassword" placeholder="Password">
-                        <button class="btn" onclick="login()">Login</button>
+                        <div class="input-group">
+                            <input type="email" id="loginEmail" placeholder="Email Address">
+                        </div>
+                        <div class="input-group">
+                            <input type="password" id="loginPassword" placeholder="Password">
+                        </div>
+                        <button class="btn" onclick="login()">Sign In</button>
 
                         <div class="forgot">
-                            <a onclick="forgotPassword()">Forgot password?</a>
+                            <a onclick="forgotPassword()">Forgot your password?</a>
                         </div>
-
                         <div id="resetMsg"></div>
                     </div>
 
                     <div class="signup">
-                        <input type="email" id="signupEmail" placeholder="Email">
-                        <input type="password" id="signupPassword" placeholder="Password">
+                        <div class="input-group">
+                            <input type="email" id="signupEmail" placeholder="Email Address">
+                        </div>
+                        <div class="input-group">
+                            <input type="password" id="signupPassword" placeholder="Create Password">
+                        </div>
                         <button class="btn" onclick="signup()">Create Account</button>
                     </div>
-
                 </div>
             </div>
 
         </div>
     </div>
 
-    <!-- FOOTER LINE -->
     <div class="footer">
-        🔒 <span>Protected</span> by Firebase Authentication • Secure & Encrypted Access
+        🛡️ <span>Secure Access</span> • Powered by Kanasu v2.0 AI Core
     </div>
 
-    <!-- FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="firebase.js"></script>
 
     <script>
         function login() {
-            firebase.auth()
-                .signInWithEmailAndPassword(loginEmail.value, loginPassword.value)
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+            firebase.auth().signInWithEmailAndPassword(email, pass)
                 .then(() => window.location.href = "dashboard.html")
                 .catch(err => alert(err.message));
         }
 
         function signup() {
-            firebase.auth()
-                .createUserWithEmailAndPassword(signupEmail.value, signupPassword.value)
+            const email = document.getElementById('signupEmail').value;
+            const pass = document.getElementById('signupPassword').value;
+            firebase.auth().createUserWithEmailAndPassword(email, pass)
                 .then(() => window.location.href = "dashboard.html")
                 .catch(err => alert(err.message));
         }
@@ -330,29 +408,30 @@
         function showSignup() {
             document.querySelector('.login').style.display = "none";
             document.querySelector('.signup').style.display = "block";
-            loginTab.classList.remove('active');
-            signupTab.classList.add('active');
+            document.getElementById('loginTab').classList.remove('active');
+            document.getElementById('signupTab').classList.add('active');
         }
 
         function showLogin() {
             document.querySelector('.login').style.display = "block";
             document.querySelector('.signup').style.display = "none";
-            signupTab.classList.remove('active');
-            loginTab.classList.add('active');
+            document.getElementById('signupTab').classList.remove('active');
+            document.getElementById('loginTab').classList.add('active');
         }
 
         function forgotPassword() {
-            if (!loginEmail.value) {
-                alert("Please enter your email");
+            const email = document.getElementById('loginEmail').value;
+            if (!email) {
+                alert("Please enter your email first.");
                 return;
             }
-            firebase.auth()
-                .sendPasswordResetEmail(loginEmail.value)
-                .then(() => resetMsg.innerText = "Password reset link sent to your email.")
+            firebase.auth().sendPasswordResetEmail(email)
+                .then(() => {
+                    document.getElementById('resetMsg').innerText = "Reset link sent! Check your inbox.";
+                })
                 .catch(err => alert(err.message));
         }
     </script>
-
 </body>
 
 </html>

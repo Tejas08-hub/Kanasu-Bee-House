@@ -4,30 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Market Insights</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Market Insights | Kanasu Bee House</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
          :root {
             --primary: #f4b400;
-            --bg: #fffcf0;
+            --secondary: #2e7d32;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --text-dark: #1e293b;
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
         
         body {
             background: var(--bg);
+            color: var(--text-dark);
             padding: 15px;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 600px;
             margin: auto;
-            padding-top: 20px;
+            padding-top: 10px;
         }
         
         .header {
@@ -37,30 +41,32 @@
             margin-bottom: 25px;
         }
         
-        .back {
+        .back-btn {
             text-decoration: none;
-            color: #444;
+            color: var(--text-dark);
             font-weight: 700;
             background: white;
-            padding: 10px 15px;
+            padding: 10px 18px;
             border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            font-size: 14px;
         }
+        /* Price Cards */
         
         .card {
-            background: white;
+            background: var(--white);
+            border-radius: 24px;
             padding: 25px;
-            border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
         
         .price-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 0;
-            border-bottom: 1px solid #f8f8f8;
+            padding: 15px 0;
+            border-bottom: 1px solid #f1f5f9;
         }
         
         .price-item:last-child {
@@ -69,59 +75,184 @@
         
         .type {
             font-weight: 600;
-            color: #555;
             font-size: 15px;
         }
         
         .amt {
             font-weight: 800;
-            color: var(--primary);
-            font-size: 18px;
+            color: var(--secondary);
         }
         
         .trend {
             font-size: 12px;
-            color: #2e7d32;
             margin-left: 5px;
+            color: #10b981;
         }
+        /* Profit Calculator Section */
         
-        .highlight-box {
-            background: linear-gradient(135deg, #f4b400, #ffca28);
+        .calc-box {
+            background: var(--dark);
+            background: #1e293b;
             color: white;
             padding: 25px;
-            border-radius: 25px;
+            border-radius: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .calc-box h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            margin-bottom: 5px;
+            opacity: 0.8;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 700;
+        }
+        
+        .result-box {
+            background: rgba(244, 180, 0, 0.15);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 15px;
+            border: 1px solid var(--primary);
+        }
+        
+        .res-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .res-total {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 10px;
+        }
+        /* Pro Tip */
+        
+        .tip {
+            background: #f0fdf4;
+            border: 1px solid #dcfce7;
+            padding: 20px;
+            border-radius: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .tip-icon {
+            font-size: 24px;
+        }
+        
+        .tip p {
+            font-size: 13px;
+            color: #166534;
+            font-weight: 500;
         }
     </style>
 </head>
 
 <body>
+
     <div class="container">
         <div class="header">
-            <a href="dashboard.html" class="back">⬅ Back</a>
-            <h2 style="font-size: 20px; font-weight: 800;">Market Trends</h2>
+            <a href="dashboard.html" class="back-btn">← Back</a>
+            <h2 style="font-weight: 800;">Market Analysis</h2>
         </div>
 
         <div class="card">
-            <h4 style="color: #bbb; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">Live Prices (India)</h4>
+            <p style="font-size: 11px; font-weight: 800; color: #94a3b8; letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase;">Current Market Rates (Today)</p>
             <div class="price-item">
-                <span class="type">Raw Wild Honey</span>
+                <span class="type">Wild Forest Honey</span>
                 <span class="amt">₹450/kg <span class="trend">▲ 2%</span></span>
             </div>
             <div class="price-item">
-                <span class="type">Organic Farm Honey</span>
+                <span class="type">Farm-Grown Organic</span>
                 <span class="amt">₹720/kg <span class="trend">▲ 4%</span></span>
             </div>
             <div class="price-item">
-                <span class="type">Export Quality</span>
-                <span class="amt">₹1,100/kg <span class="trend">▲ 1%</span></span>
+                <span class="type">Export Quality (A-Grade)</span>
+                <span class="amt">₹1,150/kg <span class="trend">▲ 1%</span></span>
             </div>
         </div>
 
-        <div class="highlight-box">
-            <h3 style="margin-bottom: 10px;">💡 Pro Analysis</h3>
-            <p style="font-size: 14px; opacity: 0.95; line-height: 1.6;">The demand for Forest Honey is rising in urban centers. Recommendation: Ensure your moisture content is below 18% for premium pricing.</p>
+        <div class="calc-box">
+            <h3>📈 Farmer Profit Predictor</h3>
+            <p style="font-size: 13px; margin-bottom: 20px; opacity: 0.8;">Calculate your total earnings (Honey + Crop Increase).</p>
+
+            <div class="input-group">
+                <label>Total Honey Harvested (kg)</label>
+                <input type="number" id="honeyQty" value="10" oninput="calculate()">
+            </div>
+
+            <div class="input-group">
+                <label>Current Crop Value (₹)</label>
+                <input type="number" id="cropVal" value="50000" oninput="calculate()">
+            </div>
+
+            <div class="result-box">
+                <div class="res-row">
+                    <span>Honey Income:</span>
+                    <span id="honeyInc">₹4,500</span>
+                </div>
+                <div class="res-row">
+                    <span>Pollination Bonus (35%):</span>
+                    <span id="pollInc" style="color: #4ade80;">+ ₹17,500</span>
+                </div>
+                <div class="res-total">
+                    <span>Total Potential:</span>
+                    <span id="totalRes">₹22,000</span>
+                </div>
+            </div>
         </div>
+
+
+
+        <div class="tip">
+            <div class="tip-icon">💡</div>
+            <p><b>Pro Insight:</b> Our ML alerts ensure your bees stay healthy during the flowering season. A healthy colony provides 2x more pollination trips than a stressed one.</p>
+        </div>
+
+        <footer>
+            <p style="text-align: center; margin-top: 40px; font-size: 12px; color: #94a3b8;">Data updated via Kanasu Market Engine v2.0</p>
+        </footer>
     </div>
+
+    <script>
+        function calculate() {
+            const qty = document.getElementById('honeyQty').value || 0;
+            const crop = document.getElementById('cropVal').value || 0;
+
+            const honeyIncome = qty * 450;
+            const pollBonus = crop * 0.35; // 35% increase from your project impact
+            const total = honeyIncome + pollBonus;
+
+            document.getElementById('honeyInc').innerText = "₹" + honeyIncome.toLocaleString();
+            document.getElementById('pollInc').innerText = "+ ₹" + pollBonus.toLocaleString();
+            document.getElementById('totalRes').innerText = "₹" + total.toLocaleString();
+        }
+    </script>
+
 </body>
 
 </html>
