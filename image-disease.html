@@ -5,90 +5,115 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bee Scan AI | Kanasu Bee House</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 :root{
---honey:#f4b400;
---bg1:#fff9e6;
---bg2:#fff2c7;
---card-bg:rgba(255,255,255,0.95);
---shadow:0 15px 40px rgba(0,0,0,0.08);
+--primary:#f4b400;
+--dark:#1e293b;
+--light-bg:#fcfcf9;
+--white:#ffffff;
 }
 
-*{box-sizing:border-box;font-family:'Montserrat',sans-serif}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
 
 body{
-margin:0;
+background:var(--light-bg);
+color:var(--dark);
 min-height:100vh;
-background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 100%);
+display:flex;
+flex-direction:column;
 }
 
-/* Top Bar like Dashboard */
-.topbar{
+/* NAVBAR */
+nav{
+padding:15px 5%;
+background:var(--white);
 display:flex;
+justify-content:space-between;
 align-items:center;
-padding:15px 20px;
-background:white;
-box-shadow:0 5px 15px rgba(0,0,0,0.05);
+border-bottom:1px solid #eee;
 position:sticky;
 top:0;
-z-index:100;
+z-index:1000;
 }
 
-.back-btn{
+.back-link{
 text-decoration:none;
+color:var(--dark);
 font-weight:700;
-color:#333;
+font-size:14px;
 }
 
-.container{
-max-width:520px;
-margin:auto;
+/* MAIN WRAPPER */
+.main-wrapper{
+flex:1;
+display:flex;
+justify-content:center;
+align-items:center;
 padding:20px;
 }
 
-/* Header */
-.header{
+/* BORDER WRAPPER */
+.scan-wrapper{
+width:100%;
+max-width:600px;
+background:white;
+border:3px solid #f4b400;
+border-radius:20px;
+box-shadow:0 15px 40px rgba(244,180,0,0.1);
+overflow:hidden;
+}
+
+/* TITLE */
+.scan-title{
 text-align:center;
-margin-bottom:20px;
-}
-
-.header h1{
 font-weight:800;
-font-size:26px;
+font-size:18px;
+padding:18px;
+border-bottom:1px solid #eee;
+background:#fffdf5;
 }
 
-.header h1 span{
-color:var(--honey);
+/* INNER CONTENT */
+.content{
+padding:25px;
 }
 
-.header p{
-font-size:12px;
-font-weight:600;
-color:#7a6300;
-}
-
-/* Card */
+/* Preview Card */
 .preview-card{
-background:var(--card-bg);
-border-radius:25px;
-padding:15px;
-box-shadow:var(--shadow);
+border-radius:20px;
 margin-bottom:20px;
+overflow:hidden;
+border:1px solid #e2e8f0;
 }
 
+/* Viewport */
 .viewport{
 width:100%;
 aspect-ratio:1;
-background:#fffef7;
-border-radius:20px;
+position:relative;
 overflow:hidden;
+border-radius:16px;
+}
+
+/* Elegant Dark Blue Gradient */
+#status{
+position:absolute;
+inset:0;
+background:linear-gradient(135deg,#0f172a,#1e293b);
 display:flex;
+flex-direction:column;
 align-items:center;
 justify-content:center;
-position:relative;
+color:white;
+text-align:center;
 }
 
 #preview{
@@ -98,12 +123,14 @@ object-fit:cover;
 display:none;
 }
 
+/* Scan bar */
 .scan-bar{
 display:none;
 position:absolute;
 width:100%;
 height:4px;
-background:var(--honey);
+background:#f4b400;
+box-shadow:0 0 15px #f4b400;
 animation:moveScan 2s linear infinite;
 }
 
@@ -112,6 +139,7 @@ animation:moveScan 2s linear infinite;
 100%{top:100%}
 }
 
+/* Buttons */
 .button-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
@@ -121,72 +149,87 @@ margin-bottom:15px;
 
 .btn-action{
 background:white;
-border:none;
+border:1px solid #e2e8f0;
 padding:14px;
-border-radius:15px;
+border-radius:12px;
 font-weight:700;
 cursor:pointer;
-box-shadow:0 4px 10px rgba(0,0,0,0.05);
+text-align:center;
 }
 
 .btn-main{
 width:100%;
-background:var(--honey);
+background:#f4b400;
 border:none;
-padding:18px;
-border-radius:18px;
+padding:16px;
+border-radius:12px;
 font-weight:800;
 cursor:pointer;
-box-shadow:0 8px 25px rgba(244,180,0,0.3);
+margin-top:10px;
 }
 
+/* Result */
 .result-box{
 margin-top:20px;
 padding:20px;
-background:white;
-border-radius:20px;
+background:#f8fafc;
+border-radius:16px;
 display:none;
-box-shadow:var(--shadow);
+border:1px solid #e2e8f0;
 }
 
 .download-btn{
 width:100%;
-background:#2d3436;
+background:#1e293b;
 color:white;
 border:none;
 padding:14px;
-border-radius:12px;
+border-radius:10px;
 font-weight:700;
 margin-top:15px;
 cursor:pointer;
 }
 
-input[type="file"]{display:none}
+input[type="file"]{
+display:none;
+}
 </style>
 </head>
 <body>
 
-<div class="topbar">
-<a href="dashboard.html" class="back-btn">← Dashboard</a>
+<nav>
+<a href="dashboard.html" class="back-link">← Dashboard</a>
+<div style="font-weight:800;">
+KANASU <span style="color:var(--primary)">BEE HOUSE</span>
+</div>
+</nav>
+
+<div class="main-wrapper">
+<div class="scan-wrapper">
+
+<div class="scan-title">
+BEE SCAN AI 
 </div>
 
-<div class="container">
-
-<div class="header">
-<h1>Bee Scan <span>AI</span></h1>
-<p>Vision-Based Hive Disease Detection</p>
-</div>
+<div class="content">
 
 <div class="preview-card">
 <div class="viewport">
+
 <div id="scanner" class="scan-bar"></div>
-<div id="status" style="text-align:center;">
-<div style="font-size:2rem;">📸</div>
-<div style="font-weight:700;color:#999;font-size:12px;">
+
+<div id="status">
+<div style="font-size:3rem;">📸</div>
+<div style="font-weight:700;font-size:14px;margin-top:10px;">
 AWAITING IMAGE
 </div>
+<div style="font-size:12px;opacity:.7;margin-top:6px;">
+Upload hive frame for AI analysis
 </div>
+</div>
+
 <img id="preview">
+
 </div>
 </div>
 
@@ -209,6 +252,8 @@ Identify Disease
 </button>
 </div>
 
+</div>
+</div>
 </div>
 
 <script>
@@ -264,7 +309,6 @@ resultContent.innerHTML=`
 `;
 }
 
-/* Professional PDF with Image */
 async function generateReport(){
 const {jsPDF}=window.jspdf;
 const doc=new jsPDF();
@@ -280,8 +324,7 @@ doc.setFontSize(12);
 doc.text("Generated: "+new Date().toLocaleString(),20,40);
 
 if(preview.src){
-const imgData=preview.src;
-doc.addImage(imgData,"JPEG",20,50,170,90);
+doc.addImage(preview.src,"JPEG",20,50,170,90);
 }
 
 let y=150;
