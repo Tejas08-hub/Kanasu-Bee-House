@@ -11,7 +11,6 @@
 <style>
 :root{
 --primary:#f4b400;
---secondary:#2e7d32;
 --dark:#1e293b;
 --light-bg:#fcfcf9;
 --white:#ffffff;
@@ -27,9 +26,12 @@ font-family:'Inter',sans-serif;
 body{
 background:var(--light-bg);
 color:var(--dark);
+min-height:100vh;
+display:flex;
+flex-direction:column;
 }
 
-/* NAVBAR SAME AS ABOUT PAGE */
+/* NAVBAR */
 nav{
 padding:15px 5%;
 background:var(--white);
@@ -49,26 +51,38 @@ font-weight:700;
 font-size:14px;
 }
 
-.container{
-max-width:600px;
-margin:60px auto;
+/* OUTER WRAPPER */
+.main-wrapper{
+flex:1;
+display:flex;
+justify-content:center;
+align-items:center;
 padding:20px;
 }
 
-/* CARD */
-.card{
-background:var(--white);
-padding:40px;
-border-radius:24px;
-border:1px solid #e2e8f0;
-box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);
+/* BORDER WRAPPER SAME AS CHATBOT */
+.calculator-wrapper{
+width:100%;
+max-width:600px;
+background:white;
+border:3px solid #f4b400;
+border-radius:20px;
+box-shadow:0 15px 40px rgba(244,180,0,0.1);
+overflow:hidden;
 }
 
-.card h2{
+/* TITLE SECTION */
+.calculator-title{
 text-align:center;
-margin-bottom:35px;
-font-size:26px;
 font-weight:800;
+font-size:18px;
+padding:18px;
+border-bottom:1px solid #eee;
+background:#fffdf5;
+}
+
+.card{
+padding:35px;
 }
 
 /* INPUTS */
@@ -157,11 +171,15 @@ KANASU <span style="color:var(--primary)">BEE HOUSE</span>
 </div>
 </nav>
 
-<div class="container">
+<div class="main-wrapper">
+
+<div class="calculator-wrapper">
+
+<div class="calculator-title">
+HONEY CALCULATOR 🍯
+</div>
 
 <div class="card">
-
-<h2>🍯 Honey Profit Analyzer</h2>
 
 <div class="input-group">
 <label>Honey Weight (kg)</label>
@@ -191,12 +209,11 @@ KANASU <span style="color:var(--primary)">BEE HOUSE</span>
 
 </div>
 </div>
+</div>
 
 <script>
-/* ==== YOUR ORIGINAL LOGIC UNCHANGED ==== */
-
+/* ORIGINAL LOGIC UNCHANGED */
 function calculate(){
-
 const kg=parseFloat(document.getElementById("kg").value);
 const price=parseFloat(document.getElementById("price").value);
 const cost=parseFloat(document.getElementById("cost").value);
@@ -222,7 +239,6 @@ document.getElementById("be").innerText=breakEven;
 }
 
 function exportPDF(){
-
 if(document.getElementById("result").style.display==="none"){
 alert("Please calculate first.");
 return;
