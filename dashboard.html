@@ -2,359 +2,333 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kanasu Bee House – Smart Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kanasu Bee House – Smart Dashboard</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    <script src="firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="firebase.js"></script>
 
-    <style>
-        :root {
-            --primary: #f4b400;
-            --bg: #fffcf0;
-            --glass: rgba(255, 255, 255, 0.9);
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
-        }
+<style>
+:root {
+    --primary: #f4b400;
+    --bg: #fffcf0;
+    --glass: rgba(255, 255, 255, 0.9);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Montserrat',sans-serif }
+body { background: var(--bg); color:#2d3436 }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif
-        }
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 20px;
+    background:var(--glass);
+    position:sticky;
+    top:0;
+    z-index:1000;
+    border-bottom:1px solid rgba(244,180,0,.2)
+}
 
-        body {
-            background: var(--bg);
-            color: #2d3436
-        }
+.menu-btn{
+    font-size:20px;
+    background:white;
+    border:1px solid #eee;
+    width:40px;height:40px;
+    border-radius:10px;
+    cursor:pointer
+}
 
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 20px;
-            background: var(--glass);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(244, 180, 0, .2)
-        }
+.dropdown{
+    display:none;
+    position:absolute;
+    top:60px;
+    left:10px;
+    background:white;
+    border-radius:15px;
+    width:280px;
+    box-shadow:0 10px 30px rgba(0,0,0,.1);
+    padding:10px
+}
+.menu:hover .dropdown{display:block}
 
-        .menu-btn {
-            font-size: 20px;
-            background: white;
-            border: 1px solid #eee;
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            cursor: pointer
-        }
+.dropdown b{
+    padding:10px;
+    display:block;
+    font-size:11px;
+    color:#999;
+    text-transform:uppercase
+}
+.dropdown a{
+    padding:12px;
+    display:block;
+    text-decoration:none;
+    color:#444;
+    border-radius:8px;
+    font-weight:600;
+    font-size:14px
+}
+.dropdown a:hover{
+    background:rgba(244,180,0,.1);
+    color:var(--primary)
+}
 
-        .dropdown {
-            display: none;
-            position: absolute;
-            top: 60px;
-            left: 10px;
-            background: white;
-            border-radius: 15px;
-            width: 280px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
-            padding: 10px
-        }
+.main{padding:15px;max-width:1400px;margin:auto}
 
-        .menu:hover .dropdown {
-            display: block
-        }
+.cards{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    margin-bottom:20px
+}
+.card{
+    background:white;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:var(--shadow)
+}
+.card h3{
+    font-size:10px;
+    color:#999;
+    text-transform:uppercase;
+    margin-bottom:5px
+}
+.value{font-size:22px;font-weight:800}
 
-        .dropdown b {
-            padding: 10px;
-            display: block;
-            font-size: 11px;
-            color: #999;
-            text-transform: uppercase
-        }
+.info-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:15px;
+    margin-bottom:20px
+}
+.info-box{
+    background:white;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:var(--shadow)
+}
 
-        .dropdown a {
-            padding: 12px;
-            display: block;
-            text-decoration: none;
-            color: #444;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px
-        }
+#hiveCondition{
+    margin-top:10px;
+    padding:10px;
+    border-radius:10px;
+    font-weight:700;
+    text-align:center;
+    font-size:13px
+}
 
-        .dropdown a:hover {
-            background: rgba(244, 180, 0, .1);
-            color: var(--primary)
-        }
+.graphs{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:15px
+}
+.graph-card{
+    background:white;
+    padding:15px;
+    border-radius:20px;
+    height:320px;
+    box-shadow:var(--shadow)
+}
 
-        .main {
-            padding: 15px;
-            max-width: 1400px;
-            margin: auto
-        }
-
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px
-        }
-
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: var(--shadow)
-        }
-
-        .card h3 {
-            font-size: 10px;
-            color: #999;
-            text-transform: uppercase;
-            margin-bottom: 5px
-        }
-
-        .value {
-            font-size: 22px;
-            font-weight: 800
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            margin-bottom: 20px
-        }
-
-        .info-box {
-            background: white;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: var(--shadow)
-        }
-
-        #hiveCondition {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 10px;
-            font-weight: 700;
-            text-align: center;
-            font-size: 13px
-        }
-
-        .graphs {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px
-        }
-
-        .graph-card {
-            background: white;
-            padding: 15px;
-            border-radius: 20px;
-            height: 320px;
-            box-shadow: var(--shadow)
-        }
-
-        @media(min-width:768px) {
-            .cards {
-                grid-template-columns: repeat(4, 1fr)
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr 1fr
-            }
-
-            .graphs {
-                grid-template-columns: 1fr 1fr
-            }
-        }
-    </style>
+@media(min-width:768px){
+    .cards{grid-template-columns:repeat(4,1fr)}
+    .info-grid{grid-template-columns:1fr 1fr}
+    .graphs{grid-template-columns:1fr 1fr}
+}
+</style>
 </head>
 
 <body>
 
-    <div class="topbar">
-        <div class="menu">
-            <button class="menu-btn">☰</button>
-            <div class="dropdown">
-                <b>Main Controls</b>
-                <a onclick="openDemo()">📊 Open Demo Dashboard</a>
-                <a onclick="pairHive()">➕ Add New Hive</a>
-                <hr>
-                <b>Services</b>
-                <a href="calculator.html">🍯 Honey Calculator</a>
-                <a href="market.html">📈 Market Analysis</a>
-                <a href="videos.html">🎥 Learning Videos</a>
-                <a href="chatbot.html">🤖 Bee Chatbot</a>
-                <a href="image-disease.html">🖼️ Image Disease Detection</a>
-                <a href="about.html">ℹ️ About Project</a>
-                <hr>
-                <b>Paired Hives</b>
-                <div id="dashboardList"></div>
-                <hr>
-                <a onclick="logout()" style="color:#e74c3c">Logout</a>
-            </div>
+<div class="topbar">
+    <div class="menu">
+        <button class="menu-btn">☰</button>
+        <div class="dropdown">
+            <b>Main Controls</b>
+            <a onclick="openDemo()">📊 Open Demo Dashboard</a>
+            <a onclick="pairHive()">➕ Add New Hive</a>
+            <hr>
+            <b>Services</b>
+            <a href="calculator.html">🍯 Honey Calculator</a>
+            <a href="market.html">📈 Market Analysis</a>
+            <a href="videos.html">🎥 Learning Videos</a>
+            <a href="chatbot.html">🤖 Bee Chatbot</a>
+            <a href="image-disease.html">🖼️ Image Disease Detection</a>
+            <a href="about.html">ℹ️ About Project</a>
+            <hr>
+            <b>Paired Hives</b>
+            <div id="dashboardList"></div>
+            <hr>
+            <a onclick="logout()" style="color:#e74c3c">Logout</a>
         </div>
-
-        <h2 id="title">Dashboard</h2>
-        <span id="badge"
-            style="background:var(--primary);color:white;padding:5px 12px;border-radius:8px;font-weight:700;font-size:10px;">MODE</span>
     </div>
 
-    <div class="main">
+    <h2 id="title">Dashboard</h2>
+    <span id="badge"
+        style="background:var(--primary);color:white;padding:5px 12px;border-radius:8px;font-weight:700;font-size:10px;">MODE</span>
+</div>
 
-        <div class="cards">
-            <div class="card">
-                <h3>Temp</h3>
-                <div id="temp" class="value">--</div>
-            </div>
-            <div class="card">
-                <h3>Humid</h3>
-                <div id="humidity" class="value">--</div>
-            </div>
-            <div class="card">
-                <h3>Sound</h3>
-                <div id="sound" class="value">--</div>
-            </div>
-            <div class="card">
-                <h3>Weight</h3>
-                <div id="weight" class="value">--</div>
-            </div>
-        </div>
+<div class="main">
 
-        <div class="info-grid">
-            <div class="info-box">
-                <p><b>Status:</b> <span id="statusText">Initialising...</span></p>
-                <div id="hiveCondition">Waiting for data...</div>
-            </div>
+<div class="cards">
+    <div class="card"><h3>Temp</h3><div id="temp" class="value">--</div></div>
+    <div class="card"><h3>Humid</h3><div id="humidity" class="value">--</div></div>
+    <div class="card"><h3>Sound</h3><div id="sound" class="value">--</div></div>
+    <div class="card"><h3>Weight</h3><div id="weight" class="value">--</div></div>
+</div>
 
-            <div class="info-box">
-                <p id="mlText">Select a hive to begin AI analysis.</p>
-            </div>
-
-            <div class="info-box" style="border-left:4px solid #e67e22;">
-                <p><b>🦠 Disease Prediction (Sound-based)</b></p>
-                <div id="diseaseBox" style="margin-top:8px;font-size:13px;font-weight:600;color:#555">
-                    No analysis yet.
-                </div>
-            </div>
-        </div>
-
-        <div class="graphs">
-            <div class="graph-card"><canvas id="tChart"></canvas></div>
-            <div class="graph-card"><canvas id="hChart"></canvas></div>
-            <div class="graph-card"><canvas id="sChart"></canvas></div>
-            <div class="graph-card"><canvas id="wChart"></canvas></div>
-        </div>
-
+<div class="info-grid">
+    <div class="info-box">
+        <p><b>Status:</b> <span id="statusText">Initialising...</span></p>
+        <div id="hiveCondition">Waiting for data...</div>
     </div>
 
-    <script>
-        let charts = {},
-            demoTimer = null,
-            activeHiveRef = null;
+    <div class="info-box">
+        <p id="mlText">Select a hive to begin AI analysis.</p>
+    </div>
 
-        function getChart(id, color) {
-            return new Chart(document.getElementById(id), {
-                type: 'line',
-                data: { labels: [], datasets: [{ data: [], borderColor: color, backgroundColor: color + '22', fill: true, tension: .4 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-            })
-        }
+    <div class="info-box" style="border-left:4px solid #e67e22;">
+        <p><b>🦠 Disease Prediction (Sound-based)</b></p>
+        <div id="diseaseBox" style="margin-top:8px;font-size:13px;font-weight:600;color:#555">
+            No analysis yet.
+        </div>
+    </div>
+</div>
 
-        function initCharts() {
-            charts.t = getChart("tChart", "#f4b400");
-            charts.h = getChart("hChart", "#2e7d32");
-            charts.s = getChart("sChart", "#e53935");
-            charts.w = getChart("wChart", "#5e35b1");
-        }
+<div class="graphs">
+    <div class="graph-card"><canvas id="tChart"></canvas></div>
+    <div class="graph-card"><canvas id="hChart"></canvas></div>
+    <div class="graph-card"><canvas id="sChart"></canvas></div>
+    <div class="graph-card"><canvas id="wChart"></canvas></div>
+</div>
 
-        function updateUI(t, h, s, w) {
-            temp.innerText = t + "°C";
-            humidity.innerText = h + "%";
-            sound.innerText = s + " dB";
-            weight.innerText = w + " kg";
-            [t, h, s, w].forEach((v, i) => {
-                let k = Object.keys(charts)[i];
-                charts[k].data.labels.push("");
-                charts[k].data.datasets[0].data.push(v);
-                if (charts[k].data.labels.length > 10) {
-                    charts[k].data.labels.shift();
-                    charts[k].data.datasets[0].data.shift();
-                }
-                charts[k].update("none");
-            });
-        }
+</div>
 
-        function updateCond(t, s) {
-            if (t > 38 || s > 75) {
-                hiveCondition.innerText = "DANGER 🔴";
-                hiveCondition.style.background = "#fdecea";
-            } else {
-                hiveCondition.innerText = "HEALTHY 🟢";
-                hiveCondition.style.background = "#e6f7ea";
-            }
-        }
+<script>
+let charts={}, demoTimer=null, activeHiveRef=null, timeCounter=0;
 
-        function updateDiseaseBox(s) {
-            if (s < 55) {
-                diseaseBox.innerHTML = "🟢 Healthy hive<br>Recommendation: Continue monitoring.";
-            } else if (s < 70) {
-                diseaseBox.innerHTML = "🟡 Possible stress (~60%)<br>Verify with ML image detection.";
-            } else {
-                diseaseBox.innerHTML = "🔴 Possible disease (~70%)<br><b>Verify with ML image detection</b>.";
-            }
-        }
+function getChart(id,color,label){
+return new Chart(document.getElementById(id),{
+type:'line',
+data:{labels:[],datasets:[{data:[],borderColor:color,backgroundColor:color+'22',fill:true,tension:.4}]},
+options:{
+responsive:true,
+maintainAspectRatio:false,
+plugins:{legend:{display:false}},
+scales:{
+x:{title:{display:true,text:'Time (30 min interval)'}},
+y:{title:{display:true,text:label}}
+}
+}
+})
+}
 
-        function openDemo() {
-            clearInterval(demoTimer);
-            badge.innerText = "DEMO";
-            title.innerText = "Demo Dashboard";
-            statusText.innerText = "Simulating Real-time Data";
-            mlText.innerText = "Sound patterns stable. Queen presence likely.";
+function initCharts(){
+charts.t=getChart("tChart","#f4b400","Temperature (°C)");
+charts.h=getChart("hChart","#2e7d32","Humidity (%)");
+charts.s=getChart("sChart","#e53935","Sound (dB)");
+charts.w=getChart("wChart","#5e35b1","Weight (kg)");
+}
 
-            demoTimer = setInterval(() => {
-                let t = (33 + Math.random() * 3).toFixed(1);
-                let h = (50 + Math.random() * 15).toFixed(1);
-                let s = Math.floor(40 + Math.random() * 20);
-                let w = (20 + Math.random() * 5).toFixed(2);
-                updateUI(t, h, s, w);
-                updateCond(t, s);
-                updateDiseaseBox(s);
-            }, 3000);
-        }
+function getNextTime(){
+let hrs=Math.floor(timeCounter/2);
+let mins=(timeCounter%2)*30;
+timeCounter++;
+return `${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}`;
+}
 
-        function openEmptyHive(id, name) {
-            clearInterval(demoTimer);
-            title.innerText = name;
-            badge.innerText = "LIVE";
-            statusText.innerText = "Waiting for data...";
-            hiveCondition.innerText = "No data yet";
-            diseaseBox.innerText = "Insufficient data. Awaiting sound input.";
-            mlText.innerHTML = `⚠️ Sound anomaly detected.<br>
-            <a href="image-disease.html" style="color:#f4b400;font-weight:700;">
-            Verify using Image-based ML Detection →
-            </a>`;
-        }
+function updateUI(t,h,s,w){
+temp.innerText=t+"°C";
+humidity.innerText=h+"%";
+sound.innerText=s+" dB";
+weight.innerText=w+" kg";
 
-        function pairHive() { }
-        function loadDashboardList() { }
-        function removeHive() { }
+let label=getNextTime();
 
-        window.onload = () => {
-            initCharts();
-            openDemo();
-        }
-    </script>
+[t,h,s,w].forEach((v,i)=>{
+let k=Object.keys(charts)[i];
+charts[k].data.labels.push(label);
+charts[k].data.datasets[0].data.push(v);
+if(charts[k].data.labels.length>10){
+charts[k].data.labels.shift();
+charts[k].data.datasets[0].data.shift();
+}
+charts[k].update("none");
+});
+}
+
+function updateCond(t,s){
+if(t>38||s>75){
+hiveCondition.innerText="DANGER 🔴";
+hiveCondition.style.background="#fdecea";
+}else{
+hiveCondition.innerText="HEALTHY 🟢";
+hiveCondition.style.background="#e6f7ea";
+}
+}
+
+function updateDiseaseBox(s){
+if(s<55){
+diseaseBox.innerHTML="🟢 Healthy hive<br>Recommendation: Continue monitoring.";
+}else if(s<70){
+diseaseBox.innerHTML="🟡 Possible stress (~60%)<br>Verify with ML image detection.";
+}else{
+diseaseBox.innerHTML="🔴 Possible disease (~70%)<br><b>Verify with ML image detection</b>.";
+}
+}
+
+function openDemo(){
+clearInterval(demoTimer);
+badge.innerText="DEMO";
+title.innerText="Demo Dashboard";
+statusText.innerText="Simulating Real-time Data";
+mlText.innerText="Sound patterns stable. Queen presence likely.";
+
+demoTimer=setInterval(()=>{
+let t=(33+Math.random()*3).toFixed(1);
+let h=(50+Math.random()*15).toFixed(1);
+let s=Math.floor(40+Math.random()*20);
+let w=(20+Math.random()*5).toFixed(2);
+updateUI(t,h,s,w);
+updateCond(t,s);
+updateDiseaseBox(s);
+},3000);
+}
+
+function openEmptyHive(id,name){
+clearInterval(demoTimer);
+title.innerText=name;
+badge.innerText="LIVE";
+statusText.innerText="Waiting for data...";
+hiveCondition.innerText="No data yet";
+diseaseBox.innerText="Insufficient data. Awaiting sound input.";
+mlText.innerHTML=`⚠️ Sound anomaly detected.<br>
+<a href="image-disease.html" style="color:#f4b400;font-weight:700;">
+Verify using Image-based ML Detection →
+</a>`;
+}
+
+function logout(){
+firebase.auth().signOut().then(()=>{
+window.location.href="index.html";
+});
+}
+
+function pairHive(){}
+function loadDashboardList(){}
+function removeHive(){}
+
+window.onload=()=>{
+initCharts();
+openDemo();
+}
+</script>
 
 </body>
 </html>
