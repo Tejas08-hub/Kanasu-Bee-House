@@ -31,7 +31,7 @@ flex-direction:column;
 height:100vh;
 }
 
-/* NAVBAR SAME AS OTHER PAGES */
+/* NAVBAR */
 nav{
 padding:15px 5%;
 background:var(--white);
@@ -51,14 +51,19 @@ font-weight:700;
 font-size:14px;
 }
 
-/* CHAT CONTAINER */
+/* CHAT WRAPPER WITH COLORED BORDER */
 .chat-wrapper{
 flex:1;
 display:flex;
 flex-direction:column;
 max-width:900px;
-margin:auto;
+margin:30px auto;
 width:100%;
+background:white;
+border:2px solid #f4b400;
+border-radius:20px;
+box-shadow:0 15px 40px rgba(244,180,0,0.08);
+overflow:hidden;
 }
 
 /* CHAT WINDOW */
@@ -99,7 +104,7 @@ border-bottom-right-radius:4px;
 
 .bot-msg{
 align-self:flex-start;
-background:white;
+background:#f8fafc;
 border:1px solid #e2e8f0;
 border-bottom-left-radius:4px;
 }
@@ -174,7 +179,7 @@ KANASU <span style="color:var(--primary)">BEE HOUSE</span>
 
 <div id="chat-window">
 <div class="msg bot-msg">
-Hi, I'm Kanasu Bee...<br>
+Hi, I'm Kanasu Bee 🐝<br>
 How can I help you today about bee keeping?
 </div>
 </div>
@@ -187,8 +192,6 @@ How can I help you today about bee keeping?
 </div>
 
 <script>
-/* ===== YOUR ORIGINAL LOGIC UNCHANGED ===== */
-
 const chatWindow=document.getElementById('chat-window');
 const userInput=document.getElementById('user-input');
 const sendBtn=document.getElementById('send-btn');
