@@ -5,155 +5,162 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Honey Calculator | Kanasu Bee House</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 :root{
-    --honey:#f4b400;
-    --honey-dark:#d49a00;
-    --bg1:#fff9e6;
-    --bg2:#fff2c7;
-    --card-bg:rgba(255,255,255,0.95);
-    --shadow:0 20px 40px rgba(0,0,0,0.08);
+--primary:#f4b400;
+--secondary:#2e7d32;
+--dark:#1e293b;
+--light-bg:#fcfcf9;
+--white:#ffffff;
 }
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Montserrat',sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
 }
 
 body{
-    min-height:100vh;
-    background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 100%);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
+background:var(--light-bg);
+color:var(--dark);
 }
 
-/* Back button */
-.back-btn{
-    position:absolute;
-    top:25px;
-    left:30px;
-    text-decoration:none;
-    background:white;
-    padding:10px 18px;
-    border-radius:12px;
-    font-weight:700;
-    color:#333;
-    box-shadow:var(--shadow);
-    transition:0.3s;
+/* NAVBAR SAME AS ABOUT PAGE */
+nav{
+padding:15px 5%;
+background:var(--white);
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid #eee;
+position:sticky;
+top:0;
+z-index:1000;
 }
 
-.back-btn:hover{
-    background:var(--honey);
-    color:white;
+.back-link{
+text-decoration:none;
+color:var(--dark);
+font-weight:700;
+font-size:14px;
 }
 
-/* Card */
+.container{
+max-width:600px;
+margin:60px auto;
+padding:20px;
+}
+
+/* CARD */
 .card{
-    width:100%;
-    max-width:500px;
-    background:var(--card-bg);
-    padding:45px 35px;
-    border-radius:32px;
-    box-shadow:var(--shadow);
+background:var(--white);
+padding:40px;
+border-radius:24px;
+border:1px solid #e2e8f0;
+box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);
 }
 
-h2{
-    text-align:center;
-    margin-bottom:30px;
-    font-weight:800;
-    font-size:22px;
-    color:#333;
+.card h2{
+text-align:center;
+margin-bottom:35px;
+font-size:26px;
+font-weight:800;
 }
 
+/* INPUTS */
 .input-group{
-    margin-bottom:20px;
+margin-bottom:22px;
 }
 
 label{
-    font-size:12px;
-    font-weight:700;
-    color:#777;
-    display:block;
-    margin-bottom:8px;
+font-size:13px;
+font-weight:700;
+display:block;
+margin-bottom:8px;
+color:#64748b;
 }
 
 input{
-    width:100%;
-    padding:16px;
-    border-radius:14px;
-    border:2px solid transparent;
-    background:#f6f6f6;
-    font-size:14px;
-    font-weight:600;
-    transition:0.3s;
+width:100%;
+padding:14px;
+border-radius:12px;
+border:1px solid #e2e8f0;
+font-size:14px;
+transition:0.3s;
 }
 
 input:focus{
-    outline:none;
-    background:white;
-    border-color:var(--honey);
-    box-shadow:0 0 0 4px rgba(244,180,0,0.1);
+outline:none;
+border-color:var(--primary);
+box-shadow:0 0 0 3px rgba(244,180,0,0.1);
 }
 
+/* BUTTONS */
 button{
-    width:100%;
-    padding:15px;
-    border:none;
-    border-radius:14px;
-    font-weight:700;
-    margin-top:12px;
-    cursor:pointer;
-    transition:0.3s;
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+font-weight:700;
+cursor:pointer;
+margin-top:12px;
+transition:0.2s;
 }
 
 .primary{
-    background:var(--honey);
-    color:white;
+background:var(--primary);
+color:white;
 }
 
 .primary:hover{
-    background:var(--honey-dark);
+opacity:0.9;
 }
 
 .secondary{
-    background:#444;
-    color:white;
+background:#1e293b;
+color:white;
 }
 
+/* RESULT BOX */
 .result{
-    margin-top:30px;
-    padding:20px;
-    border-radius:18px;
-    background:#fafafa;
-    display:none;
-    border:1px solid rgba(0,0,0,0.05);
+margin-top:30px;
+padding:25px;
+border-radius:18px;
+background:#f8fafc;
+display:none;
+border:1px solid #e2e8f0;
 }
 
 .res-row{
-    display:flex;
-    justify-content:space-between;
-    margin-bottom:12px;
-    font-size:14px;
+display:flex;
+justify-content:space-between;
+margin-bottom:12px;
+font-size:14px;
 }
 
 .res-row b{
-    font-weight:800;
+font-weight:800;
 }
 </style>
 </head>
 
 <body>
 
-<a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+<nav>
+<a href="dashboard.html" class="back-link">← Dashboard</a>
+<div style="font-weight:800;">
+KANASU <span style="color:var(--primary)">BEE HOUSE</span>
+</div>
+</nav>
+
+<div class="container">
 
 <div class="card">
+
 <h2>🍯 Honey Profit Analyzer</h2>
 
 <div class="input-group">
@@ -183,8 +190,11 @@ button{
 </div>
 
 </div>
+</div>
 
 <script>
+/* ==== YOUR ORIGINAL LOGIC UNCHANGED ==== */
+
 function calculate(){
 
 const kg=parseFloat(document.getElementById("kg").value);
@@ -221,11 +231,9 @@ return;
 const { jsPDF } = window.jspdf;
 const doc = new jsPDF();
 
-// Page border
 doc.setDrawColor(180);
 doc.rect(10, 10, 190, 277);
 
-// Title
 doc.setFont("helvetica", "bold");
 doc.setFontSize(18);
 doc.text("KANASU BEE HOUSE", 105, 30, null, null, "center");
@@ -253,11 +261,9 @@ addRow("ROI:", document.getElementById("roi").innerText);
 addRow("Margin:", document.getElementById("margin").innerText);
 addRow("Break-even (kg):", document.getElementById("be").innerText);
 
-// Date
 doc.setFontSize(11);
 doc.text("Generated on: " + new Date().toLocaleString(), 25, y + 15);
 
-// Footer
 doc.setFontSize(10);
 doc.setTextColor(120);
 doc.text("Smart Apiculture Platform | Kanasu Bee House", 105, 285, null, null, "center");
