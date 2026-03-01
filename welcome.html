@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kanasu Bee House – Welcome</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="firebase.js"></script>
+
+<style>
+:root { --primary:#f4b400; --bg:#fffcf0; --glass:rgba(255,255,255,.95); --shadow:0 12px 40px rgba(0,0,0,.08); }
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Montserrat',sans-serif}
+body{background:var(--bg);color:#2d3436; min-height: 100vh; overflow-x: hidden;}
+
+/* TOPBAR ALIGNMENT */
+.topbar{
+display:flex;justify-content:space-between;align-items:center;
+padding:12px 25px;background:var(--glass);
+position:sticky;top:0;z-index:1000;
+border-bottom:1px solid rgba(244,180,0,.2);
+backdrop-filter: blur(10px);
+}
+
+.menu-btn{
+font-size:20px;background:white;border:1px solid #eee;
+width:40px;height:40px;border-radius:10px;cursor:pointer;transition: 0.3s;
+}
+
+.dropdown{
+display:none;position:absolute;top:60px;left:20px;
+background:white;border-radius:15px;width:280px;
+box-shadow:0 10px 30px rgba(0,0,0,.1);padding:10px;
+}
+.menu:hover .dropdown{display:block}
+.dropdown b{padding:10px;display:block;font-size:11px;color:#999;text-transform:uppercase;}
+.dropdown a{padding:12px;display:block;text-decoration:none;color:#444;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;}
+.dropdown a:hover{background:rgba(244,180,0,.1);color:var(--primary)}
+
+/* HERO SPLIT SECTION */
+.hero-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 5%;
+    align-items: center;
+    gap: 30px;
+    min-height: 80vh;
+}
+
+/* LEFT SIDE */
+.hero-left {
+    flex: 1.2;
+    text-align: left;
+}
+
+#welcomeText {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 800;
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+.welcome-name { color: var(--primary); }
+
+/* GRID BOXES */
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.action-card {
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: 0.3s;
+    border: 1px solid transparent;
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+}
+
+.card-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+    background: #fff9e6;
+    width: 50px; height: 50px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 12px;
+}
+
+.action-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 5px; }
+.action-card p { font-size: 12px; color: #777; line-height: 1.4; }
+
+/* RIGHT SIDE IMAGE */
+.hero-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    animation: float 4s ease-in-out infinite;
+}
+
+.hero-img {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* MOBILE FIX */
+@media(max-width: 768px){
+    .hero-container { flex-direction: column; text-align: center; padding-top: 20px; }
+    .hero-right { order: 1; }
+    .hero-left { order: 2; width: 100%; }
+    #welcomeText { justify-content: center; }
+    .action-grid { grid-template-columns: 1fr; }
+}
+
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+    <div class="menu">
+        <button class="menu-btn">☰</button>
+        <div class="dropdown">
+            <b>Main Controls</b>
+            <a onclick="openDemo()">📊 Open Demo Dashboard</a>
+            <a onclick="pairHive()">➕ Add New Hive</a>
+            <hr>
+            <b>Services</b>
+            <a href="calculator.html">🍯 Honey Calculator</a>
+            <a href="market.html">📈 Market Analysis</a>
+            <a href="videos.html">🎥 Learning Videos</a>
+            <a href="chatbot.html">🤖 Kanasu Bee Chatbot</a>
+            <a href="image-disease.html">🐝 BEE SCAN AI</a>
+            <hr>
+            <a onclick="logout()" style="color:#e74c3c">Logout</a>
+        </div>
+    </div>
+    <h2><span style="color:#2d3436;">Kanasu </span><span style="color:#f4b400;">Bee House</span></h2>
+    <div style="width:40px"></div>
+</div>
+
+<div class="hero-container">
+    <div class="hero-left">
+        <h1 id="welcomeText">Hello, <span class="welcome-name" id="userName">...</span> 👋</h1>
+        
+        <div class="action-grid">
+            <div class="action-card" onclick="openDemo()">
+                <div class="card-icon">📊</div>
+                <h3>Open Demo</h3>
+                <p>Simulate real-time data monitoring.</p>
+            </div>
+
+            <div class="action-card" onclick="pairHive()">
+                <div class="card-icon">➕</div>
+                <h3>Add Hive</h3>
+                <p>Connect your hardware via ID.</p>
+            </div>
+
+            <div class="action-card" onclick="window.location.href='image-disease.html'">
+                <div class="card-icon">🐝</div>
+                <h3>BEE SCAN AI</h3>
+                <p>Detect bee diseases via image.</p>
+            </div>
+
+            <div class="action-card" onclick="window.location.href='chatbot.html'">
+                <div class="card-icon">🤖</div>
+                <h3>Bee Chatbot</h3>
+                <p>AI assistant for your apiary.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-right">
+        <img src="welcome-bee.png" class="hero-img">
+    </div>
+</div>
+
+<script>
+firebase.auth().onAuthStateChanged(user=>{
+    if(user){
+        firebase.database().ref("users/"+user.uid).once("value")
+        .then(snapshot=>{
+            let data=snapshot.val();
+            document.getElementById("userName").innerText = data && data.name ? data.name : "Friend";
+        });
+    }else{
+        window.location.href="index.html";
+    }
+});
+
+function openDemo(){ window.location.href="dashboard.html"; }
+function pairHive(){
+    let id=prompt("Hive ID"), pin=prompt("PIN"), name=prompt("Name");
+    if(id && pin && name){
+        firebase.database().ref("hives/"+id).once("value").then(snap=>{
+            if(snap.exists() && String(snap.val().pin)===String(pin)){
+                alert("Success!"); window.location.href="dashboard.html";
+            } else { alert("Error!"); }
+        });
+    }
+}
+function logout(){ firebase.auth().signOut().then(()=>window.location.href="index.html"); }
+</script>
+
+</body>
+</html>
