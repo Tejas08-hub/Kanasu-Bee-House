@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Hive Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+    --primary:#f4b400;
+    --bg:#fffcf0;
+    --glass:rgba(255,255,255,.9);
+    --shadow:0 8px 32px rgba(0,0,0,.05);
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Montserrat',sans-serif}
+body{background:var(--bg);color:#2d3436}
+
+/* TOPBAR */
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px 20px;
+background:var(--glass);
+border-bottom:1px solid rgba(244,180,0,.2);
+}
+
+.back-btn{
+background:white;
+border:1px solid #eee;
+padding:8px 14px;
+border-radius:10px;
+cursor:pointer;
+font-weight:600;
+}
+
+.main{
+padding:15px;
+max-width:1400px;
+margin:auto;
+}
+
+/* CARDS */
+.cards{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-bottom:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:20px;
+box-shadow:var(--shadow);
+}
+
+.card h3{
+font-size:10px;
+color:#999;
+margin-bottom:5px;
+text-transform:uppercase;
+}
+
+.value{
+font-size:20px;
+font-weight:800;
+}
+
+/* GRAPHS */
+.graphs{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
+
+.graph-card{
+background:white;
+padding:15px;
+border-radius:20px;
+height:320px;
+box-shadow:var(--shadow);
+}
+
+/* MOBILE */
+@media(max-width:900px){
+.cards{grid-template-columns:repeat(2,1fr);}
+.graphs{grid-template-columns:1fr;}
+}
+@media(max-width:500px){
+.cards{grid-template-columns:1fr;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+<button class="back-btn" onclick="goBack()">← Back</button>
+
+<h2 id="title">Live Hive</h2>
+
+<span style="background:#f4b400;color:white;padding:5px 12px;border-radius:8px;font-weight:700;font-size:10px;">
+LIVE
+</span>
+</div>
+
+<div class="main">
+
+<div class="cards">
+<div class="card">
+<h3>Temp</h3>
+<div id="temp" class="value">Waiting for data</div>
+</div>
+
+<div class="card">
+<h3>Humid</h3>
+<div id="humidity" class="value">Waiting for data</div>
+</div>
+
+<div class="card">
+<h3>Sound</h3>
+<div id="sound" class="value">Waiting for data</div>
+</div>
+
+<div class="card">
+<h3>Weight</h3>
+<div id="weight" class="value">Waiting for data</div>
+</div>
+</div>
+
+<div class="graphs">
+<div class="graph-card"><canvas id="tChart"></canvas></div>
+<div class="graph-card"><canvas id="hChart"></canvas></div>
+<div class="graph-card"><canvas id="sChart"></canvas></div>
+<div class="graph-card"><canvas id="wChart"></canvas></div>
+</div>
+
+</div>
+
+<script>
+
+/* Back */
+function goBack(){
+window.location.href="welcome.html";
+}
+
+/* Set Hive Name */
+let hiveName = localStorage.getItem("activeHiveName");
+if(hiveName){
+document.getElementById("title").innerText = hiveName;
+}
+
+/* Create Empty Charts */
+
+function createEmptyChart(id,color){
+return new Chart(document.getElementById(id),{
+type:'line',
+data:{
+labels:[],
+datasets:[{
+data:[],
+borderColor:color,
+backgroundColor:color+"22",
+fill:true,
+tension:0.4,
+borderWidth:2
+}]
+},
+options:{
+responsive:true,
+maintainAspectRatio:false,
+plugins:{legend:{display:false}},
+scales:{y:{beginAtZero:true}}
+}
+});
+}
+
+createEmptyChart("tChart","#f4b400");
+createEmptyChart("hChart","#2e7d32");
+createEmptyChart("sChart","#e53935");
+createEmptyChart("wChart","#5e35b1");
+
+</script>
+
+</body>
+</html>

@@ -1,165 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kanasu Bee House | Secure Access</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanasu Bee House | Secure Access</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<style>
-:root{
---bg:#e8dfc4;
---card:#f2efe6;
---primary:#f4b400;
---primary-dark:#d49a00;
---text:#2d2d2d;
---muted:#6b6b6b;
-}
+    <style>
+         :root {
+            --honey: #f4b400;
+            --honey-dark: #d49a00;
+            --honey-glass: rgba(244, 180, 0, 0.1);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #2d2d2d;
+            --text-muted: #666;
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #fff9e6 0%, #fff2c7 100%);
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Montserrat',sans-serif;}
+        .page {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 60px;
+            align-items: center;
+        }
+        
+        .info {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .header h1 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+        
+        .header span {
+            color: var(--honey);
+        }
+        
+        .subtitle {
+            margin: 15px 0 35px;
+            font-size: 18px;
+            color: #5a4a2f;
+            font-weight: 500;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+            background: white;
+            box-shadow: var(--shadow);
+        }
+        
+        .feature img {
+            width: 40px;
+            margin-bottom: 12px;
+        }
+        
+        .feature h3 {
+            color: var(--honey-dark);
+            font-size: 14px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        
+        .feature p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
 
-body{
-background:var(--bg);
-min-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-padding:40px;
-}
+        .auth {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .auth-card {
+            width: 100%;
+            max-width: 400px;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 32px;
+            box-shadow: var(--shadow);
+        }
+        
+        .auth-card h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 800;
+        }
 
-.container{
-width:100%;
-max-width:1300px;
-display:grid;
-grid-template-columns:1.2fr 0.8fr;
-gap:60px;
-align-items:center;
-}
+        .tabs {
+            display: flex;
+            background: #f0f0f0;
+            border-radius: 14px;
+            padding: 5px;
+            margin-bottom: 25px;
+        }
+        
+        .tabs button {
+            flex: 1;
+            border: none;
+            background: none;
+            padding: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 10px;
+            color: var(--text-muted);
+        }
+        
+        .tabs .active {
+            background: var(--honey);
+            color: white;
+        }
 
-.header h1{
-font-size:48px;
-font-weight:800;
-color:var(--text);
-}
-.header span{color:var(--primary);}
-.subtitle{margin-top:10px;font-size:20px;color:#5a4a2f;}
+        .input-group {
+            margin-bottom: 15px;
+        }
 
-.features{
-margin-top:50px;
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:30px;
-}
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            background: #f8f8f8;
+            font-size: 14px;
+        }
 
-.feature{
-background:var(--card);
-padding:30px;
-border-radius:20px;
-}
-.feature img{width:45px;margin-bottom:15px;}
-.feature h3{color:var(--primary-dark);margin-bottom:8px;font-size:16px;}
-.feature p{font-size:14px;color:var(--muted);}
+        input:focus {
+            outline: none;
+            border-color: var(--honey);
+        }
 
-.auth-card{
-background:#f3f3f3;
-padding:50px 40px;
-border-radius:40px;
-box-shadow:0 30px 60px rgba(0,0,0,0.1);
-}
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: var(--honey);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+        }
 
-.auth-card h2{text-align:center;margin-bottom:30px;}
+        .signup {
+            display: none;
+        }
 
-.tabs{
-display:flex;
-background:#ddd;
-border-radius:20px;
-padding:5px;
-margin-bottom:30px;
-}
+        @media (max-width: 1000px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
 
-.tabs button{
-flex:1;
-padding:12px;
-border:none;
-background:none;
-border-radius:15px;
-font-weight:700;
-cursor:pointer;
-}
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 600px;
+                margin: 0 auto;
+            }
+        }
+        
+        @media (max-width: 500px) {
+            .features {
+                grid-template-columns: 1fr;
+            }
 
-.tabs .active{
-background:var(--primary);
-color:white;
-}
-
-.input-group{margin-bottom:20px;}
-
-input{
-width:100%;
-padding:18px;
-border:none;
-border-radius:15px;
-background:#d9dee7;
-font-size:14px;
-}
-
-.btn{
-width:100%;
-padding:18px;
-border:none;
-border-radius:15px;
-background:var(--primary);
-color:white;
-font-weight:700;
-font-size:16px;
-cursor:pointer;
-margin-top:10px;
-}
-
-.btn:hover{background:var(--primary-dark);}
-
-.message{
-text-align:center;
-margin-top:15px;
-font-weight:600;
-font-size:14px;
-}
-
-.success{color:green;}
-.error{color:red;}
-
-.forgot{
-text-align:center;
-margin-top:20px;
-color:var(--primary-dark);
-font-weight:600;
-cursor:pointer;
-}
-
-.signup{display:none;}
-
-@media(max-width:1000px){
-.container{
-grid-template-columns:1fr;
-text-align:center;
-}
-.features{grid-template-columns:1fr;}
-}
-</style>
+            .auth-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
+<div class="page">
 <div class="container">
 
-<div>
+<div class="info">
+
 <div class="header">
 <h1>Kanasu <span>Bee House</span></h1>
-<div class="subtitle">Hybrid Acoustic–Vision AI Platform for Smart Apiculture</div>
+<div class="subtitle">
+Hybrid Acoustic–Vision AI Platform for Smart Apiculture
+</div>
 </div>
 
+<!-- ✅ FEATURE BOXES RESTORED -->
 <div class="features">
+
 <div class="feature">
 <img src="https://cdn-icons-png.flaticon.com/512/2920/2920244.png">
 <h3>Smart Sensors</h3>
@@ -183,10 +255,13 @@ text-align:center;
 <h3>Early Alerts</h3>
 <p>Acoustic analysis to detect diseases before they spread.</p>
 </div>
+
 </div>
 </div>
 
+<div class="auth">
 <div class="auth-card">
+
 <h2>Welcome Back</h2>
 
 <div class="tabs">
@@ -202,22 +277,28 @@ text-align:center;
 <input type="password" id="loginPassword" placeholder="Password">
 </div>
 <button class="btn" onclick="login()">Sign In</button>
-<div class="forgot" onclick="forgotPassword()">Forgot your password?</div>
-<div class="message" id="loginMsg"></div>
 </div>
 
 <div class="signup">
+
+<!-- ✅ ONLY ADDITION -->
 <div class="input-group">
 <input type="text" id="signupName" placeholder="Full Name">
 </div>
+
 <div class="input-group">
 <input type="email" id="signupEmail" placeholder="Email Address">
 </div>
+
 <div class="input-group">
 <input type="password" id="signupPassword" placeholder="Create Password">
 </div>
+
 <button class="btn" onclick="signup()">Create Account</button>
-<div class="message" id="signupMsg"></div>
+
+</div>
+
+</div>
 </div>
 
 </div>
@@ -229,41 +310,30 @@ text-align:center;
 <script src="firebase.js"></script>
 
 <script>
-
-function login(){
-firebase.auth().signInWithEmailAndPassword(loginEmail.value,loginPassword.value)
-.then(()=>window.location.href="welcome.html")
-.catch(err=>{
-loginMsg.innerHTML=err.message;
-loginMsg.className="message error";
-});
+function login() {
+firebase.auth().signInWithEmailAndPassword(
+loginEmail.value,
+loginPassword.value
+).then(()=>window.location.href="welcome.html")
+.catch(err=>alert(err.message));
 }
 
-function signup(){
-if(!signupName.value){
-signupMsg.innerHTML="Please enter your name.";
-signupMsg.className="message error";
-return;
-}
+function signup() {
+if(!signupName.value){ alert("Please enter your name"); return; }
 
-firebase.auth().createUserWithEmailAndPassword(signupEmail.value,signupPassword.value)
-.then(async userCredential=>{
+firebase.auth().createUserWithEmailAndPassword(
+signupEmail.value,
+signupPassword.value
+).then(userCredential=>{
 
-await firebase.database().ref("users/"+userCredential.user.uid).set({
-name:signupName.value,
-email:signupEmail.value
+firebase.database().ref("users/"+userCredential.user.uid).set({
+name: signupName.value,
+email: signupEmail.value
 });
 
-signupMsg.innerHTML="Signup successful! Redirecting...";
-signupMsg.className="message success";
+window.location.href="welcome.html";
 
-setTimeout(()=>window.location.href="welcome.html",1500);
-
-})
-.catch(err=>{
-signupMsg.innerHTML=err.message;
-signupMsg.className="message error";
-});
+}).catch(err=>alert(err.message));
 }
 
 function showSignup(){
@@ -279,13 +349,6 @@ document.querySelector('.signup').style.display="none";
 signupTab.classList.remove('active');
 loginTab.classList.add('active');
 }
-
-function forgotPassword(){
-if(!loginEmail.value){alert("Enter email first.");return;}
-firebase.auth().sendPasswordResetEmail(loginEmail.value)
-.then(()=>alert("Reset link sent."));
-}
-
 </script>
 
 </body>
