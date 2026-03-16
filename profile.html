@@ -1,10 +1,9 @@
-```html
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Profile | Kanasu Bee House</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -56,7 +55,7 @@ font-weight:600;
 color:#666;
 }
 
-/* MAIN CONTAINER */
+/* MAIN */
 
 .container{
 max-width:1000px;
@@ -102,7 +101,7 @@ color:#777;
 margin-bottom:15px;
 }
 
-/* FORM CARD */
+/* CARD */
 
 .card{
 background:white;
@@ -117,7 +116,7 @@ font-weight:800;
 margin-bottom:20px;
 }
 
-/* GRID FORM */
+/* GRID */
 
 .grid{
 display:grid;
@@ -156,17 +155,24 @@ color:white;
 cursor:pointer;
 }
 
+.btn:hover{
+background:#d39e00;
+}
+
 /* FIELD STATUS */
 
 .status-card{
-background:#fff7d6;
-border-left:5px solid #f4b400;
+background:linear-gradient(135deg,#fff7cc,#ffe680);
+border:1px solid #f4b400;
 padding:25px;
-border-radius:15px;
+border-radius:18px;
+box-shadow:0 6px 20px rgba(244,180,0,0.15);
 }
 
 .status-card textarea{
 background:white;
+border:1px solid #f4b400;
+resize:none;
 }
 
 /* MOBILE */
@@ -212,7 +218,7 @@ height:110px;
 
 </div>
 
-<!-- PROFILE DETAILS -->
+<!-- DETAILS -->
 
 <div class="card">
 
@@ -287,8 +293,9 @@ height:110px;
 
 <div class="status-card">
 
-<div class="section-title"> Field Status</div>
-<textarea id="activity" rows="3" placeholder="Example: Hive 3 inspected, good honey flow"></textarea>
+<div class="section-title">🐝 Field Status</div>
+
+<textarea id="activity" rows="3" placeholder="Example: Hive 3 inspected, honey flow good"></textarea>
 
 <button class="btn" onclick="saveActivity()">Update Status</button>
 
@@ -389,7 +396,7 @@ activity:document.getElementById("activity").value
 
 });
 
-alert("Field status updated ");
+alert("Field status updated 🐝");
 
 }
 
