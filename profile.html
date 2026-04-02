@@ -1,12 +1,11 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Profile | Kanasu Bee House</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -14,424 +13,649 @@
 <script src="firebase.js"></script>
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Montserrat',sans-serif;
+:root {
+  --amber:       #E8A000;
+  --amber-light: #FFF3CC;
+  --amber-dark:  #B87D00;
+  --bg:          #FAFAF7;
+  --surface:     #FFFFFF;
+  --border:      #EBEBEB;
+  --text-primary:#1A1A1A;
+  --text-secondary:#6B6B6B;
+  --text-muted:  #9E9E9E;
+  --success:     #2E7D32;
+  --error:       #C62828;
+  --radius-sm:   8px;
+  --radius-md:   14px;
+  --radius-lg:   20px;
+  --shadow-sm:   0 1px 4px rgba(0,0,0,0.06);
+  --shadow-md:   0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg:   0 8px 32px rgba(0,0,0,0.10);
 }
 
-body{
-background:#fffdf4;
-color:#333;
+*, *::before, *::after {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
 }
 
-/* TOPBAR */
-
-.topbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:16px 20px;
-background:white;
-box-shadow:0 2px 10px rgba(0,0,0,0.05);
-position:sticky;
-top:0;
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
 }
 
-.brand{
-font-size:20px;
-font-weight:800;
+/* ── TOPBAR ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  height: 64px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.brand span{
-color:#f4b400;
+.brand {
+  font-family: 'Inter', serif;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+}
+.brand span { color: var(--amber); }
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: all .18s ease;
+  text-decoration: none;
+}
+.back-btn:hover {
+  background: var(--bg);
+  color: var(--text-primary);
+  border-color: #ccc;
+}
+.back-btn svg { flex-shrink: 0; }
+
+/* ── LAYOUT ── */
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-.back{
-cursor:pointer;
-font-weight:600;
-color:#666;
+/* ── SECTION HEADER ── */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.section-header .icon {
+  width: 34px; height: 34px;
+  background: var(--amber-light);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+.section-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
-/* MAIN */
-
-.container{
-max-width:1000px;
-margin:auto;
-padding:20px;
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
 }
 
-/* PROFILE CARD */
-
-.profile-card{
-background:white;
-padding:25px;
-border-radius:20px;
-box-shadow:0 5px 20px rgba(0,0,0,0.05);
-text-align:center;
-margin-bottom:25px;
+/* ── PROFILE HERO ── */
+.profile-hero {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
 }
 
-.profile-img{
-width:130px;
-height:130px;
-border-radius:50%;
-object-fit:cover;
-border:5px solid #f4b400;
+.avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
 }
 
-.upload-btn{
-margin-top:10px;
-cursor:pointer;
-font-size:14px;
-color:#f4b400;
+.profile-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--amber);
+  display: block;
 }
 
-.profile-name{
-font-size:22px;
-font-weight:700;
-margin-top:10px;
+.avatar-edit {
+  position: absolute;
+  bottom: 2px; right: 2px;
+  width: 28px; height: 28px;
+  background: var(--amber);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  border: 2px solid white;
+  transition: background .18s;
+}
+.avatar-edit:hover { background: var(--amber-dark); }
+.avatar-edit svg { pointer-events: none; }
+
+.profile-info { flex: 1; min-width: 180px; }
+.profile-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.profile-email {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+.profile-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--amber-light);
+  color: var(--amber-dark);
+  border: 1px solid #FADA7A;
 }
 
-.profile-email{
-font-size:13px;
-color:#777;
-margin-bottom:15px;
+/* ── FORM ── */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
 }
 
-/* CARD */
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1 / -1; }
 
-.card{
-background:white;
-padding:25px;
-border-radius:20px;
-box-shadow:0 5px 20px rgba(0,0,0,0.05);
-margin-bottom:25px;
+.form-group label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
-.section-title{
-font-weight:800;
-margin-bottom:20px;
+input, select, textarea {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 13px;
+  width: 100%;
+  transition: border-color .18s, box-shadow .18s;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px rgba(232,160,0,.12);
+  background: #fff;
+}
+textarea { resize: vertical; line-height: 1.55; }
+select { appearance: none; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6B6B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  padding-right: 36px;
 }
 
-/* GRID */
+/* ── SAVE BUTTON ── */
+.btn-save {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: var(--amber);
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background .18s, transform .1s;
+  min-width: 150px;
+}
+.btn-save:hover { background: var(--amber-dark); }
+.btn-save:active { transform: scale(.98); }
+.btn-save.saved { background: var(--success); }
 
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
+.form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
 }
 
-.form-group label{
-font-size:11px;
-font-weight:700;
-color:#777;
-display:block;
-margin-bottom:6px;
+.save-status {
+  font-size: 13px;
+  color: var(--text-secondary);
+  opacity: 0;
+  transition: opacity .3s;
+}
+.save-status.visible { opacity: 1; }
+
+/* ── FIELD STATUS CARD ── */
+.status-card {
+  background: linear-gradient(135deg, #FFFBEC 0%, #FFF4CC 100%);
+  border: 1px solid #FADA7A;
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
 }
 
-input,select,textarea{
-width:100%;
-padding:11px;
-border-radius:10px;
-border:1px solid #ddd;
-background:#fafafa;
-font-weight:600;
+.status-card input,
+.status-card select,
+.status-card textarea {
+  background: white;
+  border-color: #F0D060;
+}
+.status-card input:focus,
+.status-card select:focus,
+.status-card textarea:focus {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px rgba(232,160,0,.15);
 }
 
-/* BUTTON */
-
-.btn{
-margin-top:20px;
-width:100%;
-padding:13px;
-background:#f4b400;
-border:none;
-border-radius:10px;
-font-weight:700;
-color:white;
-cursor:pointer;
+/* ── TOAST ── */
+#toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  background: #1A1A1A;
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  transform: translateY(16px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s, transform .25s;
 }
+#toast.show { opacity: 1; transform: translateY(0); }
+#toast.success { background: var(--success); }
+#toast.error   { background: var(--error); }
 
-.btn:hover{
-background:#d39e00;
+/* ── MOBILE ── */
+@media (max-width: 640px) {
+  .topbar { padding: 0 16px; }
+  .page { padding: 20px 14px 48px; gap: 18px; }
+  .card, .status-card { padding: 20px; }
+  .grid { grid-template-columns: 1fr; }
+  .profile-hero { gap: 18px; }
+  .profile-name { font-size: 19px; }
+  .form-footer { flex-direction: column; align-items: stretch; }
+  .btn-save { width: 100%; justify-content: center; }
+  #toast { right: 14px; left: 14px; bottom: 18px; text-align: center; }
 }
-
-/* FIELD STATUS */
-
-.status-card{
-background:linear-gradient(135deg,#fff7cc,#ffe680);
-border:1px solid #f4b400;
-padding:25px;
-border-radius:18px;
-box-shadow:0 6px 20px rgba(244,180,0,0.15);
-}
-
-.status-card textarea{
-background:white;
-border:1px solid #f4b400;
-resize:none;
-}
-
-/* MOBILE */
-
-@media(max-width:700px){
-
-.grid{
-grid-template-columns:1fr;
-}
-
-.profile-img{
-width:110px;
-height:110px;
-}
-
-}
-
 </style>
-
 </head>
 
 <body>
 
+<!-- TOPBAR -->
 <div class="topbar">
-<div class="back" onclick="goBack()">← Dashboard</div>
-<div class="brand">Kanasu <span>Bee House</span></div>
+  <a class="back-btn" onclick="goBack()">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Dashboard
+  </a>
+  <div class="brand">Kanasu <span>Bee House</span></div>
 </div>
 
-<div class="container">
+<div class="page">
 
-<!-- PROFILE -->
+  <!-- PROFILE CARD -->
+  <div class="card">
+    <div class="profile-hero">
 
-<div class="profile-card">
+      <div class="avatar-wrap">
+        <img id="profileDisplay" class="profile-img" src="https://via.placeholder.com/150" alt="Profile Photo">
+        <div class="avatar-edit" title="Change photo" onclick="document.getElementById('imgUpload').click()">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M9 2l2 2-7 7H2v-2L9 2z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <input type="file" id="imgUpload" accept="image/*" style="display:none;">
+      </div>
 
-<img id="profileDisplay" class="profile-img" src="https://via.placeholder.com/150">
+      <div class="profile-info">
+        <div class="profile-name" id="displayName">Beekeeper</div>
+        <div class="profile-email" id="displayEmail">Loading…</div>
+        <div class="profile-meta">
+          <span class="badge" id="badgeHoney">🍯 Wild Honey</span>
+          <span class="badge" id="badgeLocation">📍 —</span>
+          <span class="badge" id="badgeExp">⏳ — yrs exp</span>
+        </div>
+      </div>
 
-<div class="upload-btn" onclick="document.getElementById('imgUpload').click()">Change Photo</div>
+    </div>
+  </div>
 
-<input type="file" id="imgUpload" accept="image/*" style="display:none;">
+  <!-- BEEKEEPER DETAILS -->
+  <div class="card">
+    <div class="section-header">
+      <div class="icon">🍯</div>
+      <h2>Beekeeper Details</h2>
+    </div>
 
-<div class="profile-name" id="displayName">Beekeeper</div>
-<div class="profile-email" id="displayEmail">loading...</div>
+    <div class="grid">
+
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="fullName" placeholder="Your full name">
+      </div>
+
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" id="phone" placeholder="+91 00000 00000">
+      </div>
+
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="userLocation" placeholder="City, State">
+      </div>
+
+      <div class="form-group">
+        <label>Honey Specialty</label>
+        <select id="honeyType">
+          <option>Wild Honey</option>
+          <option>Forest Honey</option>
+          <option>Multifloral</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Flower / Pollen Source</label>
+        <select id="flowerSource">
+          <option>Wild Forest</option>
+          <option>Coffee Blossom</option>
+          <option>Mustard Fields</option>
+          <option>Eucalyptus</option>
+          <option>Multifloral</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Years of Experience</label>
+        <input type="number" id="experience" placeholder="e.g. 5" min="0">
+      </div>
+
+      <div class="form-group">
+        <label>Active Bee Colonies</label>
+        <input type="number" id="hives" placeholder="e.g. 12" min="0">
+      </div>
+
+      <div class="form-group">
+        <label>Honey Production (kg / year)</label>
+        <input type="number" id="production" placeholder="e.g. 200" min="0">
+      </div>
+
+      <div class="form-group">
+        <label>Annual Revenue (₹)</label>
+        <input type="text" id="revenue" placeholder="e.g. 1,50,000">
+      </div>
+
+      <div class="form-group">
+        <label>Certifications</label>
+        <input type="text" id="certifications" placeholder="e.g. FSSAI, Organic India">
+      </div>
+
+      <div class="form-group full">
+        <label>Beekeeper Bio</label>
+        <textarea id="bio" rows="3" placeholder="A short description about you and your beekeeping journey…"></textarea>
+      </div>
+
+    </div>
+
+    <div class="form-footer">
+      <span class="save-status" id="saveStatus">All changes saved</span>
+      <button class="btn-save" onclick="updateProfile()" id="saveBtn">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+          <path d="M2 8l4 4 7-8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Save Profile
+      </button>
+    </div>
+  </div>
+
+  <!-- FIELD STATUS -->
+  <div class="status-card">
+    <div class="section-header">
+      <div class="icon">🐝</div>
+      <h2>Field Status Update</h2>
+    </div>
+
+    <div class="grid">
+
+      <div class="form-group">
+        <label>Hive Condition</label>
+        <select id="hiveCondition">
+          <option value="">— Select —</option>
+          <option>Excellent</option>
+          <option>Good</option>
+          <option>Needs Attention</option>
+          <option>Critical</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Last Inspection Date</label>
+        <input type="date" id="lastInspection">
+      </div>
+
+      <div class="form-group full">
+        <label>Status Notes</label>
+        <textarea id="activity" rows="3" placeholder="e.g. Hive 3 inspected — honey flow good, queen sighted, no signs of disease."></textarea>
+      </div>
+
+    </div>
+
+    <div class="form-footer">
+      <button class="btn-save" onclick="saveActivity()" id="statusBtn">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+          <path d="M7.5 1v7M4 5l3.5 3.5L11 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Update Status
+      </button>
+    </div>
+  </div>
 
 </div>
 
-<!-- DETAILS -->
-
-<div class="card">
-
-<div class="section-title">🍯 Beekeeper Details</div>
-
-<div class="grid">
-
-<div class="form-group">
-<label>Honey Specialty</label>
-<select id="honeyType">
-<option>Wild Honey</option>
-<option>Forest Honey</option>
-<option>Multifloral</option>
-</select>
-</div>
-
-<div class="form-group">
-<label>Location</label>
-<input type="text" id="userLocation" placeholder="City, State">
-</div>
-
-<div class="form-group">
-<label>Active Bee Colonies</label>
-<input type="number" id="hives">
-</div>
-
-<div class="form-group">
-<label>Annual Revenue (₹)</label>
-<input type="text" id="revenue">
-</div>
-
-<div class="form-group">
-<label>Years of Experience</label>
-<input type="number" id="experience">
-</div>
-
-<div class="form-group">
-<label>Flower Source</label>
-<select id="flowerSource">
-<option>Wild Forest</option>
-<option>Coffee Blossom</option>
-<option>Mustard Fields</option>
-<option>Eucalyptus</option>
-<option>Multifloral</option>
-</select>
-</div>
-
-<div class="form-group">
-<label>Honey Production (kg/year)</label>
-<input type="number" id="production">
-</div>
-
-<div class="form-group">
-<label>Phone</label>
-<input type="text" id="phone">
-</div>
-
-</div>
-
-<div style="margin-top:15px">
-
-<label>Beekeeper Bio</label>
-<textarea rows="3" id="bio"></textarea>
-
-</div>
-
-<button class="btn" onclick="updateProfile()" id="saveBtn">Save Profile</button>
-
-</div>
-
-<!-- FIELD STATUS -->
-
-<div class="status-card">
-
-<div class="section-title">🐝 Field Status</div>
-
-<textarea id="activity" rows="3" placeholder="Example: Hive 3 inspected, honey flow good"></textarea>
-
-<button class="btn" onclick="saveActivity()">Update Status</button>
-
-</div>
-
-</div>
+<!-- TOAST -->
+<div id="toast"></div>
 
 <script>
-
 const auth = firebase.auth();
-const db = firebase.database();
-let currentUser=null;
+const db   = firebase.database();
+let currentUser = null;
 
-auth.onAuthStateChanged(user=>{
-
-if(!user){
-window.location.href="index.html";
-}
-else{
-
-currentUser=user;
-
-document.getElementById("displayEmail").innerText=user.email;
-
-loadUserData(user.uid);
-
-}
-
+auth.onAuthStateChanged(user => {
+  if (!user) {
+    window.location.href = "index.html";
+  } else {
+    currentUser = user;
+    document.getElementById("displayEmail").innerText = user.email;
+    loadUserData(user.uid);
+  }
 });
 
-function loadUserData(uid){
+function loadUserData(uid) {
+  db.ref("users/" + uid).on("value", snap => {
+    const d = snap.val();
+    if (!d) return;
 
-db.ref("users/"+uid).on("value",snap=>{
+    setValue("displayName",    d.name            || "Beekeeper");
+    setValue("fullName",       d.name            || "");
+    setValue("honeyType",      d.honeyType       || "Wild Honey");
+    setValue("revenue",        d.totalRevenue    || "");
+    setValue("hives",          d.totalHives      || "");
+    setValue("userLocation",   d.location        || "");
+    setValue("experience",     d.experience      || "");
+    setValue("production",     d.production      || "");
+    setValue("flowerSource",   d.flowerSource    || "Wild Forest");
+    setValue("phone",          d.phone           || "");
+    setValue("bio",            d.bio             || "");
+    setValue("certifications", d.certifications  || "");
+    setValue("activity",       d.activity        || "");
+    setValue("hiveCondition",  d.hiveCondition   || "");
+    setValue("lastInspection", d.lastInspection  || "");
 
-const data=snap.val();
+    document.getElementById("badgeHoney").textContent    = "🍯 " + (d.honeyType  || "—");
+    document.getElementById("badgeLocation").textContent = "📍 " + (d.location   || "—");
+    document.getElementById("badgeExp").textContent      = "⏳ " + (d.experience ? d.experience + " yrs exp" : "—");
 
-if(data){
-
-document.getElementById("displayName").innerText=data.name || "Beekeeper";
-
-document.getElementById("honeyType").value=data.honeyType || "Wild Honey";
-document.getElementById("revenue").value=data.totalRevenue || "";
-document.getElementById("hives").value=data.totalHives || "";
-document.getElementById("userLocation").value=data.location || "";
-
-document.getElementById("experience").value=data.experience || "";
-document.getElementById("production").value=data.production || "";
-document.getElementById("flowerSource").value=data.flowerSource || "";
-document.getElementById("phone").value=data.phone || "";
-document.getElementById("bio").value=data.bio || "";
-
-document.getElementById("activity").value=data.activity || "";
-
-if(data.profileImageBase64){
-document.getElementById("profileDisplay").src=data.profileImageBase64;
+    if (d.profileImageBase64) {
+      document.getElementById("profileDisplay").src = d.profileImageBase64;
+    }
+  });
 }
 
+function setValue(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val;
 }
 
+async function updateProfile() {
+  const btn = document.getElementById("saveBtn");
+  btn.textContent = "Saving…";
+  btn.disabled = true;
+
+  try {
+    const name = document.getElementById("fullName").value.trim();
+    await db.ref("users/" + currentUser.uid).update({
+      name:           name,
+      honeyType:      document.getElementById("honeyType").value,
+      totalRevenue:   document.getElementById("revenue").value,
+      totalHives:     document.getElementById("hives").value,
+      location:       document.getElementById("userLocation").value,
+      experience:     document.getElementById("experience").value,
+      production:     document.getElementById("production").value,
+      flowerSource:   document.getElementById("flowerSource").value,
+      phone:          document.getElementById("phone").value,
+      bio:            document.getElementById("bio").value,
+      certifications: document.getElementById("certifications").value,
+    });
+
+    if (name) document.getElementById("displayName").innerText = name;
+    document.getElementById("badgeHoney").textContent    = "🍯 " + document.getElementById("honeyType").value;
+    document.getElementById("badgeLocation").textContent = "📍 " + (document.getElementById("userLocation").value || "—");
+    document.getElementById("badgeExp").textContent      = "⏳ " + (document.getElementById("experience").value ? document.getElementById("experience").value + " yrs exp" : "—");
+
+    showStatus("saveStatus");
+    showToast("Profile saved successfully", "success");
+  } catch (err) {
+    showToast("Failed to save. Please try again.", "error");
+  }
+
+  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 8l4 4 7-8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Save Profile`;
+  btn.disabled = false;
+}
+
+async function saveActivity() {
+  const btn = document.getElementById("statusBtn");
+  btn.textContent = "Updating…";
+  btn.disabled = true;
+
+  try {
+    await db.ref("users/" + currentUser.uid).update({
+      activity:       document.getElementById("activity").value,
+      hiveCondition:  document.getElementById("hiveCondition").value,
+      lastInspection: document.getElementById("lastInspection").value,
+    });
+    showToast("Field status updated 🐝", "success");
+  } catch (err) {
+    showToast("Failed to update status.", "error");
+  }
+
+  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1v7M4 5l3.5 3.5L11 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Update Status`;
+  btn.disabled = false;
+}
+
+document.getElementById("imgUpload").addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onloadend = function() {
+    const base64String = reader.result;
+    db.ref("users/" + currentUser.uid).update({ profileImageBase64: base64String })
+      .then(() => {
+        document.getElementById("profileDisplay").src = base64String;
+        showToast("Profile photo updated", "success");
+      });
+  };
+  reader.readAsDataURL(file);
 });
 
+function goBack() {
+  window.location.href = "welcome.html";
 }
 
-async function updateProfile(){
-
-const btn=document.getElementById("saveBtn");
-
-btn.innerText="Saving...";
-
-await db.ref("users/"+currentUser.uid).update({
-
-honeyType:document.getElementById("honeyType").value,
-totalRevenue:document.getElementById("revenue").value,
-totalHives:document.getElementById("hives").value,
-location:document.getElementById("userLocation").value,
-
-experience:document.getElementById("experience").value,
-production:document.getElementById("production").value,
-flowerSource:document.getElementById("flowerSource").value,
-phone:document.getElementById("phone").value,
-bio:document.getElementById("bio").value
-
-});
-
-btn.innerText="Saved ✓";
-
-setTimeout(()=>{
-btn.innerText="Save Profile";
-},2000);
-
+function showToast(msg, type = "") {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = "show " + type;
+  setTimeout(() => { t.className = ""; }, 3000);
 }
 
-async function saveActivity(){
-
-await db.ref("users/"+currentUser.uid).update({
-
-activity:document.getElementById("activity").value
-
-});
-
-alert("Field status updated 🐝");
-
+function showStatus(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add("visible");
+  setTimeout(() => el.classList.remove("visible"), 3000);
 }
-
-document.getElementById("imgUpload").addEventListener("change",function(e){
-
-const file=e.target.files[0];
-
-if(!file) return;
-
-const reader=new FileReader();
-
-reader.onloadend=function(){
-
-const base64String=reader.result;
-
-db.ref("users/"+currentUser.uid).update({
-profileImageBase64:base64String
-}).then(()=>{
-
-document.getElementById("profileDisplay").src=base64String;
-
-});
-
-};
-
-reader.readAsDataURL(file);
-
-});
-
-function goBack(){
-window.location.href="welcome.html";
-}
-
 </script>
 
 </body>
 </html>
-```
