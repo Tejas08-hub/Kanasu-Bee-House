@@ -36,27 +36,36 @@ min-height:100vh;
 /* TOPBAR */
 .topbar{
 display:flex;
-justify-content:center;
 align-items:center;
-padding:16px 20px;
-background:var(--glass);
+justify-content:center;
+padding:18px 20px;
+background:#ffffff; /* ✅ solid white */
 position:sticky;
 top:0;
 z-index:1000;
-border-bottom:2px solid rgba(244,180,0,.15);
+border-bottom:1px solid #eee;
+box-shadow:0 4px 12px rgba(0,0,0,0.05); /* ✅ soft shadow */
 position:relative;
 }
 
 .menu-btn{
 position:absolute;
-left:20px;
-width:42px;
-height:42px;
-border-radius:12px;
+left:12px;
+top:50%;
+transform:translateY(-50%);
+width:48px;
+height:48px;
+border-radius:14px;
 border:1px solid #eee;
-background:white;
-font-size:18px;
+background:#fff;
+font-size:22px;
 cursor:pointer;
+box-shadow:0 3px 10px rgba(0,0,0,0.08); /* ✅ depth */
+transition:0.2s;
+}
+
+.menu-btn:hover{
+background:#f9f9f9;
 }
 
 .profile-circle{
@@ -85,10 +94,10 @@ border-radius:50%;
 }
 
 .brand{
-font-size:20px;
+font-size:24px;
 font-weight:800;
+letter-spacing:0.5px;
 }
-
 /* DROPDOWN */
 .dropdown{
 display:none;
@@ -186,8 +195,25 @@ color:#666;
 }
 
 @media(max-width:600px){
+
 .cards{grid-template-columns:1fr;}
 #welcomeText{font-size:24px;}
+
+.topbar{
+padding:14px 10px;
+}
+
+.brand{
+font-size:18px;
+}
+
+.menu-btn{
+width:42px;
+height:42px;
+font-size:20px;
+left:8px;
+}
+
 }
 
 /* Paired Hives */
@@ -204,10 +230,6 @@ margin-bottom:8px;
 <div class="topbar">
 
 <button class="menu-btn" onclick="toggleMenu()">☰</button>
-
-<div class="profile-circle" id="profileCircle" onclick="openProfile()">
-T
-</div>
 
 <div class="dropdown" id="menuDropdown">
 
@@ -291,30 +313,27 @@ function openProfile(){
 window.location.href="profile.html";
 }
 
-firebase.auth().onAuthStateChanged(user=>{
-if(user){
+firebase.auth().onAuthStateChanged(user => {
+    if (user) {
 
-firebase.database().ref("users/"+user.uid).once("value")
-.then(snapshot=>{
-let data=snapshot.val();
+        firebase.database().ref("users/" + user.uid).once("value")
+        .then(snapshot => {
 
-if(data && data.name){
-welcomeText.innerHTML=
-`<span style="color:black;">Welcome </span>
-<span style="color:#f4b400;">${data.name}</span>`;
+            let data = snapshot.val();
 
-profileCircle.innerText=data.name.charAt(0).toUpperCase();
-}
+            // ✅ Always show something
+            let name = (data && data.name) ? data.name : "User";
 
-if(data && data.profileImageURL){
-profileCircle.innerHTML="<img src='"+data.profileImageURL+"'>";
-}
+            // ✅ Welcome text
+            document.getElementById("welcomeText").innerHTML =
+                `<span style="color:black;">Welcome </span>
+                 <span style="color:#f4b400;">${name}</span>`;
 
-});
+        });
 
-}else{
-window.location.href="index.html";
-}
+    } else {
+        window.location.href = "index.html";
+    }
 });
 
 function openDemo(){

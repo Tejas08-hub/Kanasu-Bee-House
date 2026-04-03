@@ -148,9 +148,20 @@ body {
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  object-fit: cover;
   border: 3px solid var(--amber);
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #f5f5f5;
+  font-weight: 600;
+  color: #888;
+}
+
+.profile-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .avatar-edit {
@@ -359,7 +370,9 @@ select { appearance: none; cursor: pointer;
     <div class="profile-hero">
 
       <div class="avatar-wrap">
-        <img id="profileDisplay" class="profile-img" src="https://via.placeholder.com/150" alt="Profile Photo">
+        <div id="profileDisplay" class="profile-img">
+  Profile
+</div>
         <div class="avatar-edit" title="Change photo" onclick="document.getElementById('imgUpload').click()">
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
             <path d="M9 2l2 2-7 7H2v-2L9 2z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/>
@@ -556,7 +569,8 @@ function loadUserData(uid) {
     document.getElementById("badgeExp").textContent      = "⏳ " + (d.experience ? d.experience + " yrs exp" : "—");
 
     if (d.profileImageBase64) {
-      document.getElementById("profileDisplay").src = d.profileImageBase64;
+      document.getElementById("profileDisplay").innerHTML =
+  `<img src="${d.profileImageBase64}">`;
     }
   });
 }

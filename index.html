@@ -319,21 +319,28 @@ loginPassword.value
 }
 
 function signup() {
-if(!signupName.value){ alert("Please enter your name"); return; }
 
-firebase.auth().createUserWithEmailAndPassword(
-signupEmail.value,
-signupPassword.value
-).then(userCredential=>{
+    if(!signupName.value){ 
+        alert("Please enter your name"); 
+        return; 
+    }
 
-firebase.database().ref("users/"+userCredential.user.uid).set({
-name: signupName.value,
-email: signupEmail.value
-});
+    firebase.auth().createUserWithEmailAndPassword(
+        signupEmail.value,
+        signupPassword.value
+    ).then(userCredential => {
 
-window.location.href="welcome.html";
+        return firebase.database().ref("users/" + userCredential.user.uid).set({
+            name: signupName.value,
+            email: signupEmail.value
+        });
 
-}).catch(err=>alert(err.message));
+    }).then(() => {
+
+        // ✅ ONLY ONE redirect AFTER save
+        window.location.href = "welcome.html";
+
+    }).catch(err => alert(err.message));
 }
 
 function showSignup(){
