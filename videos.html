@@ -4,276 +4,654 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Learning Center | Kanasu Bee House</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-
 <style>
-:root{
---primary:#f4b400;
---bg:#f8fafc;
---white:#ffffff;
---text:#1e293b;
+:root {
+  --primary: #f4b400;
+  --primary-light: #fffbea;
+  --primary-dark: #c98f00;
+  --bg: #f8fafc;
+  --white: #ffffff;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --card-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  --card-shadow-hover: 0 12px 28px rgba(0,0,0,0.12);
 }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Inter',sans-serif;
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
 }
 
-body{
-background:var(--bg);
-color:var(--text);
-min-height:100vh;
-display:flex;
-flex-direction:column;
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* NAVBAR */
-.header{
-background:var(--white);
-padding:18px 5%;
-display:flex;
-align-items:center;
-justify-content:space-between;
-border-bottom:1px solid #e2e8f0;
-position:sticky;
-top:0;
-z-index:100;
+.header {
+  background: var(--white);
+  padding: 16px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.back-btn{
-text-decoration:none;
-color:var(--text);
-font-weight:700;
-font-size:14px;
-background:#f1f5f9;
-padding:8px 16px;
-border-radius:10px;
-transition:.3s;
+.back-btn {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 13px;
+  background: #f1f5f9;
+  padding: 8px 14px;
+  border-radius: 10px;
+  transition: .2s;
+  white-space: nowrap;
 }
 
-.back-btn:hover{
-background:var(--primary);
-color:white;
+.back-btn:hover { background: var(--primary); color: white; }
+
+.logo {
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: .3px;
 }
 
-/* CENTER WRAPPER */
-.main-wrapper{
-flex:1;
-display:flex;
-justify-content:center;
-padding:30px 20px;
+/* MAIN WRAPPER */
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 28px 16px 48px;
 }
 
-/* BORDER WRAPPER */
-.learning-wrapper{
-width:100%;
-max-width:1200px;
-background:white;
-border:3px solid var(--primary);
-border-radius:22px;
-box-shadow:0 15px 40px rgba(244,180,0,0.08);
-overflow:hidden;
+.learning-wrapper {
+  width: 100%;
+  max-width: 1180px;
+  background: white;
+  border: 2.5px solid var(--primary);
+  border-radius: 22px;
+  box-shadow: 0 15px 40px rgba(244,180,0,0.10);
+  overflow: hidden;
 }
 
-/* TITLE INSIDE BORDER */
-.learning-title{
-text-align:center;
-font-weight:800;
-font-size:20px;
-padding:20px;
-background:#fffdf5;
-border-bottom:1px solid #eee;
+/* HERO TITLE BAR */
+.learning-title {
+  text-align: center;
+  font-weight: 800;
+  font-size: 20px;
+  padding: 22px 20px;
+  background: linear-gradient(135deg, #fffdf0 0%, #fff8dc 100%);
+  border-bottom: 1px solid #f0e0a0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  letter-spacing: .3px;
+}
+
+.title-icon {
+  width: 32px; height: 32px;
+  background: var(--primary);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+
+/* STATS BAR */
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  background: #fafafa;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  padding: 14px 28px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+  flex: 1;
+  min-width: 100px;
+}
+
+.stat-item:last-child { border-right: none; }
+
+.stat-num {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
 }
 
 /* CONTENT */
-.container{
-padding:30px 30px 40px;
+.container {
+  padding: 32px 28px 44px;
 }
 
-/* Sections */
-.section-title{
-font-size:22px;
-font-weight:800;
-margin:40px 0 20px;
-display:flex;
-align-items:center;
-gap:10px;
+/* SECTION */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 44px 0 8px;
 }
 
-.section-title span{
-background:var(--primary);
-width:4px;
-height:24px;
-border-radius:10px;
+.section-header:first-of-type { margin-top: 4px; }
+
+.section-accent {
+  background: var(--primary);
+  width: 4px;
+  height: 26px;
+  border-radius: 10px;
+  flex-shrink: 0;
 }
 
-/* Video Grid */
-.video-grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-gap:25px;
+.section-title {
+  font-size: 20px;
+  font-weight: 800;
 }
 
-.video-card{
-background:var(--white);
-border-radius:20px;
-overflow:hidden;
-text-decoration:none;
-color:inherit;
-box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);
-transition:.3s;
-border:1px solid #e2e8f0;
+.section-badge {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-left: auto;
+  white-space: nowrap;
 }
 
-.video-card:hover{
-transform:translateY(-5px);
-box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);
-border-color:var(--primary);
+.section-desc {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin: 0 0 20px 16px;
+  padding-left: 16px;
+  border-left: 2px solid #f0e0a0;
 }
 
-.thumbnail{
-width:100%;
-aspect-ratio:16/9;
-object-fit:cover;
-background:#eee;
+/* VIDEO GRID */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 22px;
 }
 
-.video-info{
-padding:20px;
+/* VIDEO CARD */
+.video-card {
+  background: var(--white);
+  border-radius: 18px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--card-shadow);
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
 }
 
-.badge{
-display:inline-block;
-padding:4px 10px;
-border-radius:6px;
-font-size:11px;
-font-weight:700;
-text-transform:uppercase;
-margin-bottom:10px;
+.video-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--card-shadow-hover);
+  border-color: var(--primary);
 }
 
-.badge.disease{
-background:#fee2e2;
-color:#ef4444;
+.thumbnail-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #e2e8f0;
+  overflow: hidden;
 }
 
-.badge.basics{
-background:#dcfce7;
-color:#166534;
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .3s ease;
 }
 
-.video-info h3{
-font-size:16px;
-font-weight:700;
-line-height:1.4;
+.video-card:hover .thumbnail { transform: scale(1.04); }
+
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0);
+  transition: background .25s;
 }
 
-.video-info p{
-font-size:13px;
-color:#64748b;
-margin-top:8px;
+.video-card:hover .play-overlay { background: rgba(0,0,0,0.18); }
+
+.play-btn {
+  width: 44px; height: 44px;
+  background: rgba(255,255,255,0.92);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity .25s, transform .25s;
 }
 
-/* Mobile */
-@media(max-width:600px){
-.video-grid{
-grid-template-columns:1fr;
+.video-card:hover .play-btn { opacity: 1; transform: scale(1); }
+
+.play-btn svg { margin-left: 3px; }
+
+.video-info {
+  padding: 16px 18px 18px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
-.learning-title{
-font-size:18px;
+
+.badge-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 9px;
+  flex-wrap: wrap;
 }
-.container{
-padding:20px;
+
+.badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .4px;
 }
+
+.badge.disease    { background: #fee2e2; color: #b91c1c; }
+.badge.basics     { background: #dcfce7; color: #166534; }
+.badge.nutrition  { background: #e0f2fe; color: #0369a1; }
+.badge.seasonal   { background: #f3e8ff; color: #7e22ce; }
+.badge.advanced   { background: #fef9c3; color: #854d0e; }
+.badge.equipment  { background: #f0fdf4; color: #15803d; }
+.badge.production { background: #fff7ed; color: #c2410c; }
+
+.duration-badge {
+  margin-left: auto;
+  background: #f1f5f9;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.video-info h3 {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.45;
+  margin-bottom: 6px;
+}
+
+.video-info p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.watch-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  text-decoration: none;
+}
+
+/* DIVIDER */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border), transparent);
+  margin: 44px 0 0;
+}
+
+/* FOOTER NOTE */
+.footer-note {
+  margin-top: 40px;
+  background: var(--primary-light);
+  border: 1px solid #f0e0a0;
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.footer-note-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.footer-note h4 {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.footer-note p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* MOBILE */
+@media (max-width: 700px) {
+  .main-wrapper { padding: 16px 10px 36px; }
+
+  .learning-wrapper { border-radius: 16px; }
+
+  .learning-title { font-size: 16px; padding: 16px 14px; }
+
+  .stats-bar { gap: 0; }
+  .stat-item { padding: 12px 10px; min-width: 80px; }
+  .stat-num { font-size: 18px; }
+  .stat-label { font-size: 10px; }
+
+  .container { padding: 20px 14px 32px; }
+
+  .section-title { font-size: 17px; }
+  .section-badge { display: none; }
+
+  .video-grid { grid-template-columns: 1fr; gap: 14px; }
+
+  .header { padding: 14px 4%; }
+  .logo { font-size: 13px; }
+}
+
+@media (min-width: 701px) and (max-width: 1000px) {
+  .video-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 </head>
-
 <body>
 
 <div class="header">
-<a href="welcome.html" class="back-btn">← Dashboard</a>
-<div style="font-weight:800;">
-KANASU <span style="color:#f4b400;">BEE HOUSE</span>
-</div>
+  <a href="welcome.html" class="back-btn">← Dashboard</a>
+  <div class="logo">KANASU <span style="color:#f4b400;">BEE HOUSE</span></div>
 </div>
 
 <div class="main-wrapper">
-
 <div class="learning-wrapper">
 
-<div class="learning-title">
-LEARNING CENTER 🎓
-</div>
+  <!-- Title -->
+  <div class="learning-title">
+    <div class="title-icon">🎓</div>
+    LEARNING CENTER
+  </div>
 
-<div class="container">
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num">12</div>
+      <div class="stat-label">Videos</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Topics</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">~3h</div>
+      <div class="stat-label">Content</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">Free</div>
+      <div class="stat-label">Access</div>
+    </div>
+  </div>
 
-<div class="section-title"><span></span>Disease Identification Guide</div>
-<p style="color:#64748b;margin-bottom:20px;font-size:14px;">
-Use these guides to verify ML predictions with visual inspections.
-</p>
+  <div class="container">
 
-<div class="video-grid">
+    <!-- SECTION 1: Disease ID -->
+    <div class="section-header">
+      <div class="section-accent"></div>
+      <div class="section-title">Disease Identification Guide</div>
+      <div class="section-badge">3 Videos</div>
+    </div>
+    <p class="section-desc">Use these guides to verify ML predictions with visual inspections of your hive.</p>
 
-<a href="http://www.youtube.com/watch?v=ZEKD5HlIuHM" target="_blank" class="video-card">
-<img src="https://img.youtube.com/vi/ZEKD5HlIuHM/maxresdefault.jpg" class="thumbnail">
-<div class="video-info">
-<span class="badge disease">Expert Guide</span>
-<h3>Comprehensive Honey Bee Diseases</h3>
-<p>Learn to identify bacterial pathogens, viruses, and fungi affecting colonies.</p>
-</div>
-</a>
+    <div class="video-grid">
 
-<a href="http://www.youtube.com/watch?v=yRS8KCexH9c" target="_blank" class="video-card">
-<img src="https://img.youtube.com/vi/yRS8KCexH9c/maxresdefault.jpg" class="thumbnail">
-<div class="video-info">
-<span class="badge disease">Management</span>
-<h3>Symptoms to Solutions</h3>
-<p>A guide to identifying honeybee pests and managing hive health.</p>
-</div>
-</a>
+      <a href="https://www.youtube.com/watch?v=ZEKD5HlIuHM" target="_blank" class="video-card">
+        <div class="thumbnail-wrap">
+          <img src="https://img.youtube.com/vi/ZEKD5HlIuHM/maxresdefault.jpg" class="thumbnail" alt="Comprehensive Honey Bee Diseases" loading="lazy">
+          <div class="play-overlay"><div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#1e293b"/></svg></div></div>
+        </div>
+        <div class="video-info">
+          <div class="badge-row"><span class="badge disease">Expert Guide</span><span class="duration-badge">28 min</span></div>
+          <h3>Comprehensive Honey Bee Diseases</h3>
+          <p>Learn to identify bacterial pathogens, viruses, and fungi affecting colonies.</p>
+        </div>
+      </a>
 
-<a href="http://www.youtube.com/watch?v=XGRf-fuM1Wg" target="_blank" class="video-card">
-<img src="https://img.youtube.com/vi/XGRf-fuM1Wg/maxresdefault.jpg" class="thumbnail">
-<div class="video-info">
-<span class="badge disease">Visual Check</span>
-<h3>How to spot Chalkbrood</h3>
-<p>Specific visual identification of Chalkbrood in a Honeybee colony.</p>
-</div>
-</a>
+      <a href="https://www.youtube.com/watch?v=yRS8KCexH9c" target="_blank" class="video-card">
+        <div class="thumbnail-wrap">
+          <img src="https://img.youtube.com/vi/yRS8KCexH9c/maxresdefault.jpg" class="thumbnail" alt="Symptoms to Solutions" loading="lazy">
+          <div class="play-overlay"><div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#1e293b"/></svg></div></div>
+        </div>
+        <div class="video-info">
+          <div class="badge-row"><span class="badge disease">Management</span><span class="duration-badge">22 min</span></div>
+          <h3>Symptoms to Solutions</h3>
+          <p>A guide to identifying honeybee pests and managing hive health effectively.</p>
+        </div>
+      </a>
 
-</div>
+      <a href="https://www.youtube.com/watch?v=XGRf-fuM1Wg" target="_blank" class="video-card">
+        <div class="thumbnail-wrap">
+          <img src="https://img.youtube.com/vi/XGRf-fuM1Wg/maxresdefault.jpg" class="thumbnail" alt="How to Spot Chalkbrood" loading="lazy">
+          <div class="play-overlay"><div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#1e293b"/></svg></div></div>
+        </div>
+        <div class="video-info">
+          <div class="badge-row"><span class="badge disease">Visual Check</span><span class="duration-badge">15 min</span></div>
+          <h3>How to Spot Chalkbrood</h3>
+          <p>Specific visual identification of Chalkbrood in a Honeybee colony.</p>
+        </div>
+      </a>
 
-<div class="section-title"><span></span>Beekeeping for Beginners</div>
+    </div>
 
-<div class="video-grid">
+    <!-- SECTION 2: Beginners -->
+    <div class="section-divider"></div>
+    <div class="section-header">
+      <div class="section-accent"></div>
+      <div class="section-title">Beekeeping for Beginners</div>
+      <div class="section-badge">2 Videos</div>
+    </div>
+    <p class="section-desc">Foundational knowledge for new beekeepers — inspections, nutrition, and colony wellness.</p>
 
-<a href="http://www.youtube.com/watch?v=Rt_NYm8Pxh0" target="_blank" class="video-card">
-<img src="https://img.youtube.com/vi/Rt_NYm8Pxh0/maxresdefault.jpg" class="thumbnail">
-<div class="video-info">
-<span class="badge basics">Tutorial</span>
-<h3>Essential Hive Inspection Checks</h3>
-<p>What to look for during your routine weekly hive inspections.</p>
-</div>
-</a>
+    <div class="video-grid">
 
-<a href="http://www.youtube.com/watch?v=IlLQ4C_dEhY" target="_blank" class="video-card">
-<img src="https://img.youtube.com/vi/IlLQ4C_dEhY/maxresdefault.jpg" class="thumbnail">
-<div class="video-info">
-<span class="badge basics">Maintenance</span>
-<h3>Bee Health & Maintenance Guide</h3>
-<p>Nutrition, hydration, and general colony wellness for new beekeepers.</p>
-</div>
-</a>
+      <a href="https://www.youtube.com/watch?v=Rt_NYm8Pxh0" target="_blank" class="video-card">
+        <div class="thumbnail-wrap">
+          <img src="https://img.youtube.com/vi/Rt_NYm8Pxh0/maxresdefault.jpg" class="thumbnail" alt="Essential Hive Inspection Checks" loading="lazy">
+          <div class="play-overlay"><div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#1e293b"/></svg></div></div>
+        </div>
+        <div class="video-info">
+          <div class="badge-row"><span class="badge basics">Tutorial</span><span class="duration-badge">18 min</span></div>
+          <h3>Essential Hive Inspection Checks</h3>
+          <p>What to look for during your routine weekly hive inspections.</p>
+        </div>
+      </a>
 
-</div>
+      <a href="https://www.youtube.com/watch?v=IlLQ4C_dEhY" target="_blank" class="video-card">
+        <div class="thumbnail-wrap">
+          <img src="https://img.youtube.com/vi/IlLQ4C_dEhY/maxresdefault.jpg" class="thumbnail" alt="Bee Health & Maintenance Guide" loading="lazy">
+          <div class="play-overlay"><div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#1e293b"/></svg></div></div>
+        </div>
+        <div class="video-info">
+          <div class="badge-row"><span class="badge basics">Maintenance</span><span class="duration-badge">25 min</span></div>
+          <h3>Bee Health &amp; Maintenance Guide</h3>
+          <p>Nutrition, hydration, and general colony wellness for new beekeepers.</p>
+        </div>
+      </a>
 
-</div>
-</div>
-</div>
+    </div>
+
+    <!-- SECTION 3: Seasonal Management (NEW) -->
+    <div class="section-divider"></div>
+    <div class="section-header">
+      <div class="section-accent"></div>
+      <div class="section-title">Seasonal Hive Management</div>
+      <div class="section-badge">3 Videos</div>
+    </div>
+    <p class="section-desc">Prepare your colony for every season — from winter cluster survival to spring build-up strategies.</p>
+
+    <div class="video-grid">
+
+      <a href="https://www.youtube.com/watch?v=GvBTgrGk4J8" target="_blank" class="video-card">
+        <div class="thumbnail-wrap">
+          <img src="https://img.youtube.com/vi/GvBTgrGk4J8/maxresdefault.jpg" class="thumbnail" alt="Preparing Hives for Winter" loading="lazy">
+          <div class="play-overlay"><div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#1e293b"/></svg></div></div>
+        </div>
+        <div class="video-info">
+          <div class="badge-row"><span class="badge seasonal">Winter Prep</span><span class="duration-badge">20 min</span></div>
+          <h3>Preparing Hives for Winter</h3>
+          <p>Step-by-step winterisation guide — insulation, ventilation, and food stores.</p>
+        </div>
+      </a>
+
+      <a href="https://www.youtube.com/watch?v=8RyMdAMBgzg" target="_blank" class="video-card">
+        <div class="thumbnail-wrap">
+          <img src="https://img.youtube.com/vi/8RyMdAMBgzg/maxresdefault.jpg" class="thumbnail" alt="Spring Colony Expansion" loading="lazy">
+          <div class="play-overlay"><div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#1e293b"/></svg></div></div>
+        </div>
+        <div class="video-info">
+          <div class="badge-row"><span class="badge seasonal">Spring</span><span class="duration-badge">17 min</span></div>
+          <h3>Spring Colony Expansion Tips</h3>
+          <p>How to support rapid spring build-up and prevent early swarming.</p>
+        </div>
+      </a>
+
+      <a href="https://www.youtube.com/watch?v=sM9m-BNhNaI" target="_blank" class="video-card">
+        <div class="thumbnail-wrap">
+          <img src="https://img.youtube.com/vi/sM9m-BNhNaI/maxresdefault.jpg" class="thumbnail" alt="Summer Swarm Control" loading="lazy">
+          <div class="play-overlay"><div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#1e293b"/></svg></div></div>
+        </div>
+        <div class="video-info">
+          <div class="badge-row"><span class="badge seasonal">Summer</span><span class="duration-badge">21 min</span></div>
+          <h3>Summer Swarm Control</h3>
+          <p>Recognise swarm triggers and use proven methods to keep your bees home.</p>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- SECTION 4: Honey Production (NEW) -->
+    <div class="section-divider"></div>
+    <div class="section-header">
+      <div class="section-accent"></div>
+      <div class="section-title">Honey Harvesting &amp; Production</div>
+      <div class="section-badge">2 Videos</div>
+    </div>
+    <p class="section-desc">From capping to extraction — get the best yield while keeping your colony strong.</p>
+
+    <div class="video-grid">
+
+      <a href="https://www.youtube.com/watch?v=WgGMUCWt6_w" target="_blank" class="video-card">
+        <div class="thumbnail-wrap">
+          <img src="https://img.youtube.com/vi/WgGMUCWt6_w/maxresdefault.jpg" class="thumbnail" alt="When and How to Harvest Honey" loading="lazy">
+          <div class="play-overlay"><div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#1e293b"/></svg></div></div>
+        </div>
+        <div class="video-info">
+          <div class="badge-row"><span class="badge production">Harvesting</span><span class="duration-badge">24 min</span></div>
+          <h3>When &amp; How to Harvest Honey</h3>
+          <p>Timing your harvest correctly and extracting with minimal disruption to the colony.</p>
+        </div>
+      </a>
+
+      <a href="https://www.youtube.com/watch?v=5Z2DVU38GQw" target="_blank" class="video-card">
+        <div class="thumbnail-wrap">
+          <img src="https://img.youtube.com/vi/5Z2DVU38GQw/maxresdefault.jpg" class="thumbnail" alt="Honey Quality and Storage" loading="lazy">
+          <div class="play-overlay"><div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#1e293b"/></svg></div></div>
+        </div>
+        <div class="video-info">
+          <div class="badge-row"><span class="badge production">Quality</span><span class="duration-badge">14 min</span></div>
+          <h3>Honey Quality &amp; Storage Guide</h3>
+          <p>Moisture control, filtration, and proper storage to preserve flavour and shelf life.</p>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- SECTION 5: Equipment (NEW) -->
+    <div class="section-divider"></div>
+    <div class="section-header">
+      <div class="section-accent"></div>
+      <div class="section-title">Tools &amp; Equipment</div>
+      <div class="section-badge">2 Videos</div>
+    </div>
+    <p class="section-desc">Understand your gear — from protective suits to hive tools and smokers.</p>
+
+    <div class="video-grid">
+
+      <a href="https://www.youtube.com/watch?v=uJ28P_5BIR8" target="_blank" class="video-card">
+        <div class="thumbnail-wrap">
+          <img src="https://img.youtube.com/vi/uJ28P_5BIR8/maxresdefault.jpg" class="thumbnail" alt="Essential Beekeeping Equipment" loading="lazy">
+          <div class="play-overlay"><div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#1e293b"/></svg></div></div>
+        </div>
+        <div class="video-info">
+          <div class="badge-row"><span class="badge equipment">Starter Kit</span><span class="duration-badge">16 min</span></div>
+          <h3>Essential Beekeeping Equipment</h3>
+          <p>Everything a new beekeeper needs — from veils and gloves to hive components.</p>
+        </div>
+      </a>
+
+      <a href="https://www.youtube.com/watch?v=ZsktaVQIGhM" target="_blank" class="video-card">
+        <div class="thumbnail-wrap">
+          <img src="https://img.youtube.com/vi/ZsktaVQIGhM/maxresdefault.jpg" class="thumbnail" alt="Using a Bee Smoker Correctly" loading="lazy">
+          <div class="play-overlay"><div class="play-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="3,1 13,7 3,13" fill="#1e293b"/></svg></div></div>
+        </div>
+        <div class="video-info">
+          <div class="badge-row"><span class="badge equipment">Technique</span><span class="duration-badge">11 min</span></div>
+          <h3>Using a Bee Smoker Correctly</h3>
+          <p>How to light, fuel, and apply smoke without harming or over-stressing your bees.</p>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Footer note -->
+    <div class="footer-note">
+      <div class="footer-note-icon">💡</div>
+      <div>
+        <h4>Pro Tip — Cross-check with ML Predictions</h4>
+        <p>After running an image scan in the ML Dashboard, use the Disease Identification videos above to visually confirm the diagnosis before starting any treatment. Videos with a <strong>Visual Check</strong> badge are especially useful for this.</p>
+      </div>
+    </div>
+
+  </div><!-- /.container -->
+</div><!-- /.learning-wrapper -->
+</div><!-- /.main-wrapper -->
 
 </body>
 </html>
