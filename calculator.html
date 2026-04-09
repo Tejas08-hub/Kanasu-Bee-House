@@ -7,6 +7,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 
 <style>
 :root{
@@ -56,7 +57,7 @@ font-size:14px;
 flex:1;
 display:flex;
 justify-content:center;
-align-items:center;
+align-items:flex-start;
 padding:20px;
 }
 
@@ -159,6 +160,156 @@ font-size:14px;
 .res-row b{
 font-weight:800;
 }
+
+/* ── NEW SECTIONS BELOW ── */
+
+.section-divider{
+border:none;
+border-top:1px solid #e2e8f0;
+margin:0;
+}
+
+.new-section{
+padding:28px 35px;
+display:none;
+border-top:1px solid #e2e8f0;
+}
+
+.section-title{
+font-size:13px;
+font-weight:700;
+color:#64748b;
+text-transform:uppercase;
+letter-spacing:0.06em;
+margin-bottom:18px;
+}
+
+/* CHART */
+.chart-wrap{
+position:relative;
+height:200px;
+width:100%;
+}
+
+.chart-legend{
+display:flex;
+gap:16px;
+margin-top:10px;
+font-size:12px;
+color:#64748b;
+}
+
+.chart-legend span{
+display:flex;
+align-items:center;
+gap:5px;
+}
+
+.leg-dot{
+width:10px;
+height:10px;
+border-radius:2px;
+display:inline-block;
+}
+
+/* METRICS GRID */
+.metrics-grid{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:10px;
+margin-bottom:6px;
+}
+
+.metric-card{
+background:#f8fafc;
+border:1px solid #e2e8f0;
+border-radius:12px;
+padding:12px 14px;
+}
+
+.metric-card .m-label{
+font-size:11px;
+color:#64748b;
+font-weight:600;
+margin-bottom:5px;
+}
+
+.metric-card .m-val{
+font-size:18px;
+font-weight:800;
+color:var(--dark);
+}
+
+.metric-card .m-val.green{ color:#1D9E75; }
+.metric-card .m-val.red{ color:#D85A30; }
+
+/* SLIDER ROWS */
+.slider-row{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:14px;
+}
+
+.slider-row .s-label{
+font-size:12px;
+font-weight:700;
+color:#64748b;
+min-width:120px;
+}
+
+.slider-row input[type=range]{
+flex:1;
+accent-color:var(--primary);
+}
+
+.slider-row .s-val{
+font-size:13px;
+font-weight:700;
+min-width:80px;
+text-align:right;
+color:var(--dark);
+}
+
+/* FORECAST */
+.forecast-item{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+padding:12px 0;
+border-bottom:1px solid #f1f5f9;
+font-size:13px;
+}
+
+.forecast-item:last-child{ border-bottom:none; }
+
+.forecast-item .f-label{ color:#64748b; font-weight:600; }
+.forecast-item .f-vals{ text-align:right; }
+.forecast-item .f-vals b{ display:block; font-size:14px; font-weight:800; }
+.forecast-item .f-vals small{ color:#64748b; font-size:12px; }
+
+/* RECOMMENDATION BOX */
+.rec-box{
+background:#fffdf0;
+border:1.5px solid #f4b400;
+border-radius:14px;
+padding:18px 20px;
+font-size:13px;
+line-height:1.7;
+color:var(--dark);
+}
+
+.rec-box .rec-tag{
+display:inline-block;
+background:#f4b400;
+color:white;
+font-size:10px;
+font-weight:700;
+padding:3px 8px;
+border-radius:6px;
+margin-bottom:10px;
+letter-spacing:0.05em;
+}
 </style>
 </head>
 
@@ -208,11 +359,66 @@ HONEY CALCULATOR 🍯
 </div>
 
 </div>
+
+<!-- ── PROFIT CHART ── -->
+<div class="new-section" id="sec-chart">
+<div class="section-title">Profit Chart</div>
+<div class="chart-wrap">
+<canvas id="profitChart"></canvas>
+</div>
+<div class="chart-legend">
+<span><span class="leg-dot" style="background:#f4b400"></span>Revenue</span>
+<span><span class="leg-dot" style="background:#b4b2a9"></span>Cost</span>
+<span><span class="leg-dot" id="leg-profit-dot" style="background:#1D9E75"></span>Profit</span>
+</div>
+</div>
+
+<!-- ── SCENARIO SIMULATOR ── -->
+<div class="new-section" id="sec-scenario">
+<div class="section-title">What-If Scenario Simulator</div>
+<div class="slider-row">
+<span class="s-label">Price per kg (₹)</span>
+<input type="range" id="s-price" min="50" max="2000" step="10" oninput="updateScenario()">
+<span class="s-val" id="sv-price">₹0</span>
+</div>
+<div class="slider-row">
+<span class="s-label">Quantity (kg)</span>
+<input type="range" id="s-kg" min="1" max="500" step="1" oninput="updateScenario()">
+<span class="s-val" id="sv-kg">0 kg</span>
+</div>
+<div class="slider-row">
+<span class="s-label">Total Cost (₹)</span>
+<input type="range" id="s-cost" min="100" max="200000" step="100" oninput="updateScenario()">
+<span class="s-val" id="sv-cost">₹0</span>
+</div>
+<div class="metrics-grid">
+<div class="metric-card"><div class="m-label">Revenue</div><div class="m-val" id="sm-rev">—</div></div>
+<div class="metric-card"><div class="m-label">Profit</div><div class="m-val" id="sm-profit">—</div></div>
+<div class="metric-card"><div class="m-label">Margin</div><div class="m-val" id="sm-margin">—</div></div>
+</div>
+</div>
+
+<!-- ── DEMAND FORECAST ── -->
+<div class="new-section" id="sec-forecast">
+<div class="section-title">Growth Forecast</div>
+<div id="forecast-list"></div>
+</div>
+
+<!-- ── SMART RECOMMENDATION ── -->
+<div class="new-section" id="sec-rec">
+<div class="section-title">Smart Pricing Recommendation</div>
+<div class="rec-box">
+<div class="rec-tag">AI INSIGHT</div>
+<div id="rec-text"></div>
+</div>
+</div>
+
+</div>
 </div>
 </div>
 
 <script>
-/* ORIGINAL LOGIC UNCHANGED */
+/* ── ORIGINAL LOGIC — UNTOUCHED ── */
 function calculate(){
 const kg=parseFloat(document.getElementById("kg").value);
 const price=parseFloat(document.getElementById("price").value);
@@ -236,6 +442,9 @@ document.getElementById("profit").innerText="₹"+profit.toLocaleString();
 document.getElementById("roi").innerText=roi+"%";
 document.getElementById("margin").innerText=margin+"%";
 document.getElementById("be").innerText=breakEven;
+
+/* ── NEW: show extra sections after calculate ── */
+renderExtras(kg, price, cost, revenue, profit, parseFloat(margin));
 }
 
 function exportPDF(){
@@ -285,6 +494,151 @@ doc.setTextColor(120);
 doc.text("Smart Apiculture Platform | Kanasu Bee House", 105, 285, null, null, "center");
 
 doc.save("Kanasu_Honey_Report.pdf");
+}
+
+/* ── NEW FUNCTIONS — added below, do not touch above ── */
+
+let chartInstance = null;
+
+function fmt(n){ return "₹" + Math.round(n).toLocaleString("en-IN"); }
+
+function renderExtras(kg, price, cost, revenue, profit, margin){
+  showSections();
+  drawChart(revenue, cost, profit);
+  initSliders(kg, price, cost);
+  buildForecast(kg, price, cost);
+  buildRecommendation(price, cost, kg, margin);
+}
+
+function showSections(){
+  ["sec-chart","sec-scenario","sec-forecast","sec-rec"].forEach(function(id){
+    document.getElementById(id).style.display = "block";
+  });
+}
+
+function drawChart(revenue, cost, profit){
+  const profitColor = profit >= 0 ? "#1D9E75" : "#D85A30";
+  document.getElementById("leg-profit-dot").style.background = profitColor;
+
+  const ctx = document.getElementById("profitChart").getContext("2d");
+  if(chartInstance){ chartInstance.destroy(); }
+
+  chartInstance = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Revenue","Cost","Profit"],
+      datasets:[{
+        data:[revenue, cost, profit],
+        backgroundColor:["#f4b400","#b4b2a9", profitColor],
+        borderRadius:8,
+        borderSkipped:false
+      }]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:function(c){ return " ₹"+Math.round(c.raw).toLocaleString("en-IN"); }}}
+      },
+      scales:{
+        y:{ticks:{callback:function(v){ return "₹"+Math.round(v/1000)+"k"; }, font:{size:11}}, grid:{color:"rgba(0,0,0,0.05)"}},
+        x:{ticks:{font:{size:12}}, grid:{display:false}}
+      }
+    }
+  });
+}
+
+function initSliders(kg, price, cost){
+  var sp = document.getElementById("s-price");
+  var sk = document.getElementById("s-kg");
+  var sc = document.getElementById("s-cost");
+
+  sp.min  = Math.max(10, Math.round(price * 0.3));
+  sp.max  = Math.round(price * 3);
+  sp.value = Math.round(price);
+
+  sk.min  = 1;
+  sk.max  = Math.round(kg * 5);
+  sk.value = Math.round(kg);
+
+  sc.min  = 100;
+  sc.max  = Math.round(cost * 5);
+  sc.value = Math.round(cost);
+
+  updateScenario();
+}
+
+function updateScenario(){
+  var sp   = parseFloat(document.getElementById("s-price").value) || 0;
+  var sk   = parseFloat(document.getElementById("s-kg").value)    || 0;
+  var sc   = parseFloat(document.getElementById("s-cost").value)  || 0;
+
+  document.getElementById("sv-price").innerText = "₹" + Math.round(sp);
+  document.getElementById("sv-kg").innerText    = Math.round(sk) + " kg";
+  document.getElementById("sv-cost").innerText  = fmt(sc);
+
+  var r = sk * sp;
+  var p = r - sc;
+  var m = r > 0 ? ((p / r) * 100) : 0;
+
+  var pEl = document.getElementById("sm-profit");
+  pEl.innerText  = fmt(p);
+  pEl.className  = "m-val " + (p >= 0 ? "green" : "red");
+
+  document.getElementById("sm-rev").innerText    = fmt(r);
+  document.getElementById("sm-margin").innerText = m.toFixed(1) + "%";
+}
+
+function buildForecast(kg, price, cost){
+  var scenarios = [
+    { label:"Next month",  growth:0.05,  months:1 },
+    { label:"In 3 months", growth:0.10,  months:3 },
+    { label:"In 6 months", growth:0.20,  months:6 }
+  ];
+
+  var html = "";
+  scenarios.forEach(function(s){
+    var projKg     = kg * (1 + s.growth * s.months);
+    var projRev    = projKg * price;
+    var projProfit = projRev - cost;
+    html += '<div class="forecast-item">'
+          +   '<div class="f-label">' + s.label + ' <span style="color:#f4b400">(+' + Math.round(s.growth * s.months * 100) + '%)</span></div>'
+          +   '<div class="f-vals">'
+          +     '<b>' + fmt(projRev) + '</b>'
+          +     '<small>Profit: ' + fmt(projProfit) + ' &nbsp;|&nbsp; ' + projKg.toFixed(0) + ' kg</small>'
+          +   '</div>'
+          + '</div>';
+  });
+
+  var cpk = cost / kg;
+  html += '<p style="margin-top:12px;font-size:12px;color:#64748b;">Every kg sold beyond break-even earns you <b style="color:var(--dark)">₹' + Math.round(price - cpk) + '</b> pure profit.</p>';
+
+  document.getElementById("forecast-list").innerHTML = html;
+}
+
+function buildRecommendation(price, cost, kg, margin){
+  var cpk              = cost / kg;
+  var recommendedPrice = Math.ceil(cpk * 1.4 / 10) * 10;
+  var premiumPrice     = Math.ceil(cpk * 1.7 / 10) * 10;
+  var text = "";
+
+  if(margin < 15){
+    text = "Your current margin of <b>" + margin.toFixed(1) + "%</b> is thin. "
+         + "Consider raising your price to <b>₹" + recommendedPrice + "/kg</b> for a healthy 40% margin, "
+         + "or <b>₹" + premiumPrice + "/kg</b> for a premium 70% margin. "
+         + "Selling directly at farmers markets or via subscriptions can help cut middlemen costs.";
+  } else if(margin < 40){
+    text = "Your margin is decent at <b>" + margin.toFixed(1) + "%</b>. "
+         + "To reach 50%, try pricing at <b>₹" + Math.ceil(cpk / 0.5 / 10) * 10 + "/kg</b>. "
+         + "Bundling 500g gift jars at a slight premium can boost perceived value and average order size.";
+  } else {
+    text = "Excellent margin at <b>" + margin.toFixed(1) + "%</b>! "
+         + "You're pricing well. Focus on scaling up volume — every extra 10 kg sold adds <b>₹" + Math.round((price - cpk) * 10).toLocaleString("en-IN") + "</b> profit. "
+         + "Consider specialty varieties (raw, organic, single-flora) to push margins even higher.";
+  }
+
+  document.getElementById("rec-text").innerHTML = text;
 }
 </script>
 
