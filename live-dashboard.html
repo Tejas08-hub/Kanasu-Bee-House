@@ -8,7 +8,35 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<!-- 🔥 Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="firebase.js"></script>
+
 <style>
+    /* 🔥 ML CARD FULL WIDTH */
+.ml-card{
+grid-column:1 / -1;  /* full width */
+padding:25px;
+border-radius:22px;
+border:2px solid #f4b400;
+}
+
+/* BIG TEXT */
+.ml-card .value{
+font-size:28px;
+}
+
+/* STATUS COLORS */
+.ml-card.healthy{
+background:#e8f5e9;
+border-color:#2e7d32;
+}
+
+.ml-card.alert{
+background:#ffebee;
+border-color:#d32f2f;
+}
 :root {
     --primary:#f4b400;
     --bg:#fffcf0;
@@ -100,9 +128,7 @@ box-shadow:var(--shadow);
 
 <div class="topbar">
 <button class="back-btn" onclick="goBack()">← Back</button>
-
 <h2 id="title">Live Hive</h2>
-
 <span style="background:#f4b400;color:white;padding:5px 12px;border-radius:8px;font-weight:700;font-size:10px;">
 LIVE
 </span>
@@ -110,28 +136,38 @@ LIVE
 
 <div class="main">
 
+<!-- ✅ CARDS -->
 <div class="cards">
+
 <div class="card">
 <h3>Temp</h3>
-<div id="temp" class="value">Waiting for data</div>
+<div id="temp" class="value">--</div>
 </div>
 
 <div class="card">
 <h3>Humid</h3>
-<div id="humidity" class="value">Waiting for data</div>
+<div id="humidity" class="value">--</div>
 </div>
 
 <div class="card">
 <h3>Sound</h3>
-<div id="sound" class="value">Waiting for data</div>
+<div id="sound" class="value">--</div>
 </div>
 
 <div class="card">
 <h3>Weight</h3>
-<div id="weight" class="value">Waiting for data</div>
+<div id="weight" class="value">--</div>
+</div>
+
+<!-- 🔥 YOUR ML RESULT CARD -->
+<div class="card ml-card">
+    <h3>Hive Sound Status</h3>
+    <div class="value" id="status">Loading...</div>
+    <p id="message" style="margin-top:10px;font-size:14px;"></p>
 </div>
 </div>
 
+<!-- ✅ GRAPHS -->
 <div class="graphs">
 <div class="graph-card"><canvas id="tChart"></canvas></div>
 <div class="graph-card"><canvas id="hChart"></canvas></div>
@@ -148,34 +184,18 @@ function goBack(){
 window.location.href="welcome.html";
 }
 
-/* Set Hive Name */
+/* Hive Name */
 let hiveName = localStorage.getItem("activeHiveName");
 if(hiveName){
 document.getElementById("title").innerText = hiveName;
 }
 
-/* Create Empty Charts */
-
+/* Charts */
 function createEmptyChart(id,color){
 return new Chart(document.getElementById(id),{
 type:'line',
-data:{
-labels:[],
-datasets:[{
-data:[],
-borderColor:color,
-backgroundColor:color+"22",
-fill:true,
-tension:0.4,
-borderWidth:2
-}]
-},
-options:{
-responsive:true,
-maintainAspectRatio:false,
-plugins:{legend:{display:false}},
-scales:{y:{beginAtZero:true}}
-}
+data:{labels:[],datasets:[{data:[],borderColor:color,backgroundColor:color+"22",fill:true,tension:0.4}]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}
 });
 }
 
@@ -183,6 +203,42 @@ createEmptyChart("tChart","#f4b400");
 createEmptyChart("hChart","#2e7d32");
 createEmptyChart("sChart","#e53935");
 createEmptyChart("wChart","#5e35b1");
+
+/* 🔥 FIREBASE LIVE DATA */
+const hiveId = "HIVE001";
+
+const ref = firebase.database().ref("hives/" + hiveId);
+
+ref.on("value", (snapshot) => {
+    const data = snapshot.val();
+
+    if(data){
+
+        const statusEl = document.getElementById("status");
+        const messageEl = document.getElementById("message");
+        const card = document.querySelector(".ml-card");
+
+        statusEl.innerText = data.status;
+        messageEl.innerText = data.message;
+
+        card.classList.remove("healthy","alert");
+
+        if(data.status === "Healthy"){
+            statusEl.style.color = "#2e7d32";
+            card.classList.add("healthy");
+        } else {
+            statusEl.style.color = "#d32f2f";
+            card.classList.add("alert");
+        }
+    
+
+        // Optional values (future ESP32)
+        document.getElementById("temp").innerText = data.temp || "--";
+        document.getElementById("humidity").innerText = data.humidity || "--";
+        document.getElementById("sound").innerText = data.sound || "--";
+        document.getElementById("weight").innerText = data.weight || "--";
+    }
+});
 
 </script>
 
