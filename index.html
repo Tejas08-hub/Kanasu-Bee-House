@@ -277,14 +277,33 @@
       .feature { text-align: left; }
     }
 
-    /* MOBILE: stack feature boxes one by one */
     @media (max-width: 560px) {
       .page { padding: 24px 16px; }
 
       .features {
-        grid-template-columns: 1fr;
-        gap: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
         max-width: 100%;
+      }
+
+      .feature {
+        width: 85%;
+        text-align: left;
+        background: white;
+        box-shadow: 0 8px 24px rgba(244, 180, 0, 0.13), 0 2px 8px rgba(0,0,0,0.07);
+        border: 1px solid rgba(244, 180, 0, 0.22);
+        animation: floatCard 3s ease-in-out infinite;
+      }
+
+      .feature:nth-child(2) { animation-delay: 0.4s; }
+      .feature:nth-child(3) { animation-delay: 0.8s; }
+      .feature:nth-child(4) { animation-delay: 1.2s; }
+
+      @keyframes floatCard {
+        0%, 100% { transform: translateY(0px); }
+        50%       { transform: translateY(-6px); }
       }
 
       .auth-card {
@@ -294,6 +313,10 @@
 
       .header h1 { font-size: 28px; }
       .subtitle { font-size: 14px; }
+    }
+
+    @media (max-width: 380px) {
+      .feature { width: 95%; }
     }
   </style>
 </head>
