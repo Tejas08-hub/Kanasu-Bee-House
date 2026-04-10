@@ -277,10 +277,15 @@
       .feature { text-align: left; }
     }
 
+    /* MOBILE: stack feature boxes one by one */
     @media (max-width: 560px) {
       .page { padding: 24px 16px; }
 
-      .features { gap: 12px; }
+      .features {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        max-width: 100%;
+      }
 
       .auth-card {
         padding: 28px 20px;
@@ -289,10 +294,6 @@
 
       .header h1 { font-size: 28px; }
       .subtitle { font-size: 14px; }
-    }
-
-    @media (max-width: 380px) {
-      .features { grid-template-columns: 1fr; }
     }
   </style>
 </head>
