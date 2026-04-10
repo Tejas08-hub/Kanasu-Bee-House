@@ -761,29 +761,63 @@ const handleFile = (e) => {
 camInput.onchange = handleFile;
 galInput.onchange = handleFile;
 
-// ── DUMMY RESULTS — Replace with your ML model output ──────────────────────
-const DUMMY_RESULT = {
-  disease: "Varroa Mite Infestation",
-  scientificName: "Varroa destructor",
-  confidence: 62,
-  severity: "moderate",
-  description: "Varroa mites are parasitic arachnids that attach to honey bees and feed on their fat bodies. They weaken bees, shorten lifespan, and transmit viruses. Visible as reddish-brown dots on adult bees or pupae.",
-  actions: [
-    { icon: "🔍", text: "Inspect hive manually — count mites on 100 adult bees" },
-    { icon: "🔊", text: "Confirm using hive sound correlation if available" },
-    { icon: "🌿", text: "Apply Oxalic Acid or Apivar strips (integrated pest management)" },
-    { icon: "📋", text: "Log findings in your hive record book" },
-    { icon: "👨‍⚕️", text: "Consult your local apiculture officer for treatment plan" },
-  ]
+// ── DISEASE DATABASE ────────────────────────────────────────────────────────
+const FLASK_API = "https://kanasu-bee-api-8vib.onrender.com/predict";
+const DISEASE_DB = {
+  healthy: {
+    disease: "Healthy Colony",
+    scientificName: "No disease detected",
+    confidence: null,
+    severity: "low",
+    description: "Your bee colony appears healthy. The bees show no visible signs of disease or infestation. Continue regular monitoring to maintain colony health.",
+    actions: [
+      { icon: "✅", text: "Continue regular hive inspection every 2 weeks" },
+      { icon: "📋", text: "Log this result in your hive health record book" },
+      { icon: "🍯", text: "Ensure adequate food stores — check honey and pollen levels" },
+      { icon: "🌿", text: "Maintain good ventilation and hygiene inside the hive" },
+      { icon: "👁️", text: "Watch for early signs of stress in next inspection" },
+    ]
+  },
+  varroa: {
+    disease: "Varroa Mite Infestation",
+    scientificName: "Varroa destructor",
+    confidence: null,
+    severity: "high",
+    description: "Varroa mites are parasitic arachnids that attach to honey bees and feed on their fat bodies. They weaken bees, shorten lifespan, and transmit deadly viruses like Deformed Wing Virus (DWV).",
+    actions: [
+      { icon: "🔍", text: "Inspect hive manually — count mites on 100 adult bees (>3% = treat)" },
+      { icon: "🌿", text: "Apply Oxalic Acid treatment or Apivar strips immediately" },
+      { icon: "🔊", text: "Correlate with acoustic alert if hive sound data is available" },
+      { icon: "📋", text: "Record mite count and treatment in your hive logbook" },
+      { icon: "👨‍⚕️", text: "Consult your local apiculture officer for treatment plan" },
+    ]
+  },
+  other_issue: {
+    disease: "Colony Stress Detected",
+    scientificName: "Multiple possible causes",
+    confidence: null,
+    severity: "moderate",
+    description: "Signs of colony stress detected. Possible causes include ant infestation, robbing by other colonies, missing queen, or environmental disturbance. Physical inspection is recommended.",
+    actions: [
+      { icon: "🐜", text: "Check for ant trails — apply grease bands on hive legs" },
+      { icon: "👸", text: "Verify queen presence — look for eggs and young larvae" },
+      { icon: "🚪", text: "Narrow the hive entrance to prevent robbing by other colonies" },
+      { icon: "🔎", text: "Inspect all frames for unusual brood patterns or pests" },
+      { icon: "📋", text: "Log findings and monitor colony behavior for 3–5 days" },
+    ]
+  }
 };
 // ───────────────────────────────────────────────────────────────────────────
 
+let lastResult = null; // store for PDF report
+
 async function runScan() {
-  if (!preview.src || preview.style.display === "none") {
+  if (!currentFile) {
     alert("Please upload or capture an image first.");
     return;
   }
 
+  // ── Start scanning UI ──
   scanner.style.display = "block";
   scanOverlay.style.display = "block";
   analyzeBtn.disabled = true;
@@ -792,17 +826,52 @@ async function runScan() {
   btnText.textContent = "Analyzing…";
   resultCard.style.display = "none";
 
-  // Replace with real fetch() to your ML model
-  await new Promise(r => setTimeout(r, 2800));
+  try {
+    // ── Send image to Flask API ──
+    const formData = new FormData();
+    formData.append("image", currentFile);
 
-  scanner.style.display = "none";
-  scanOverlay.style.display = "none";
-  analyzeBtn.disabled = false;
-  btnIcon.style.display = "inline";
-  spinner.style.display = "none";
-  btnText.textContent = "Identify Disease";
+    const response = await fetch(FLASK_API, {
+      method: "POST",
+      body: formData
+    });
 
-  populateResult(DUMMY_RESULT);
+    if (!response.ok) throw new Error("API error: " + response.status);
+
+    const data = await response.json();
+
+    // ── Map API response to display format ──
+    const dbEntry = DISEASE_DB[data.prediction] || DISEASE_DB["other_issue"];
+    const result = {
+      ...dbEntry,
+      confidence: Math.round(data.confidence),
+      allScores: data.all_scores || {}
+    };
+
+    lastResult = result; // save for PDF
+
+    // ── Stop scanning UI ──
+    scanner.style.display = "none";
+    scanOverlay.style.display = "none";
+    analyzeBtn.disabled = false;
+    btnIcon.style.display = "inline";
+    spinner.style.display = "none";
+    btnText.textContent = "Identify Disease";
+
+    populateResult(result);
+
+  } catch (err) {
+    // ── Error handling ──
+    scanner.style.display = "none";
+    scanOverlay.style.display = "none";
+    analyzeBtn.disabled = false;
+    btnIcon.style.display = "inline";
+    spinner.style.display = "none";
+    btnText.textContent = "Identify Disease";
+
+    alert("⚠️ Could not connect to the AI model.\n\nMake sure:\n1. Flask API is running (python app.py)\n2. It is running on port 5000\n\nError: " + err.message);
+    console.error("API Error:", err);
+  }
 }
 
 function populateResult(r) {
@@ -863,9 +932,10 @@ function resetScan() {
 }
 
 async function generateReport() {
+  if (!lastResult) { alert("Please run a scan first!"); return; }
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-  const r = DUMMY_RESULT;
+  const r = lastResult;
   const pageW = 210;
   const margin = 18;
   const now = new Date();
