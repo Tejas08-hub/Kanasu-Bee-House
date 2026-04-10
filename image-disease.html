@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bee Scan AI | Kanasu Bee House</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root {
   --primary: #f4b400;
-  --primary-dark: #d4980a;
+  --primary-dark: #c99200;
   --primary-light: #fff8e1;
   --dark: #0f172a;
   --dark2: #1e293b;
@@ -23,7 +23,7 @@
   --warning: #f59e0b;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'DM Sans', sans-serif; }
 
 body {
   background: var(--bg);
@@ -66,14 +66,11 @@ nav {
 }
 .nav-brand span { color: var(--primary); }
 
-.nav-badge {
-  background: var(--primary-light);
-  color: var(--primary-dark);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 20px;
-  letter-spacing: 0.5px;
+.nav-right {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--light);
+  font-family: 'DM Mono', monospace;
 }
 
 /* LAYOUT */
@@ -81,7 +78,6 @@ nav {
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0;
   max-width: 1100px;
   margin: 0 auto;
   width: 100%;
@@ -93,14 +89,7 @@ nav {
   .page { grid-template-columns: 1fr; padding: 16px; }
 }
 
-/* LEFT PANEL - Scanner */
-.panel-left {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.panel-right {
+.panel-left, .panel-right {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -160,7 +149,6 @@ nav {
   color: white;
   text-align: center;
   padding: 30px;
-  transition: opacity 0.3s;
 }
 
 .idle-icon {
@@ -210,7 +198,6 @@ nav {
   z-index: 9;
 }
 
-/* Image info strip */
 .img-info {
   padding: 10px 16px;
   background: #f1f5f9;
@@ -311,7 +298,31 @@ input[type="file"] { display: none; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* RIGHT PANEL */
+/* STATUS STRIP */
+.status-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.2);
+}
+
+.status-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--mid);
+  font-family: 'DM Mono', monospace;
+}
+
 /* HOW IT WORKS */
 .steps {
   padding: 16px 20px;
@@ -354,17 +365,8 @@ input[type="file"] { display: none; }
   line-height: 1.4;
 }
 
-/* RESULT BOX */
-.result-card {
-  display: none;
-}
-
-.result-header {
-  padding: 16px 20px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+/* RESULT CARD */
+.result-card { display: none; }
 
 .result-badge {
   display: inline-flex;
@@ -372,38 +374,21 @@ input[type="file"] { display: none; }
   gap: 6px;
   padding: 6px 14px;
   border-radius: 20px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
 }
 
-.badge-warning {
-  background: #fff7ed;
-  color: #c2410c;
-  border: 1px solid #fed7aa;
-}
+.badge-warning { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+.badge-success { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+.badge-danger  { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
 
-.badge-success {
-  background: #f0fdf4;
-  color: #15803d;
-  border: 1px solid #bbf7d0;
-}
-
-.badge-danger {
-  background: #fef2f2;
-  color: #b91c1c;
-  border: 1px solid #fecaca;
-}
-
-.confidence-bar-wrap {
-  padding: 0 20px 16px;
-}
+.confidence-bar-wrap { padding: 0 20px 16px; }
 
 .conf-label {
   display: flex;
   justify-content: space-between;
   margin-bottom: 6px;
 }
-
 .conf-label span { font-size: 12px; font-weight: 600; color: var(--mid); }
 .conf-label strong { font-size: 12px; color: var(--dark); }
 
@@ -422,7 +407,6 @@ input[type="file"] { display: none; }
   transition: width 1s ease;
 }
 
-/* Disease info */
 .disease-info {
   margin: 0 20px 16px;
   padding: 14px;
@@ -438,22 +422,27 @@ input[type="file"] { display: none; }
   margin-bottom: 4px;
 }
 
+.disease-sci {
+  font-size: 12px;
+  color: var(--mid);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
 .disease-desc {
   font-size: 12px;
   color: var(--mid);
   line-height: 1.5;
 }
 
-/* Actions */
-.actions-list {
-  margin: 0 20px 20px;
-}
+/* ACTIONS */
+.actions-list { margin: 0 20px 20px; }
 
 .actions-list h4 {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--mid);
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
   margin-bottom: 10px;
 }
@@ -484,21 +473,40 @@ input[type="file"] { display: none; }
   flex-shrink: 0;
 }
 
-/* Prototype note */
-.proto-note {
+/* REPORT META ROW */
+.result-meta {
+  display: flex;
+  gap: 12px;
   margin: 0 20px 16px;
-  padding: 10px 14px;
-  background: #eff6ff;
-  border-left: 3px solid #3b82f6;
-  border-radius: 0 8px 8px 0;
-  font-size: 12px;
-  color: #1d4ed8;
-  line-height: 1.5;
 }
 
-/* DOWNLOAD */
+.meta-chip {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  text-align: center;
+}
+
+.meta-chip .label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.meta-chip .value {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dark);
+}
+
+/* DOWNLOAD + RESET BUTTONS */
 .download-btn {
-  margin: 0 20px 20px;
+  margin: 0 20px 10px;
   width: calc(100% - 40px);
   background: var(--dark2);
   color: var(--white);
@@ -514,10 +522,8 @@ input[type="file"] { display: none; }
   gap: 8px;
   transition: all 0.2s;
 }
-
 .download-btn:hover { background: var(--dark); transform: translateY(-1px); }
 
-/* SCAN AGAIN */
 .scan-again-btn {
   margin: 0 20px 20px;
   width: calc(100% - 40px);
@@ -531,41 +537,21 @@ input[type="file"] { display: none; }
   cursor: pointer;
   transition: all 0.2s;
 }
-
 .scan-again-btn:hover { border-color: var(--primary); color: var(--primary-dark); }
 
-/* STATUS CHIPS */
-.status-strip {
+/* RESULT HEADER */
+.result-header {
+  padding: 16px 20px 10px;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  background: var(--bg);
-  border-top: 1px solid var(--border);
+  align-items: flex-start;
+  justify-content: space-between;
 }
 
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--success);
-  box-shadow: 0 0 0 3px rgba(16,185,129,0.2);
-}
-
-.status-text {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--mid);
-}
-
-/* DISCLAIMER */
-.disclaimer {
-  padding: 12px 20px;
-  border-top: 1px solid var(--border);
+.scan-time-label {
   font-size: 11px;
   color: var(--light);
-  line-height: 1.5;
-  text-align: center;
+  margin-top: 3px;
+  font-family: 'DM Mono', monospace;
 }
 </style>
 </head>
@@ -574,21 +560,20 @@ input[type="file"] { display: none; }
 <nav>
   <a href="welcome.html" class="back-link">← Dashboard</a>
   <div class="nav-brand">KANASU <span>BEE HOUSE</span></div>
-  <div class="nav-badge">AI BETA</div>
+  <div class="nav-right">BEE SCAN AI</div>
 </nav>
 
 <div class="page">
 
   <!-- LEFT: Scanner -->
   <div class="panel-left">
-
     <div class="card">
       <div class="card-header">
         <div class="card-title">
           <span class="dot"></span>
-          Hive Frame Scanner
+          Bee Image Scanner
         </div>
-        <span style="font-size:11px;color:var(--light);font-weight:600;">IMAGE ANALYSIS</span>
+        <span style="font-size:11px;color:var(--light);font-weight:600;font-family:'DM Mono',monospace;">IMAGE ANALYSIS</span>
       </div>
 
       <div class="viewport">
@@ -598,10 +583,10 @@ input[type="file"] { display: none; }
         <div class="idle-state" id="idleState">
           <div class="idle-icon">📷</div>
           <h3>No Image Loaded</h3>
-          <p>Upload a clear photo of your hive frame for AI-powered disease detection</p>
+          <p>Upload a clear photo of your bee or hive frame for disease detection</p>
         </div>
 
-        <img id="preview" alt="Hive frame preview">
+        <img id="preview" alt="Bee image preview">
       </div>
 
       <div class="img-info" id="imgInfo">
@@ -634,10 +619,9 @@ input[type="file"] { display: none; }
 
       <div class="status-strip">
         <div class="status-dot"></div>
-        <span class="status-text">AI Model Ready &nbsp;•&nbsp; Prototype v0.1 &nbsp;•&nbsp; Varroa Detection</span>
+        <span class="status-text">Model Ready &nbsp;•&nbsp; Varroa Detection</span>
       </div>
     </div>
-
   </div>
 
   <!-- RIGHT: Info + Results -->
@@ -653,13 +637,13 @@ input[type="file"] { display: none; }
           <div class="step-num">1</div>
           <div class="step-text">
             <strong>Capture or Upload</strong>
-            <small>Take a clear, well-lit photo of the hive frame or brood cells</small>
+            <small>Take a clear, well-lit photo of the bee, hive frame, or brood cells</small>
           </div>
         </div>
         <div class="step">
           <div class="step-num">2</div>
           <div class="step-text">
-            <strong>AI Scans the Image</strong>
+            <strong>Scan the Image</strong>
             <small>The model analyzes visual patterns associated with bee diseases</small>
           </div>
         </div>
@@ -678,13 +662,11 @@ input[type="file"] { display: none; }
           </div>
         </div>
       </div>
-      <div class="disclaimer">
-        ⚠️ This tool is a prototype. Results are indicative only — always confirm with a qualified beekeeper or apiculture officer.
-      </div>
     </div>
 
     <!-- Result card (shown after scan) -->
     <div class="card result-card" id="resultCard">
+
       <div class="card-header">
         <div class="card-title"><span class="dot"></span> Scan Result</div>
         <span id="resultBadge" class="result-badge badge-warning">⚠ Review Needed</span>
@@ -692,8 +674,8 @@ input[type="file"] { display: none; }
 
       <div class="result-header">
         <div>
-          <div class="disease-name" id="diseaseName">Varroa Mite Infestation</div>
-          <div style="font-size:12px;color:var(--light);margin-top:3px;" id="scanTime">Scanned just now</div>
+          <div class="disease-name" id="diseaseName">—</div>
+          <div class="scan-time-label" id="scanTime">—</div>
         </div>
       </div>
 
@@ -707,20 +689,30 @@ input[type="file"] { display: none; }
         </div>
       </div>
 
-      <div class="disease-info">
-        <div class="disease-name" style="font-size:14px;" id="diseaseShortName">Varroa destructor</div>
-        <div class="disease-desc" id="diseaseDesc">
-          Varroa mites are parasitic arachnids that attach to honey bees and feed on their fat bodies. They weaken bees, shorten lifespan, and transmit viruses. Visible as reddish-brown dots on adult bees or pupae.
+      <div class="result-meta">
+        <div class="meta-chip">
+          <div class="label">Risk Level</div>
+          <div class="value" id="metaSeverity">—</div>
         </div>
+        <div class="meta-chip">
+          <div class="label">Scan Date</div>
+          <div class="value" id="metaDate">—</div>
+        </div>
+        <div class="meta-chip">
+          <div class="label">Status</div>
+          <div class="value" style="color:var(--success)">Completed</div>
+        </div>
+      </div>
+
+      <div class="disease-info">
+        <div class="disease-name" style="font-size:14px;" id="diseaseShortName">—</div>
+        <div class="disease-sci" id="diseaseSci">—</div>
+        <div class="disease-desc" id="diseaseDesc">—</div>
       </div>
 
       <div class="actions-list">
         <h4>Recommended Actions</h4>
         <div id="actionsList"></div>
-      </div>
-
-      <div class="proto-note">
-        🔬 <strong>Prototype Notice:</strong> This model is still in training. Use this result as a starting point, not a final diagnosis. Confidence scores below 70% require manual verification.
       </div>
 
       <button class="download-btn" onclick="generateReport()">
@@ -730,25 +722,26 @@ input[type="file"] { display: none; }
       <button class="scan-again-btn" onclick="resetScan()">
         ↩ Scan Another Image
       </button>
+
     </div>
 
   </div>
 </div>
 
 <script>
-const camInput = document.getElementById("imgInputCam");
-const galInput = document.getElementById("imgInputGal");
-const preview = document.getElementById("preview");
-const scanner = document.getElementById("scanner");
+const camInput    = document.getElementById("imgInputCam");
+const galInput    = document.getElementById("imgInputGal");
+const preview     = document.getElementById("preview");
+const scanner     = document.getElementById("scanner");
 const scanOverlay = document.getElementById("scanOverlay");
-const idleState = document.getElementById("idleState");
-const analyzeBtn = document.getElementById("analyzeBtn");
-const spinner = document.getElementById("spinner");
-const btnText = document.getElementById("btnText");
-const btnIcon = document.getElementById("btnIcon");
-const resultCard = document.getElementById("resultCard");
+const idleState   = document.getElementById("idleState");
+const analyzeBtn  = document.getElementById("analyzeBtn");
+const spinner     = document.getElementById("spinner");
+const btnText     = document.getElementById("btnText");
+const btnIcon     = document.getElementById("btnIcon");
+const resultCard  = document.getElementById("resultCard");
 const howItWorksCard = document.getElementById("howItWorksCard");
-const imgInfo = document.getElementById("imgInfo");
+const imgInfo     = document.getElementById("imgInfo");
 
 let currentFile = null;
 
@@ -769,12 +762,11 @@ camInput.onchange = handleFile;
 galInput.onchange = handleFile;
 
 // ── DUMMY RESULTS — Replace with your ML model output ──────────────────────
-// When your model is ready, replace this object with actual API response data.
 const DUMMY_RESULT = {
   disease: "Varroa Mite Infestation",
   scientificName: "Varroa destructor",
-  confidence: 62,  // percentage
-  severity: "moderate",  // low | moderate | high
+  confidence: 62,
+  severity: "moderate",
   description: "Varroa mites are parasitic arachnids that attach to honey bees and feed on their fat bodies. They weaken bees, shorten lifespan, and transmit viruses. Visible as reddish-brown dots on adult bees or pupae.",
   actions: [
     { icon: "🔍", text: "Inspect hive manually — count mites on 100 adult bees" },
@@ -792,7 +784,6 @@ async function runScan() {
     return;
   }
 
-  // UI: scanning state
   scanner.style.display = "block";
   scanOverlay.style.display = "block";
   analyzeBtn.disabled = true;
@@ -801,10 +792,9 @@ async function runScan() {
   btnText.textContent = "Analyzing…";
   resultCard.style.display = "none";
 
-  // Simulate ML inference delay — replace with real fetch() call
+  // Replace with real fetch() to your ML model
   await new Promise(r => setTimeout(r, 2800));
 
-  // Stop scan animation
   scanner.style.display = "none";
   scanOverlay.style.display = "none";
   analyzeBtn.disabled = false;
@@ -812,30 +802,32 @@ async function runScan() {
   spinner.style.display = "none";
   btnText.textContent = "Identify Disease";
 
-  // Populate result UI
-  const r = DUMMY_RESULT;
-  populateResult(r);
+  populateResult(DUMMY_RESULT);
 }
 
 function populateResult(r) {
-  document.getElementById("diseaseName").textContent = r.disease;
-  document.getElementById("diseaseShortName").textContent = r.scientificName;
-  document.getElementById("diseaseDesc").textContent = r.description;
-  document.getElementById("scanTime").textContent = "Scanned at " + new Date().toLocaleTimeString();
-  document.getElementById("confValue").textContent = r.confidence + "%";
+  const now = new Date();
 
-  // Confidence bar
+  document.getElementById("diseaseName").textContent    = r.disease;
+  document.getElementById("diseaseShortName").textContent = r.disease;
+  document.getElementById("diseaseSci").textContent     = r.scientificName;
+  document.getElementById("diseaseDesc").textContent    = r.description;
+  document.getElementById("scanTime").textContent       = "Scanned at " + now.toLocaleTimeString();
+  document.getElementById("confValue").textContent      = r.confidence + "%";
+  document.getElementById("metaDate").textContent       = now.toLocaleDateString("en-IN", { day:"2-digit", month:"short", year:"numeric" });
+
+  const sevMap = { low: "Low", moderate: "Moderate", high: "High" };
+  document.getElementById("metaSeverity").textContent = sevMap[r.severity] || r.severity;
+
   setTimeout(() => {
     document.getElementById("confFill").style.width = r.confidence + "%";
   }, 100);
 
-  // Confidence color
   const fill = document.getElementById("confFill");
-  if (r.confidence >= 75) fill.style.background = "var(--success)";
-  else if (r.confidence >= 50) fill.style.background = "linear-gradient(90deg,var(--warning),var(--primary))";
-  else fill.style.background = "var(--danger)";
+  if (r.confidence >= 75)       fill.style.background = "var(--success)";
+  else if (r.confidence >= 50)  fill.style.background = "linear-gradient(90deg,var(--warning),var(--primary))";
+  else                          fill.style.background = "var(--danger)";
 
-  // Badge
   const badge = document.getElementById("resultBadge");
   if (r.severity === "high") {
     badge.className = "result-badge badge-danger";
@@ -848,7 +840,6 @@ function populateResult(r) {
     badge.textContent = "✓ Low Risk";
   }
 
-  // Actions
   const list = document.getElementById("actionsList");
   list.innerHTML = r.actions.map(a => `
     <div class="action-item">
@@ -857,7 +848,6 @@ function populateResult(r) {
     </div>
   `).join("");
 
-  // Show result
   howItWorksCard.style.display = "none";
   resultCard.style.display = "block";
 }
@@ -878,78 +868,132 @@ async function generateReport() {
   const r = DUMMY_RESULT;
   const pageW = 210;
   const margin = 18;
+  const now = new Date();
 
-  // ── Background header bar ──
+  // ── HEADER BAR ──
   doc.setFillColor(15, 23, 42);
-  doc.rect(0, 0, pageW, 42, "F");
+  doc.rect(0, 0, pageW, 48, "F");
 
-  // Logo text
+  // Yellow accent left strip
+  doc.setFillColor(244, 180, 0);
+  doc.rect(0, 0, 5, 48, "F");
+
+  // Organisation name
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(20);
-  doc.setTextColor(244, 180, 0);
-  doc.text("KANASU BEE HOUSE", margin, 18);
+  doc.setFontSize(18);
+  doc.setTextColor(255, 255, 255);
+  doc.text("KANASU BEE HOUSE", margin + 2, 17);
 
-  doc.setFontSize(10);
-  doc.setTextColor(148, 163, 184);
-  doc.text("Bee Scan AI  —  Disease Detection Report", margin, 28);
-
+  // Subtitle
+  doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
+  doc.setTextColor(148, 163, 184);
+  doc.text("Bee Scan AI  —  Disease Detection Report", margin + 2, 26);
+
+  // Date / Report ID
+  const reportId = "BSA-" + Date.now().toString().slice(-6);
+  doc.setFontSize(8);
   doc.setTextColor(100, 116, 139);
-  doc.text("Generated: " + new Date().toLocaleString(), margin, 36);
+  doc.text("Generated: " + now.toLocaleString(), margin + 2, 34);
+  doc.text("Report ID: " + reportId, margin + 2, 41);
 
-  // ── Divider ──
-  let y = 52;
+  // Right-side bee emoji block
+  doc.setFontSize(28);
+  doc.text("🐝", pageW - margin - 10, 32);
 
-  // ── Image ──
+  let y = 56;
+
+  // ── SCANNED IMAGE ──
   if (preview.src && preview.style.display !== "none") {
     try {
-      doc.addImage(preview.src, "JPEG", margin, y, pageW - margin * 2, 75, undefined, "MEDIUM");
-      y += 80;
+      // Section label
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139);
+      doc.text("SCANNED IMAGE", margin, y);
+      y += 4;
+
+      doc.addImage(preview.src, "JPEG", margin, y, pageW - margin * 2, 70, undefined, "MEDIUM");
+      y += 75;
     } catch(e) {}
   }
 
-  // ── Section: Diagnosis ──
+  // ── DIAGNOSIS BOX ──
+  // Background
   doc.setFillColor(248, 250, 252);
-  doc.roundedRect(margin, y, pageW - margin * 2, 38, 4, 4, "F");
   doc.setDrawColor(226, 232, 240);
-  doc.roundedRect(margin, y, pageW - margin * 2, 38, 4, 4, "S");
+  doc.roundedRect(margin, y, pageW - margin * 2, 40, 4, 4, "FD");
 
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(10);
-  doc.setTextColor(100, 116, 139);
-  doc.text("DIAGNOSIS", margin + 8, y + 9);
-
-  doc.setFontSize(16);
-  doc.setTextColor(15, 23, 42);
-  doc.text(r.disease, margin + 8, y + 20);
-
-  doc.setFontSize(10);
-  doc.setTextColor(100, 116, 139);
-  doc.text(r.scientificName, margin + 8, y + 28);
-
-  // Confidence chip
+  // Left accent bar on diagnosis box
   const confColor = r.confidence >= 75 ? [16,185,129] : r.confidence >= 50 ? [245,158,11] : [239,68,68];
   doc.setFillColor(...confColor);
-  doc.roundedRect(pageW - margin - 42, y + 8, 42, 16, 3, 3, "F");
+  doc.roundedRect(margin, y, 4, 40, 2, 2, "F");
+
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
-  doc.setTextColor(255, 255, 255);
-  doc.text(r.confidence + "% confidence", pageW - margin - 21, y + 18, { align: "center" });
+  doc.setFontSize(8);
+  doc.setTextColor(100, 116, 139);
+  doc.text("DIAGNOSIS", margin + 10, y + 9);
 
-  y += 46;
+  doc.setFontSize(15);
+  doc.setTextColor(15, 23, 42);
+  doc.text(r.disease, margin + 10, y + 20);
 
-  // ── Confidence bar ──
-  doc.setFont("helvetica", "normal");
+  doc.setFont("helvetica", "italic");
   doc.setFontSize(9);
   doc.setTextColor(100, 116, 139);
-  doc.text("Detection Confidence", margin, y + 5);
-  doc.setFillColor(226, 232, 240);
-  doc.roundedRect(margin, y + 8, pageW - margin * 2, 6, 3, 3, "F");
-  doc.setFillColor(...confColor);
-  doc.roundedRect(margin, y + 8, (pageW - margin * 2) * (r.confidence / 100), 6, 3, 3, "F");
-  y += 22;
+  doc.text(r.scientificName, margin + 10, y + 28);
 
-  // ── Description ──
+  // Confidence pill (right side)
+  doc.setFillColor(...confColor);
+  doc.roundedRect(pageW - margin - 38, y + 10, 38, 14, 3, 3, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.setTextColor(255, 255, 255);
+  doc.text(r.confidence + "%", pageW - margin - 19, y + 19, { align: "center" });
+  doc.setFontSize(7);
+  doc.text("CONFIDENCE", pageW - margin - 19, y + 27, { align: "center" });
+
+  y += 48;
+
+  // ── METADATA ROW ──
+  const chips = [
+    { label: "Risk Level", value: r.severity.charAt(0).toUpperCase() + r.severity.slice(1) },
+    { label: "Scan Date",  value: now.toLocaleDateString("en-IN", { day:"2-digit", month:"short", year:"numeric" }) },
+    { label: "Report ID",  value: reportId },
+  ];
+  const chipW = (pageW - margin * 2 - 8) / 3;
+  chips.forEach((c, i) => {
+    const cx = margin + i * (chipW + 4);
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(cx, y, chipW, 18, 3, 3, "FD");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7);
+    doc.setTextColor(148, 163, 184);
+    doc.text(c.label.toUpperCase(), cx + chipW / 2, y + 6, { align: "center" });
+    doc.setFontSize(9);
+    doc.setTextColor(15, 23, 42);
+    doc.text(c.value, cx + chipW / 2, y + 13, { align: "center" });
+  });
+  y += 26;
+
+  // ── CONFIDENCE BAR ──
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.setTextColor(15, 23, 42);
+  doc.text("Detection Confidence", margin, y);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(...confColor);
+  doc.text(r.confidence + "%", pageW - margin, y, { align: "right" });
+  y += 5;
+  doc.setFillColor(226, 232, 240);
+  doc.roundedRect(margin, y, pageW - margin * 2, 5, 2, 2, "F");
+  doc.setFillColor(...confColor);
+  doc.roundedRect(margin, y, (pageW - margin * 2) * (r.confidence / 100), 5, 2, 2, "F");
+  y += 14;
+
+  // ── ABOUT THIS DISEASE ──
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
   doc.setTextColor(15, 23, 42);
@@ -960,9 +1004,9 @@ async function generateReport() {
   doc.setTextColor(71, 85, 105);
   const descLines = doc.splitTextToSize(r.description, pageW - margin * 2);
   doc.text(descLines, margin, y);
-  y += descLines.length * 5 + 10;
+  y += descLines.length * 5 + 12;
 
-  // ── Recommended Actions ──
+  // ── RECOMMENDED ACTIONS ──
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
   doc.setTextColor(15, 23, 42);
@@ -971,41 +1015,38 @@ async function generateReport() {
 
   r.actions.forEach((a, i) => {
     doc.setFillColor(255, 248, 225);
-    doc.roundedRect(margin, y - 3, pageW - margin * 2, 12, 2, 2, "F");
+    doc.setDrawColor(253, 230, 138);
+    doc.roundedRect(margin, y - 3, pageW - margin * 2, 12, 2, 2, "FD");
+
+    // Number circle
+    doc.setFillColor(244, 180, 0);
+    doc.circle(margin + 6, y + 3, 4, "F");
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(9);
-    doc.setTextColor(180, 117, 23);
-    doc.text((i + 1) + ".", margin + 4, y + 5);
+    doc.setFontSize(8);
+    doc.setTextColor(15, 23, 42);
+    doc.text(String(i + 1), margin + 6, y + 5.5, { align: "center" });
+
     doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
     doc.setTextColor(30, 41, 59);
-    doc.text(a.text, margin + 12, y + 5);
+    doc.text(a.text, margin + 14, y + 5);
     y += 14;
   });
 
-  y += 4;
+  y += 6;
 
-  // ── Footer disclaimer ──
-  doc.setFillColor(239, 246, 255);
-  doc.roundedRect(margin, y, pageW - margin * 2, 18, 3, 3, "F");
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(8);
-  doc.setTextColor(29, 78, 216);
-  doc.text("Prototype Notice", margin + 6, y + 7);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(29, 78, 216);
-  doc.text("This is an AI prototype. Results are indicative only. Please confirm with a qualified apiculture officer.", margin + 6, y + 13);
-
-  // Footer line
+  // ── FOOTER BAR ──
   doc.setFillColor(15, 23, 42);
   doc.rect(0, 287, pageW, 10, "F");
+  doc.setFillColor(244, 180, 0);
+  doc.rect(0, 287, 5, 10, "F");
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.setTextColor(148, 163, 184);
-  doc.text("Kanasu Bee House  •  Bee Scan AI Report  •  kanasube.com", pageW / 2, 293, { align: "center" });
+  doc.text("Kanasu Bee House  •  Bee Scan AI  •  kanasube.com", pageW / 2, 293, { align: "center" });
 
-  doc.save("BeeScanAI_Report_" + Date.now() + ".pdf");
+  doc.save("BeeScanAI_Report_" + reportId + ".pdf");
 }
 </script>
-
 </body>
 </html>
