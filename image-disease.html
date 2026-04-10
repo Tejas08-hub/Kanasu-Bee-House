@@ -4,345 +4,1006 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bee Scan AI | Kanasu Bee House</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <style>
-:root{
---primary:#f4b400;
---dark:#1e293b;
---light-bg:#fcfcf9;
---white:#ffffff;
+:root {
+  --primary: #f4b400;
+  --primary-dark: #d4980a;
+  --primary-light: #fff8e1;
+  --dark: #0f172a;
+  --dark2: #1e293b;
+  --mid: #475569;
+  --light: #94a3b8;
+  --border: #e2e8f0;
+  --bg: #f8fafc;
+  --white: #ffffff;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
 }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Inter',sans-serif;
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+body {
+  background: var(--bg);
+  color: var(--dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-body{
-background:var(--light-bg);
-color:var(--dark);
-min-height:100vh;
-display:flex;
-flex-direction:column;
+/* NAV */
+nav {
+  padding: 14px 5%;
+  background: var(--white);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
-/* NAVBAR */
-nav{
-padding:15px 5%;
-background:var(--white);
-display:flex;
-justify-content:space-between;
-align-items:center;
-border-bottom:1px solid #eee;
-position:sticky;
-top:0;
-z-index:1000;
+.back-link {
+  text-decoration: none;
+  color: var(--mid);
+  font-weight: 600;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--dark); }
+
+.nav-brand {
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+.nav-brand span { color: var(--primary); }
+
+.nav-badge {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
 }
 
-.back-link{
-text-decoration:none;
-color:var(--dark);
-font-weight:700;
-font-size:14px;
+/* LAYOUT */
+.page {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 30px 20px;
+  gap: 24px;
 }
 
-/* MAIN WRAPPER */
-.main-wrapper{
-flex:1;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:20px;
+@media(max-width: 700px) {
+  .page { grid-template-columns: 1fr; padding: 16px; }
 }
 
-/* BORDER WRAPPER */
-.scan-wrapper{
-width:100%;
-max-width:600px;
-background:white;
-border:3px solid #f4b400;
-border-radius:20px;
-box-shadow:0 15px 40px rgba(244,180,0,0.1);
-overflow:hidden;
+/* LEFT PANEL - Scanner */
+.panel-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-/* TITLE */
-.scan-title{
-text-align:center;
-font-weight:800;
-font-size:18px;
-padding:18px;
-border-bottom:1px solid #eee;
-background:#fffdf5;
+.panel-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-/* INNER CONTENT */
-.content{
-padding:25px;
+/* CARD */
+.card {
+  background: var(--white);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  overflow: hidden;
 }
 
-/* Preview Card */
-.preview-card{
-border-radius:20px;
-margin-bottom:20px;
-overflow:hidden;
-border:1px solid #e2e8f0;
+.card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-/* Viewport */
-.viewport{
-width:100%;
-aspect-ratio:1;
-position:relative;
-overflow:hidden;
-border-radius:16px;
+.card-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-/* Elegant Dark Blue Gradient */
-#status{
-position:absolute;
-inset:0;
-background:linear-gradient(135deg,#0f172a,#1e293b);
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-color:white;
-text-align:center;
+.card-title .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  display: inline-block;
 }
 
-#preview{
-width:100%;
-height:100%;
-object-fit:cover;
-display:none;
+/* VIEWPORT */
+.viewport {
+  width: 100%;
+  aspect-ratio: 1;
+  position: relative;
+  overflow: hidden;
+  background: var(--dark2);
 }
 
-/* Scan bar */
-.scan-bar{
-display:none;
-position:absolute;
-width:100%;
-height:4px;
-background:#f4b400;
-box-shadow:0 0 15px #f4b400;
-animation:moveScan 2s linear infinite;
+.idle-state {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: linear-gradient(160deg, #0f172a 0%, #1e3a5f 100%);
+  color: white;
+  text-align: center;
+  padding: 30px;
+  transition: opacity 0.3s;
 }
 
-@keyframes moveScan{
-0%{top:0}
-100%{top:100%}
+.idle-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  background: rgba(244,180,0,0.15);
+  border: 2px dashed rgba(244,180,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin-bottom: 4px;
 }
 
-/* Buttons */
-.button-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:12px;
-margin-bottom:15px;
+.idle-state h3 { font-size: 16px; font-weight: 700; }
+.idle-state p { font-size: 12px; opacity: 0.55; line-height: 1.5; }
+
+#preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
 }
 
-.btn-action{
-background:white;
-border:1px solid #e2e8f0;
-padding:14px;
-border-radius:12px;
-font-weight:700;
-cursor:pointer;
-text-align:center;
+.scan-bar {
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  background: var(--primary);
+  box-shadow: 0 0 20px var(--primary), 0 0 40px rgba(244,180,0,0.4);
+  animation: moveScan 1.8s ease-in-out infinite;
+  z-index: 10;
 }
 
-.btn-main{
-width:100%;
-background:#f4b400;
-border:none;
-padding:16px;
-border-radius:12px;
-font-weight:800;
-cursor:pointer;
-margin-top:10px;
+@keyframes moveScan {
+  0% { top: 0%; }
+  100% { top: 100%; }
 }
 
-/* Result */
-.result-box{
-margin-top:20px;
-padding:20px;
-background:#f8fafc;
-border-radius:16px;
-display:none;
-border:1px solid #e2e8f0;
+.scan-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(244,180,0,0.04);
+  z-index: 9;
 }
 
-.download-btn{
-width:100%;
-background:#1e293b;
-color:white;
-border:none;
-padding:14px;
-border-radius:10px;
-font-weight:700;
-margin-top:15px;
-cursor:pointer;
+/* Image info strip */
+.img-info {
+  padding: 10px 16px;
+  background: #f1f5f9;
+  border-top: 1px solid var(--border);
+  display: none;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--mid);
 }
 
-input[type="file"]{
-display:none;
+/* UPLOAD BUTTONS */
+.upload-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 16px;
+}
+
+.upload-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 12px;
+  background: var(--bg);
+  border: 1.5px dashed var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.upload-btn:hover {
+  background: var(--primary-light);
+  border-color: var(--primary);
+}
+
+.upload-btn .icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.upload-btn span {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dark);
+  letter-spacing: 0.3px;
+}
+
+.upload-btn small {
+  font-size: 10px;
+  color: var(--light);
+}
+
+input[type="file"] { display: none; }
+
+/* ANALYZE BUTTON */
+.analyze-btn {
+  margin: 0 16px 16px;
+  width: calc(100% - 32px);
+  background: var(--primary);
+  color: var(--dark);
+  border: none;
+  padding: 16px;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+}
+
+.analyze-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+.analyze-btn:active { transform: translateY(0); }
+.analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* SPINNER */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(0,0,0,0.2);
+  border-top-color: var(--dark);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: none;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* RIGHT PANEL */
+/* HOW IT WORKS */
+.steps {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  font-weight: 800;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-text strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 2px;
+}
+
+.step-text small {
+  font-size: 12px;
+  color: var(--light);
+  line-height: 1.4;
+}
+
+/* RESULT BOX */
+.result-card {
+  display: none;
+}
+
+.result-header {
+  padding: 16px 20px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.badge-warning {
+  background: #fff7ed;
+  color: #c2410c;
+  border: 1px solid #fed7aa;
+}
+
+.badge-success {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.badge-danger {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.confidence-bar-wrap {
+  padding: 0 20px 16px;
+}
+
+.conf-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.conf-label span { font-size: 12px; font-weight: 600; color: var(--mid); }
+.conf-label strong { font-size: 12px; color: var(--dark); }
+
+.conf-track {
+  height: 8px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.conf-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--warning), var(--primary));
+  width: 0%;
+  transition: width 1s ease;
+}
+
+/* Disease info */
+.disease-info {
+  margin: 0 20px 16px;
+  padding: 14px;
+  background: var(--bg);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.disease-name {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
+
+.disease-desc {
+  font-size: 12px;
+  color: var(--mid);
+  line-height: 1.5;
+}
+
+/* Actions */
+.actions-list {
+  margin: 0 20px 20px;
+}
+
+.actions-list h4 {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--mid);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--dark);
+}
+
+.action-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Prototype note */
+.proto-note {
+  margin: 0 20px 16px;
+  padding: 10px 14px;
+  background: #eff6ff;
+  border-left: 3px solid #3b82f6;
+  border-radius: 0 8px 8px 0;
+  font-size: 12px;
+  color: #1d4ed8;
+  line-height: 1.5;
+}
+
+/* DOWNLOAD */
+.download-btn {
+  margin: 0 20px 20px;
+  width: calc(100% - 40px);
+  background: var(--dark2);
+  color: var(--white);
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.download-btn:hover { background: var(--dark); transform: translateY(-1px); }
+
+/* SCAN AGAIN */
+.scan-again-btn {
+  margin: 0 20px 20px;
+  width: calc(100% - 40px);
+  background: transparent;
+  color: var(--mid);
+  border: 1.5px solid var(--border);
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.scan-again-btn:hover { border-color: var(--primary); color: var(--primary-dark); }
+
+/* STATUS CHIPS */
+.status-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.2);
+}
+
+.status-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--mid);
+}
+
+/* DISCLAIMER */
+.disclaimer {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--light);
+  line-height: 1.5;
+  text-align: center;
 }
 </style>
 </head>
 <body>
 
 <nav>
-<a href="welcome.html" class="back-link">← Dashboard</a>
-<div style="font-weight:800;">
-KANASU <span style="color:var(--primary)">BEE HOUSE</span>
-</div>
+  <a href="welcome.html" class="back-link">← Dashboard</a>
+  <div class="nav-brand">KANASU <span>BEE HOUSE</span></div>
+  <div class="nav-badge">AI BETA</div>
 </nav>
 
-<div class="main-wrapper">
-<div class="scan-wrapper">
+<div class="page">
 
-<div class="scan-title">
-BEE SCAN AI 
-</div>
+  <!-- LEFT: Scanner -->
+  <div class="panel-left">
 
-<div class="content">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="dot"></span>
+          Hive Frame Scanner
+        </div>
+        <span style="font-size:11px;color:var(--light);font-weight:600;">IMAGE ANALYSIS</span>
+      </div>
 
-<div class="preview-card">
-<div class="viewport">
+      <div class="viewport">
+        <div class="scan-overlay" id="scanOverlay"></div>
+        <div class="scan-bar" id="scanner"></div>
 
-<div id="scanner" class="scan-bar"></div>
+        <div class="idle-state" id="idleState">
+          <div class="idle-icon">📷</div>
+          <h3>No Image Loaded</h3>
+          <p>Upload a clear photo of your hive frame for AI-powered disease detection</p>
+        </div>
 
-<div id="status">
-<div style="font-size:3rem;">📸</div>
-<div style="font-weight:700;font-size:14px;margin-top:10px;">
-AWAITING IMAGE
-</div>
-<div style="font-size:12px;opacity:.7;margin-top:6px;">
-Upload hive frame for AI analysis
-</div>
-</div>
+        <img id="preview" alt="Hive frame preview">
+      </div>
 
-<img id="preview">
+      <div class="img-info" id="imgInfo">
+        <span>📎</span>
+        <span id="imgFileName">image.jpg</span>
+        <span style="margin-left:auto;color:var(--success);font-weight:600;">✓ Ready</span>
+      </div>
 
-</div>
-</div>
+      <div class="upload-grid">
+        <label for="imgInputCam" class="upload-btn">
+          <div class="icon">📷</div>
+          <span>CAMERA</span>
+          <small>Take photo now</small>
+        </label>
+        <input type="file" id="imgInputCam" accept="image/*" capture="environment">
 
-<div class="button-grid">
-<label for="imgInputCam" class="btn-action">📷 CAMERA</label>
-<input type="file" id="imgInputCam" accept="image/*" capture="environment">
+        <label for="imgInputGal" class="upload-btn">
+          <div class="icon">🖼️</div>
+          <span>GALLERY</span>
+          <small>Choose from files</small>
+        </label>
+        <input type="file" id="imgInputGal" accept="image/*">
+      </div>
 
-<label for="imgInputGal" class="btn-action">🖼️ GALLERY</label>
-<input type="file" id="imgInputGal" accept="image/*">
-</div>
+      <button class="analyze-btn" id="analyzeBtn" onclick="runScan()">
+        <span id="btnIcon">🔍</span>
+        <span id="btnText">Identify Disease</span>
+        <div class="spinner" id="spinner"></div>
+      </button>
 
-<button class="btn-main" id="analyzeBtn" onclick="runScan()">
-Identify Disease
-</button>
+      <div class="status-strip">
+        <div class="status-dot"></div>
+        <span class="status-text">AI Model Ready &nbsp;•&nbsp; Prototype v0.1 &nbsp;•&nbsp; Varroa Detection</span>
+      </div>
+    </div>
 
-<div id="result" class="result-box">
-<div id="resultContent"></div>
-<button class="download-btn" onclick="generateReport()">
-📥 Download PDF Report
-</button>
-</div>
+  </div>
 
-</div>
-</div>
+  <!-- RIGHT: Info + Results -->
+  <div class="panel-right">
+
+    <!-- How it works (shown before scan) -->
+    <div class="card" id="howItWorksCard">
+      <div class="card-header">
+        <div class="card-title"><span class="dot"></span> How It Works</div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text">
+            <strong>Capture or Upload</strong>
+            <small>Take a clear, well-lit photo of the hive frame or brood cells</small>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text">
+            <strong>AI Scans the Image</strong>
+            <small>The model analyzes visual patterns associated with bee diseases</small>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text">
+            <strong>Get a Diagnosis</strong>
+            <small>Results include disease name, confidence score, and recommended actions</small>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text">
+            <strong>Download Report</strong>
+            <small>Save a PDF report to share with your local apiculture officer</small>
+          </div>
+        </div>
+      </div>
+      <div class="disclaimer">
+        ⚠️ This tool is a prototype. Results are indicative only — always confirm with a qualified beekeeper or apiculture officer.
+      </div>
+    </div>
+
+    <!-- Result card (shown after scan) -->
+    <div class="card result-card" id="resultCard">
+      <div class="card-header">
+        <div class="card-title"><span class="dot"></span> Scan Result</div>
+        <span id="resultBadge" class="result-badge badge-warning">⚠ Review Needed</span>
+      </div>
+
+      <div class="result-header">
+        <div>
+          <div class="disease-name" id="diseaseName">Varroa Mite Infestation</div>
+          <div style="font-size:12px;color:var(--light);margin-top:3px;" id="scanTime">Scanned just now</div>
+        </div>
+      </div>
+
+      <div class="confidence-bar-wrap">
+        <div class="conf-label">
+          <span>Detection Confidence</span>
+          <strong id="confValue">—</strong>
+        </div>
+        <div class="conf-track">
+          <div class="conf-fill" id="confFill"></div>
+        </div>
+      </div>
+
+      <div class="disease-info">
+        <div class="disease-name" style="font-size:14px;" id="diseaseShortName">Varroa destructor</div>
+        <div class="disease-desc" id="diseaseDesc">
+          Varroa mites are parasitic arachnids that attach to honey bees and feed on their fat bodies. They weaken bees, shorten lifespan, and transmit viruses. Visible as reddish-brown dots on adult bees or pupae.
+        </div>
+      </div>
+
+      <div class="actions-list">
+        <h4>Recommended Actions</h4>
+        <div id="actionsList"></div>
+      </div>
+
+      <div class="proto-note">
+        🔬 <strong>Prototype Notice:</strong> This model is still in training. Use this result as a starting point, not a final diagnosis. Confidence scores below 70% require manual verification.
+      </div>
+
+      <button class="download-btn" onclick="generateReport()">
+        📥 Download PDF Report
+      </button>
+
+      <button class="scan-again-btn" onclick="resetScan()">
+        ↩ Scan Another Image
+      </button>
+    </div>
+
+  </div>
 </div>
 
 <script>
-const camInput=document.getElementById("imgInputCam");
-const galInput=document.getElementById("imgInputGal");
-const preview=document.getElementById("preview");
-const scanner=document.getElementById("scanner");
-const status=document.getElementById("status");
-const resultDiv=document.getElementById("result");
-const resultContent=document.getElementById("resultContent");
-const analyzeBtn=document.getElementById("analyzeBtn");
+const camInput = document.getElementById("imgInputCam");
+const galInput = document.getElementById("imgInputGal");
+const preview = document.getElementById("preview");
+const scanner = document.getElementById("scanner");
+const scanOverlay = document.getElementById("scanOverlay");
+const idleState = document.getElementById("idleState");
+const analyzeBtn = document.getElementById("analyzeBtn");
+const spinner = document.getElementById("spinner");
+const btnText = document.getElementById("btnText");
+const btnIcon = document.getElementById("btnIcon");
+const resultCard = document.getElementById("resultCard");
+const howItWorksCard = document.getElementById("howItWorksCard");
+const imgInfo = document.getElementById("imgInfo");
 
-const handleFile=(e)=>{
-const file=e.target.files[0];
-if(file){
-preview.src=URL.createObjectURL(file);
-preview.style.display="block";
-status.style.display="none";
-resultDiv.style.display="none";
-scanner.style.display="none";
-}
+let currentFile = null;
+
+const handleFile = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  currentFile = file;
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
+  idleState.style.display = "none";
+  imgInfo.style.display = "flex";
+  document.getElementById("imgFileName").textContent = file.name;
+  resultCard.style.display = "none";
+  howItWorksCard.style.display = "block";
 };
 
-camInput.onchange=handleFile;
-galInput.onchange=handleFile;
+camInput.onchange = handleFile;
+galInput.onchange = handleFile;
 
-async function runScan(){
-if(!preview.src){
-alert("Please upload or capture an image");
-return;
+// ── DUMMY RESULTS — Replace with your ML model output ──────────────────────
+// When your model is ready, replace this object with actual API response data.
+const DUMMY_RESULT = {
+  disease: "Varroa Mite Infestation",
+  scientificName: "Varroa destructor",
+  confidence: 62,  // percentage
+  severity: "moderate",  // low | moderate | high
+  description: "Varroa mites are parasitic arachnids that attach to honey bees and feed on their fat bodies. They weaken bees, shorten lifespan, and transmit viruses. Visible as reddish-brown dots on adult bees or pupae.",
+  actions: [
+    { icon: "🔍", text: "Inspect hive manually — count mites on 100 adult bees" },
+    { icon: "🔊", text: "Confirm using hive sound correlation if available" },
+    { icon: "🌿", text: "Apply Oxalic Acid or Apivar strips (integrated pest management)" },
+    { icon: "📋", text: "Log findings in your hive record book" },
+    { icon: "👨‍⚕️", text: "Consult your local apiculture officer for treatment plan" },
+  ]
+};
+// ───────────────────────────────────────────────────────────────────────────
+
+async function runScan() {
+  if (!preview.src || preview.style.display === "none") {
+    alert("Please upload or capture an image first.");
+    return;
+  }
+
+  // UI: scanning state
+  scanner.style.display = "block";
+  scanOverlay.style.display = "block";
+  analyzeBtn.disabled = true;
+  btnIcon.style.display = "none";
+  spinner.style.display = "block";
+  btnText.textContent = "Analyzing…";
+  resultCard.style.display = "none";
+
+  // Simulate ML inference delay — replace with real fetch() call
+  await new Promise(r => setTimeout(r, 2800));
+
+  // Stop scan animation
+  scanner.style.display = "none";
+  scanOverlay.style.display = "none";
+  analyzeBtn.disabled = false;
+  btnIcon.style.display = "inline";
+  spinner.style.display = "none";
+  btnText.textContent = "Identify Disease";
+
+  // Populate result UI
+  const r = DUMMY_RESULT;
+  populateResult(r);
 }
 
-scanner.style.display="block";
-analyzeBtn.innerText="Analyzing Hive...";
-resultDiv.style.display="none";
+function populateResult(r) {
+  document.getElementById("diseaseName").textContent = r.disease;
+  document.getElementById("diseaseShortName").textContent = r.scientificName;
+  document.getElementById("diseaseDesc").textContent = r.description;
+  document.getElementById("scanTime").textContent = "Scanned at " + new Date().toLocaleTimeString();
+  document.getElementById("confValue").textContent = r.confidence + "%";
 
-await new Promise(r=>setTimeout(r,2500));
+  // Confidence bar
+  setTimeout(() => {
+    document.getElementById("confFill").style.width = r.confidence + "%";
+  }, 100);
 
-scanner.style.display="none";
-analyzeBtn.innerText="Identify Disease";
-resultDiv.style.display="block";
+  // Confidence color
+  const fill = document.getElementById("confFill");
+  if (r.confidence >= 75) fill.style.background = "var(--success)";
+  else if (r.confidence >= 50) fill.style.background = "linear-gradient(90deg,var(--warning),var(--primary))";
+  else fill.style.background = "var(--danger)";
 
-resultContent.innerHTML=`
-<b>🧠 Prediction:</b> Possible Varroa Mite (Prototype)<br>
-<b>Confidence:</b> Low – Model under training<br><br>
-<b>Recommended Actions:</b>
-<ul style="padding-left:20px;line-height:1.6;">
-<li>Inspect hive manually for mites</li>
-<li>Confirm using sound + image correlation</li>
-<li>Apply integrated pest management</li>
-<li>Consult local apiculture officer</li>
-</ul>
-`;
+  // Badge
+  const badge = document.getElementById("resultBadge");
+  if (r.severity === "high") {
+    badge.className = "result-badge badge-danger";
+    badge.textContent = "⚠ High Risk";
+  } else if (r.severity === "moderate") {
+    badge.className = "result-badge badge-warning";
+    badge.textContent = "⚠ Review Needed";
+  } else {
+    badge.className = "result-badge badge-success";
+    badge.textContent = "✓ Low Risk";
+  }
+
+  // Actions
+  const list = document.getElementById("actionsList");
+  list.innerHTML = r.actions.map(a => `
+    <div class="action-item">
+      <div class="action-icon">${a.icon}</div>
+      <span>${a.text}</span>
+    </div>
+  `).join("");
+
+  // Show result
+  howItWorksCard.style.display = "none";
+  resultCard.style.display = "block";
 }
 
-async function generateReport(){
-const {jsPDF}=window.jspdf;
-const doc=new jsPDF();
-
-doc.setDrawColor(180);
-doc.rect(10,10,190,277);
-
-doc.setFont("helvetica","bold");
-doc.setFontSize(18);
-doc.text("BEE SCAN AI REPORT",105,25,null,null,"center");
-
-doc.setFontSize(12);
-doc.text("Generated: "+new Date().toLocaleString(),20,40);
-
-if(preview.src){
-doc.addImage(preview.src,"JPEG",20,50,170,90);
+function resetScan() {
+  preview.style.display = "none";
+  idleState.style.display = "flex";
+  imgInfo.style.display = "none";
+  resultCard.style.display = "none";
+  howItWorksCard.style.display = "block";
+  document.getElementById("confFill").style.width = "0%";
+  currentFile = null;
 }
 
-let y=150;
+async function generateReport() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+  const r = DUMMY_RESULT;
+  const pageW = 210;
+  const margin = 18;
 
-doc.setFontSize(13);
-doc.text("Prediction: Possible Varroa Mite (Prototype)",20,y);
-y+=12;
-doc.text("Confidence: Low – Model under training",20,y);
-y+=18;
+  // ── Background header bar ──
+  doc.setFillColor(15, 23, 42);
+  doc.rect(0, 0, pageW, 42, "F");
 
-doc.text("Recommended Actions:",20,y);
-y+=12;
-doc.text("- Inspect hive manually for mites",25,y); y+=10;
-doc.text("- Confirm using sound + image correlation",25,y); y+=10;
-doc.text("- Apply integrated pest management",25,y); y+=10;
-doc.text("- Consult local apiculture officer",25,y);
+  // Logo text
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(20);
+  doc.setTextColor(244, 180, 0);
+  doc.text("KANASU BEE HOUSE", margin, 18);
 
-doc.save("Bee_Scan_AI_Report.pdf");
+  doc.setFontSize(10);
+  doc.setTextColor(148, 163, 184);
+  doc.text("Bee Scan AI  —  Disease Detection Report", margin, 28);
+
+  doc.setFontSize(9);
+  doc.setTextColor(100, 116, 139);
+  doc.text("Generated: " + new Date().toLocaleString(), margin, 36);
+
+  // ── Divider ──
+  let y = 52;
+
+  // ── Image ──
+  if (preview.src && preview.style.display !== "none") {
+    try {
+      doc.addImage(preview.src, "JPEG", margin, y, pageW - margin * 2, 75, undefined, "MEDIUM");
+      y += 80;
+    } catch(e) {}
+  }
+
+  // ── Section: Diagnosis ──
+  doc.setFillColor(248, 250, 252);
+  doc.roundedRect(margin, y, pageW - margin * 2, 38, 4, 4, "F");
+  doc.setDrawColor(226, 232, 240);
+  doc.roundedRect(margin, y, pageW - margin * 2, 38, 4, 4, "S");
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.setTextColor(100, 116, 139);
+  doc.text("DIAGNOSIS", margin + 8, y + 9);
+
+  doc.setFontSize(16);
+  doc.setTextColor(15, 23, 42);
+  doc.text(r.disease, margin + 8, y + 20);
+
+  doc.setFontSize(10);
+  doc.setTextColor(100, 116, 139);
+  doc.text(r.scientificName, margin + 8, y + 28);
+
+  // Confidence chip
+  const confColor = r.confidence >= 75 ? [16,185,129] : r.confidence >= 50 ? [245,158,11] : [239,68,68];
+  doc.setFillColor(...confColor);
+  doc.roundedRect(pageW - margin - 42, y + 8, 42, 16, 3, 3, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(255, 255, 255);
+  doc.text(r.confidence + "% confidence", pageW - margin - 21, y + 18, { align: "center" });
+
+  y += 46;
+
+  // ── Confidence bar ──
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(100, 116, 139);
+  doc.text("Detection Confidence", margin, y + 5);
+  doc.setFillColor(226, 232, 240);
+  doc.roundedRect(margin, y + 8, pageW - margin * 2, 6, 3, 3, "F");
+  doc.setFillColor(...confColor);
+  doc.roundedRect(margin, y + 8, (pageW - margin * 2) * (r.confidence / 100), 6, 3, 3, "F");
+  y += 22;
+
+  // ── Description ──
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.setTextColor(15, 23, 42);
+  doc.text("About This Disease", margin, y);
+  y += 6;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(71, 85, 105);
+  const descLines = doc.splitTextToSize(r.description, pageW - margin * 2);
+  doc.text(descLines, margin, y);
+  y += descLines.length * 5 + 10;
+
+  // ── Recommended Actions ──
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.setTextColor(15, 23, 42);
+  doc.text("Recommended Actions", margin, y);
+  y += 8;
+
+  r.actions.forEach((a, i) => {
+    doc.setFillColor(255, 248, 225);
+    doc.roundedRect(margin, y - 3, pageW - margin * 2, 12, 2, 2, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(180, 117, 23);
+    doc.text((i + 1) + ".", margin + 4, y + 5);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(30, 41, 59);
+    doc.text(a.text, margin + 12, y + 5);
+    y += 14;
+  });
+
+  y += 4;
+
+  // ── Footer disclaimer ──
+  doc.setFillColor(239, 246, 255);
+  doc.roundedRect(margin, y, pageW - margin * 2, 18, 3, 3, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(29, 78, 216);
+  doc.text("Prototype Notice", margin + 6, y + 7);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(29, 78, 216);
+  doc.text("This is an AI prototype. Results are indicative only. Please confirm with a qualified apiculture officer.", margin + 6, y + 13);
+
+  // Footer line
+  doc.setFillColor(15, 23, 42);
+  doc.rect(0, 287, pageW, 10, "F");
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(148, 163, 184);
+  doc.text("Kanasu Bee House  •  Bee Scan AI Report  •  kanasube.com", pageW / 2, 293, { align: "center" });
+
+  doc.save("BeeScanAI_Report_" + Date.now() + ".pdf");
 }
 </script>
 
