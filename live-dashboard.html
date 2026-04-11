@@ -14,29 +14,6 @@
 <script src="firebase.js"></script>
 
 <style>
-    /* 🔥 ML CARD FULL WIDTH */
-.ml-card{
-grid-column:1 / -1;  /* full width */
-padding:25px;
-border-radius:22px;
-border:2px solid #f4b400;
-}
-
-/* BIG TEXT */
-.ml-card .value{
-font-size:28px;
-}
-
-/* STATUS COLORS */
-.ml-card.healthy{
-background:#e8f5e9;
-border-color:#2e7d32;
-}
-
-.ml-card.alert{
-background:#ffebee;
-border-color:#d32f2f;
-}
 :root {
     --primary:#f4b400;
     --bg:#fffcf0;
@@ -48,78 +25,233 @@ body{background:var(--bg);color:#2d3436}
 
 /* TOPBAR */
 .topbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:12px 20px;
-background:var(--glass);
-border-bottom:1px solid rgba(244,180,0,.2);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 20px;
+    background:var(--glass);
+    border-bottom:1px solid rgba(244,180,0,.2);
 }
-
 .back-btn{
-background:white;
-border:1px solid #eee;
-padding:8px 14px;
-border-radius:10px;
-cursor:pointer;
-font-weight:600;
+    background:white;
+    border:1px solid #eee;
+    padding:8px 14px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
 }
 
 .main{
-padding:15px;
-max-width:1400px;
-margin:auto;
+    padding:15px;
+    max-width:1400px;
+    margin:auto;
 }
 
-/* CARDS */
+/* ── SENSOR CARDS ROW (4 cards) ── */
 .cards{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:12px;
-margin-bottom:20px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin-bottom:12px;
 }
 
 .card{
-background:white;
-padding:20px;
-border-radius:20px;
-box-shadow:var(--shadow);
+    background:white;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:var(--shadow);
 }
-
 .card h3{
-font-size:10px;
-color:#999;
-margin-bottom:5px;
-text-transform:uppercase;
+    font-size:10px;
+    color:#999;
+    margin-bottom:5px;
+    text-transform:uppercase;
 }
-
 .value{
-font-size:20px;
-font-weight:800;
+    font-size:20px;
+    font-weight:800;
 }
 
-/* GRAPHS */
+/* ── GAS LEVEL CARD (centered, same width as one sensor card) ── */
+.gas-row{
+    display:flex;
+    justify-content:center;
+    margin-bottom:12px;
+}
+.gas-row .card{
+    width:calc(25% - 9px); /* matches 1 card in the 4-col grid */
+    min-width:160px;
+}
+
+/* ── ANALYSIS CARDS ROW (Sound + Gas side by side) ── */
+.analysis-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:20px;
+}
+.ml-card{
+    padding:25px;
+    border-radius:22px;
+    border:2px solid #f4b400;
+}
+.ml-card .value{
+    font-size:28px;
+}
+.ml-card.healthy{
+    background:#e8f5e9;
+    border-color:#2e7d32;
+}
+.ml-card.alert{
+    background:#ffebee;
+    border-color:#d32f2f;
+}
+
+/* ── GRAPHS ── */
 .graphs{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
 }
-
 .graph-card{
-background:white;
-padding:15px;
-border-radius:20px;
-height:320px;
-box-shadow:var(--shadow);
+    background:white;
+    padding:15px;
+    border-radius:20px;
+    height:320px;
+    box-shadow:var(--shadow);
 }
 
-/* MOBILE */
-@media(max-width:900px){
-.cards{grid-template-columns:repeat(2,1fr);}
-.graphs{grid-template-columns:1fr;}
+/* ── UPLOAD SECTION ── */
+.upload-section{
+    margin-top:20px;
+    background:white;
+    border-radius:22px;
+    padding:25px;
+    box-shadow:var(--shadow);
+    border:2px dashed rgba(244,180,0,0.4);
 }
+.upload-section h2{
+    font-size:14px;
+    font-weight:700;
+    color:#2d3436;
+    margin-bottom:4px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+}
+.upload-section p.subtitle{
+    font-size:12px;
+    color:#999;
+    margin-bottom:18px;
+}
+.upload-area{
+    border:2px dashed #f4b400;
+    border-radius:16px;
+    padding:30px 20px;
+    text-align:center;
+    cursor:pointer;
+    transition:background 0.2s;
+    background:#fffcf0;
+    position:relative;
+}
+.upload-area:hover{ background:#fff8e1; }
+.upload-area.dragover{ background:#fff3cd; border-color:#e6a800; }
+.upload-area input[type="file"]{
+    position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+}
+.upload-icon{ font-size:36px; margin-bottom:8px; }
+.upload-area p{ font-size:13px; color:#666; margin:0; }
+.upload-area p span{ font-weight:700; color:#f4b400; }
+.upload-filename{
+    margin-top:10px;font-size:12px;color:#2d3436;font-weight:600;display:none;
+}
+.analyze-btn{
+    margin-top:16px;width:100%;padding:14px;
+    background:#f4b400;color:white;border:none;
+    border-radius:14px;font-size:14px;font-weight:700;
+    cursor:pointer;font-family:'Montserrat',sans-serif;
+    transition:background 0.2s,transform 0.1s;
+}
+.analyze-btn:hover:not(:disabled){ background:#e6a800; transform:translateY(-1px); }
+.analyze-btn:disabled{ background:#ddd; color:#aaa; cursor:not-allowed; transform:none; }
+
+/* Upload Result */
+.upload-result{
+    display:none;margin-top:18px;border-radius:16px;
+    padding:20px;border:2px solid #ddd;background:#f9f9f9;
+    animation:fadeIn 0.3s ease;
+}
+.upload-result.healthy{ background:#e8f5e9; border-color:#2e7d32; }
+.upload-result.alert  { background:#ffebee; border-color:#d32f2f; }
+.upload-result.stress { background:#fff3e0; border-color:#e65100; }
+.upload-result .result-label{ font-size:10px;text-transform:uppercase;color:#999;font-weight:600;margin-bottom:4px; }
+.upload-result .result-status{ font-size:26px;font-weight:800;margin-bottom:6px; }
+.upload-result.healthy .result-status{ color:#2e7d32; }
+.upload-result.alert   .result-status{ color:#d32f2f; }
+.upload-result.stress  .result-status{ color:#e65100; }
+.upload-result .result-message{ font-size:13px;color:#444;line-height:1.5; }
+.upload-result .confidence-row{ display:flex;gap:10px;margin-top:12px;flex-wrap:wrap; }
+.conf-badge{ font-size:11px;font-weight:700;padding:4px 10px;border-radius:8px;background:rgba(0,0,0,0.07); }
+
+/* dB meter */
+.db-meter-wrap{ margin-top:14px; }
+.db-meter-label{
+    font-size:11px;color:#888;font-weight:600;margin-bottom:4px;
+    display:flex;justify-content:space-between;
+}
+.db-meter-bar{ height:10px;border-radius:6px;background:#eee;overflow:hidden; }
+.db-meter-fill{ height:100%;border-radius:6px;transition:width 0.6s ease; }
+.db-meter-fill.level-healthy{ background:linear-gradient(90deg,#a5d6a7,#2e7d32); }
+.db-meter-fill.level-alert  { background:linear-gradient(90deg,#ffcc80,#f57c00); }
+.db-meter-fill.level-stress { background:linear-gradient(90deg,#ef9a9a,#d32f2f); }
+
+.tier-badge{
+    display:inline-block;font-size:10px;font-weight:700;
+    padding:2px 8px;border-radius:6px;margin-top:10px;
+    background:rgba(0,0,0,0.07);color:#555;
+    letter-spacing:0.3px;text-transform:uppercase;
+}
+.upload-result .result-file{ font-size:11px;color:#999;margin-top:8px; }
+
+/* Spinner */
+.spinner{
+    display:inline-block;width:16px;height:16px;
+    border:2px solid rgba(255,255,255,0.4);border-top-color:white;
+    border-radius:50%;animation:spin 0.7s linear infinite;
+    vertical-align:middle;margin-right:6px;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+@keyframes fadeIn{ from{ opacity:0;transform:translateY(6px); } to{ opacity:1;transform:none; } }
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+
+/* Tablet / Mobile ≤ 900px */
+@media(max-width:900px){
+    /* 4 sensor cards → 2 per row */
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+    /* Gas card: same width as one card in the 2-col grid */
+    .gas-row .card{
+        width:calc(50% - 6px);
+    }
+    /* Analysis cards stack */
+    .analysis-row{
+        grid-template-columns:1fr;
+    }
+    /* Graphs stack */
+    .graphs{
+        grid-template-columns:1fr;
+    }
+}
+
+/* Small mobile ≤ 500px */
 @media(max-width:500px){
-.cards{grid-template-columns:1fr;}
+    /* 2 sensor cards per row still looks fine, keep it */
+    .gas-row .card{
+        width:calc(50% - 6px);
+    }
 }
 </style>
 </head>
@@ -127,120 +259,301 @@ box-shadow:var(--shadow);
 <body>
 
 <div class="topbar">
-<button class="back-btn" onclick="goBack()">← Back</button>
-<h2 id="title">Live Hive</h2>
-<span style="background:#f4b400;color:white;padding:5px 12px;border-radius:8px;font-weight:700;font-size:10px;">
-LIVE
-</span>
+    <button class="back-btn" onclick="goBack()">← Back</button>
+    <h2 id="title">Live Hive</h2>
+    <span style="background:#f4b400;color:white;padding:5px 12px;border-radius:8px;font-weight:700;font-size:10px;">LIVE</span>
 </div>
 
 <div class="main">
 
-<!-- ✅ CARDS -->
-<div class="cards">
+    <!-- ── ROW 1: 4 Sensor Cards ── -->
+    <div class="cards">
+        <div class="card">
+            <h3>Temp</h3>
+            <div id="temp" class="value">--</div>
+        </div>
+        <div class="card">
+            <h3>Humid</h3>
+            <div id="humidity" class="value">--</div>
+        </div>
+        <div class="card">
+            <h3>Sound</h3>
+            <div id="sound" class="value">--</div>
+        </div>
+        <div class="card">
+            <h3>Weight</h3>
+            <div id="weight" class="value">--</div>
+        </div>
+    </div>
 
-<div class="card">
-<h3>Temp</h3>
-<div id="temp" class="value">--</div>
-</div>
+    <!-- ── ROW 2: Gas Level Card (centered) ── -->
+    <div class="gas-row">
+        <div class="card">
+            <h3>Gas Level</h3>
+            <div id="gas" class="value">--</div>
+        </div>
+    </div>
 
-<div class="card">
-<h3>Humid</h3>
-<div id="humidity" class="value">--</div>
-</div>
+    <!-- ── ROW 3: Sound Analysis + Gas Analysis side by side ── -->
+    <div class="analysis-row">
+        <div class="card ml-card" id="soundMlCard">
+            <h3>Hive Sound Status</h3>
+            <div class="value" id="status">--</div>
+            <p id="message" style="margin-top:10px;font-size:14px;"></p>
+        </div>
+        <div class="card ml-card" id="gasAnalysisCard">
+            <h3>Gas Analysis</h3>
+            <div class="value" id="gasStatus">--</div>
+            <p id="gasMessage" style="margin-top:10px;font-size:14px;"></p>
+        </div>
+    </div>
 
-<div class="card">
-<h3>Sound</h3>
-<div id="sound" class="value">--</div>
-</div>
+    <!-- ── ROW 4: Graphs ── -->
+    <div class="graphs">
+        <div class="graph-card"><canvas id="tChart"></canvas></div>
+        <div class="graph-card"><canvas id="hChart"></canvas></div>
+        <div class="graph-card"><canvas id="sChart"></canvas></div>
+        <div class="graph-card"><canvas id="wChart"></canvas></div>
+    </div>
 
-<div class="card">
-<h3>Weight</h3>
-<div id="weight" class="value">--</div>
-</div>
+    <!-- ── ROW 5: Manual Sound Upload ── -->
+    <div class="upload-section">
+        <h2>🔊 Manual Sound Analysis</h2>
+        <p class="subtitle">Upload a hive audio recording to check for queenlessness or healthy queen presence</p>
 
-<!-- 🔥 YOUR ML RESULT CARD -->
-<div class="card ml-card">
-    <h3>Hive Sound Status</h3>
-    <div class="value" id="status">Loading...</div>
-    <p id="message" style="margin-top:10px;font-size:14px;"></p>
-</div>
-</div>
+        <div class="upload-area" id="dropZone">
+            <input type="file" id="audioFile" accept=".wav,.mp3,.ogg,.flac,.m4a" />
+            <div class="upload-icon">🎵</div>
+            <p><span>Click to upload</span> or drag & drop audio file</p>
+            <p style="margin-top:4px;font-size:11px;color:#bbb;">WAV · MP3 · OGG · FLAC · M4A</p>
+        </div>
 
-<!-- ✅ GRAPHS -->
-<div class="graphs">
-<div class="graph-card"><canvas id="tChart"></canvas></div>
-<div class="graph-card"><canvas id="hChart"></canvas></div>
-<div class="graph-card"><canvas id="sChart"></canvas></div>
-<div class="graph-card"><canvas id="wChart"></canvas></div>
-</div>
+        <p class="upload-filename" id="uploadFilename">📎 No file selected</p>
 
-</div>
+        <button class="analyze-btn" id="analyzeBtn" disabled onclick="analyzeSound()">
+            Analyze Hive Sound
+        </button>
+
+        <div class="upload-result" id="uploadResult">
+            <div class="result-label">Manual Analysis Result</div>
+            <div class="result-status" id="uploadStatus">--</div>
+            <div class="result-message" id="uploadMessage"></div>
+            <div class="confidence-row" id="confidenceRow"></div>
+            <div class="db-meter-wrap" id="dbMeterWrap" style="display:none">
+                <div class="db-meter-label">
+                    <span>Sound Level (RMS dB)</span>
+                    <span id="dbValue">-- dB</span>
+                </div>
+                <div class="db-meter-bar">
+                    <div class="db-meter-fill" id="dbMeterFill" style="width:0%"></div>
+                </div>
+            </div>
+            <div class="tier-badge" id="tierBadge"></div>
+            <div class="result-file" id="uploadFileLabel"></div>
+        </div>
+    </div>
+
+</div><!-- /.main -->
 
 <script>
 
-/* Back */
+/* ── Back ── */
 function goBack(){
-window.location.href="welcome.html";
+    window.location.href = "welcome.html";
 }
 
-/* Hive Name */
+/* ── Hive Name ── */
 let hiveName = localStorage.getItem("activeHiveName");
 if(hiveName){
-document.getElementById("title").innerText = hiveName;
+    document.getElementById("title").innerText = hiveName;
 }
 
-/* Charts */
-function createEmptyChart(id,color){
-return new Chart(document.getElementById(id),{
-type:'line',
-data:{labels:[],datasets:[{data:[],borderColor:color,backgroundColor:color+"22",fill:true,tension:0.4}]},
-options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}
-});
-}
-
-createEmptyChart("tChart","#f4b400");
-createEmptyChart("hChart","#2e7d32");
-createEmptyChart("sChart","#e53935");
-createEmptyChart("wChart","#5e35b1");
-
-/* 🔥 FIREBASE LIVE DATA */
-const hiveId = "HIVE001";
-
-const ref = firebase.database().ref("hives/" + hiveId);
-
-ref.on("value", (snapshot) => {
-    const data = snapshot.val();
-
-    if(data){
-
-        const statusEl = document.getElementById("status");
-        const messageEl = document.getElementById("message");
-        const card = document.querySelector(".ml-card");
-
-        statusEl.innerText = data.status;
-        messageEl.innerText = data.message;
-
-        card.classList.remove("healthy","alert");
-
-        if(data.status === "Healthy"){
-            statusEl.style.color = "#2e7d32";
-            card.classList.add("healthy");
-        } else {
-            statusEl.style.color = "#d32f2f";
-            card.classList.add("alert");
+/* ── Charts ── */
+function createEmptyChart(id, color){
+    return new Chart(document.getElementById(id), {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                data: [],
+                borderColor: color,
+                backgroundColor: color + "22",
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
         }
-    
+    });
+}
 
-        // Optional values (future ESP32)
-        document.getElementById("temp").innerText = data.temp || "--";
-        document.getElementById("humidity").innerText = data.humidity || "--";
-        document.getElementById("sound").innerText = data.sound || "--";
-        document.getElementById("weight").innerText = data.weight || "--";
+createEmptyChart("tChart", "#f4b400");
+createEmptyChart("hChart", "#2e7d32");
+createEmptyChart("sChart", "#e53935");
+createEmptyChart("wChart", "#5e35b1");
+
+/* ── Firebase: get hive ID from URL ── */
+const params = new URLSearchParams(window.location.search);
+const hiveId = params.get("hive");
+
+if(!hiveId){
+    alert("No hive selected!");
+}
+
+/* ── Real-time data listener ── */
+const dbRef = firebase.database().ref("hives/" + hiveId);
+
+dbRef.on("value", (snapshot) => {
+    const data = snapshot.val();
+    if(!data) return;
+
+    /* Sensor values */
+    document.getElementById("temp").innerText     = data.sensors?.temperature ?? "--";
+    document.getElementById("humidity").innerText = data.sensors?.humidity    ?? "--";
+    document.getElementById("sound").innerText    = data.sensors?.sound_db    ?? "--";
+    document.getElementById("weight").innerText   = data.sensors?.weight      ?? "--";
+    document.getElementById("gas").innerText      = data.sensors?.gas_level   ?? "--";
+
+    /* 🤖 Sound ML card */
+    const statusEl  = document.getElementById("status");
+    const messageEl = document.getElementById("message");
+    const soundCard = document.getElementById("soundMlCard");
+
+    statusEl.innerText  = data.sound_ml?.status ?? "--";
+    messageEl.innerText = data.sound_ml?.queen_present
+        ? "Queen Present 🟢"
+        : "Queen Missing 🔴";
+
+    soundCard.classList.remove("healthy", "alert");
+    if(data.sound_ml?.status === "Healthy"){
+        statusEl.style.color = "#2e7d32";
+        soundCard.classList.add("healthy");
+    } else if(data.sound_ml?.status) {
+        statusEl.style.color = "#d32f2f";
+        soundCard.classList.add("alert");
+    }
+
+    /* 🧪 Gas Analysis card */
+    const gasStatusEl  = document.getElementById("gasStatus");
+    const gasMessageEl = document.getElementById("gasMessage");
+    const gasCard      = document.getElementById("gasAnalysisCard");
+
+    gasStatusEl.innerText  = data.gas_analysis?.status ?? "--";
+    gasMessageEl.innerText = data.gas_analysis?.pesticide_detected
+        ? "⚠️ Pesticide Detected"
+        : "Safe Environment ✅";
+
+    gasCard.classList.remove("healthy", "alert");
+    if(data.gas_analysis?.pesticide_detected){
+        gasStatusEl.style.color = "#d32f2f";
+        gasCard.classList.add("alert");
+    } else if(data.gas_analysis?.status) {
+        gasStatusEl.style.color = "#2e7d32";
+        gasCard.classList.add("healthy");
     }
 });
 
-</script>
+/* ── Manual Sound Upload ── */
+const BACKEND_URL    = "https://kanasu-bee-sound-api.onrender.com";
+const audioFileInput = document.getElementById("audioFile");
+const analyzeBtn     = document.getElementById("analyzeBtn");
+const filenameLabel  = document.getElementById("uploadFilename");
+const dropZone       = document.getElementById("dropZone");
 
+audioFileInput.addEventListener("change", () => {
+    const file = audioFileInput.files[0];
+    if(file){
+        filenameLabel.style.display = "block";
+        filenameLabel.innerText = "📎 " + file.name + " (" + (file.size/1024).toFixed(1) + " KB)";
+        analyzeBtn.disabled = false;
+    }
+});
+
+dropZone.addEventListener("dragover",  (e) => { e.preventDefault(); dropZone.classList.add("dragover"); });
+dropZone.addEventListener("dragleave", ()  => dropZone.classList.remove("dragover"));
+dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropZone.classList.remove("dragover");
+    const file = e.dataTransfer.files[0];
+    if(file){
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        audioFileInput.files = dt.files;
+        filenameLabel.style.display = "block";
+        filenameLabel.innerText = "📎 " + file.name + " (" + (file.size/1024).toFixed(1) + " KB)";
+        analyzeBtn.disabled = false;
+    }
+});
+
+async function analyzeSound(){
+    const file = audioFileInput.files[0];
+    if(!file) return;
+
+    analyzeBtn.disabled = true;
+    analyzeBtn.innerHTML = '<span class="spinner"></span> Analyzing...';
+
+    const resultCard = document.getElementById("uploadResult");
+    resultCard.style.display = "none";
+    resultCard.className = "upload-result";
+
+    try {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await fetch(BACKEND_URL + "/predict", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if(data.error){
+            showUploadError(data.error);
+            return;
+        }
+
+        resultCard.style.display = "block";
+        resultCard.classList.add(data.status_class);
+
+        document.getElementById("uploadStatus").innerText    = data.prediction;
+        document.getElementById("uploadMessage").innerText   = data.message;
+        document.getElementById("uploadFileLabel").innerText = "📂 File: " + data.filename;
+
+        const confRow = document.getElementById("confidenceRow");
+        confRow.innerHTML = "";
+        if(data.confidence && Object.keys(data.confidence).length > 0){
+            for(const [cls, pct] of Object.entries(data.confidence)){
+                const badge = document.createElement("span");
+                badge.className = "conf-badge";
+                badge.innerText = cls + ": " + pct + "%";
+                confRow.appendChild(badge);
+            }
+        }
+
+    } catch(err){
+        showUploadError("Could not connect to the prediction server. Check your backend URL or try again.");
+    }
+
+    analyzeBtn.disabled = false;
+    analyzeBtn.innerHTML = "Analyze Hive Sound";
+}
+
+function showUploadError(msg){
+    const resultCard = document.getElementById("uploadResult");
+    resultCard.style.display = "block";
+    resultCard.className = "upload-result alert";
+    document.getElementById("uploadStatus").innerText    = "Error";
+    document.getElementById("uploadMessage").innerText   = "❌ " + msg;
+    document.getElementById("confidenceRow").innerHTML   = "";
+    document.getElementById("uploadFileLabel").innerText = "";
+    document.getElementById("analyzeBtn").disabled       = false;
+    document.getElementById("analyzeBtn").innerHTML      = "Analyze Hive Sound";
+}
+
+</script>
 </body>
 </html>
