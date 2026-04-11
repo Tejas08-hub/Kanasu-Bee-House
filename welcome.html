@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kanasu Bee House - Welcome</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -13,388 +13,545 @@
 <script src="firebase.js"></script>
 
 <style>
-:root{
---primary:#f4b400;
---bg:#fffcf0;
---glass:rgba(255,255,255,.95);
---shadow:0 15px 45px rgba(0,0,0,.08);
+:root {
+  --amber: #D4920A;
+  --amber-hover: #B87C08;
+  --amber-light: #FDF6E8;
+  --amber-mid: rgba(212,146,10,0.13);
+  --amber-border: rgba(212,146,10,0.26);
+  --surface: #ffffff;
+  --bg: #F7F5F0;
+  --text: #1A1917;
+  --text-2: #68635D;
+  --text-3: #A39E98;
+  --border: rgba(26,25,23,0.08);
+  --shadow-xs: 0 1px 4px rgba(0,0,0,0.05);
+  --shadow-sm: 0 4px 16px rgba(0,0,0,0.07);
+  --shadow-md: 0 14px 44px rgba(0,0,0,0.09);
+  --r-sm: 10px;
+  --r-md: 15px;
+  --r-lg: 20px;
 }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Montserrat',sans-serif;
-}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-body{
-background:var(--bg);
-color:#2d3436;
-min-height:100vh;
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  min-height: 100vh;
 }
 
 /* TOPBAR */
-.topbar{
-display:flex;
-align-items:center;
-justify-content:center;
-padding:18px 20px;
-background:#ffffff; /* ✅ solid white */
-position:sticky;
-top:0;
-z-index:1000;
-border-bottom:1px solid #eee;
-box-shadow:0 4px 12px rgba(0,0,0,0.05); /* ✅ soft shadow */
-position:relative;
+.topbar {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding: 0 20px;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  position: sticky; top: 0; z-index: 1000;
+  border-bottom: 1px solid var(--border);
 }
 
-.menu-btn{
-position:absolute;
-left:12px;
-top:50%;
-transform:translateY(-50%);
-width:48px;
-height:48px;
-border-radius:14px;
-border:1px solid #eee;
-background:#fff;
-font-size:22px;
-cursor:pointer;
-box-shadow:0 3px 10px rgba(0,0,0,0.08); /* ✅ depth */
-transition:0.2s;
+.menu-btn {
+  width: 40px; height: 40px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.16s ease;
+  box-shadow: var(--shadow-xs);
+  color: var(--text);
+  flex-shrink: 0;
+}
+.menu-btn:hover { border-color: var(--amber-border); background: var(--amber-light); }
+
+.brand {
+  flex: 1;
+  text-align: center;
+  font-family: 'Lora', serif;
+  font-size: 20px; font-weight: 600;
 }
 
-.menu-btn:hover{
-background:#f9f9f9;
+/* Spacer to balance the left menu button so brand stays centered */
+.topbar-spacer {
+  width: 40px;
+  flex-shrink: 0;
 }
 
-.profile-circle{
-position:absolute;
-right:20px;
-width:42px;
-height:42px;
-border-radius:50%;
-background:var(--primary);
-color:white;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:700;
-cursor:pointer;
-overflow:hidden;
-border:2px solid white;
-box-shadow:0 5px 15px rgba(0,0,0,.1);
-}
-
-.profile-circle img{
-width:100%;
-height:100%;
-object-fit:cover;
-border-radius:50%;
-}
-
-.brand{
-font-size:24px;
-font-weight:800;
-letter-spacing:0.5px;
-}
 /* DROPDOWN */
-.dropdown{
-display:none;
-position:absolute;
-top:65px;
-left:20px;
-background:white;
-width:290px;
-border-radius:18px;
-box-shadow:0 20px 50px rgba(0,0,0,.15);
-padding:15px;
-max-height:450px;
-overflow-y:auto;
+.dropdown {
+  display: none;
+  position: absolute; top: 66px; left: 16px;
+  width: 308px;
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+  padding: 8px;
+  max-height: 530px; overflow-y: auto;
+  animation: dropIn 0.2s cubic-bezier(0.22,1,0.36,1);
+  z-index: 999;
+}
+.dropdown.active { display: block; }
+.dropdown::-webkit-scrollbar { width: 3px; }
+.dropdown::-webkit-scrollbar-thumb { background: #ddd8d0; border-radius: 10px; }
+
+@keyframes dropIn {
+  from { opacity:0; transform: translateY(-8px) scale(0.97); }
+  to   { opacity:1; transform: translateY(0) scale(1); }
 }
 
-.dropdown.active{
-display:block;
+.menu-rich {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background 0.14s;
+  text-decoration: none;
+}
+.menu-rich:hover { background: var(--amber-light); }
+
+.menu-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+  transition: all 0.14s;
+}
+.menu-rich:hover .menu-icon { background: var(--amber-mid); border-color: var(--amber-border); }
+
+.menu-text { display: flex; flex-direction: column; gap: 2px; }
+.menu-title {
+  font-size: 13px; font-weight: 600;
+  color: var(--text); line-height: 1;
+  transition: color 0.14s;
+}
+.menu-desc {
+  font-size: 11px; color: var(--text-2);
+  font-weight: 400; line-height: 1.3;
+}
+.menu-rich:hover .menu-title { color: var(--amber-hover); }
+
+.section-label {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text-3);
+  padding: 12px 10px 5px;
 }
 
-.dropdown a{
-display:block;
-padding:12px;
-text-decoration:none;
-color:#444;
-font-weight:600;
-border-radius:10px;
-font-size:14px;
+.menu-divider { border:none; border-top: 1px solid var(--border); margin: 5px 0; }
+
+/* PAIRED HIVES */
+.hive-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--amber-border);
+  background: var(--amber-light);
+  margin-bottom: 5px; cursor: pointer;
+  transition: all 0.16s ease;
+}
+.hive-item:hover { border-color: var(--amber); transform: translateX(2px); background: rgba(212,146,10,0.11); }
+
+.hive-dot {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, #D4920A, #B07808);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
 }
 
-.dropdown a:hover{
-background:rgba(244,180,0,.12);
-color:var(--primary);
+.hive-info { flex:1; min-width:0; }
+.hive-name {
+  font-size: 13px; font-weight: 600; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;
 }
+.hive-sub { font-size: 10px; color: #B07808; font-weight: 500; }
 
-.section-title{
-font-size:11px;
-color:#999;
-margin:12px 0 6px;
+.hive-del {
+  width: 24px; height: 24px; border: none; background: none;
+  border-radius: 6px; color: #C09080; font-size: 12px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: all 0.14s; flex-shrink: 0;
+}
+.hive-item:hover .hive-del { opacity: 1; }
+.hive-del:hover { background: rgba(200,70,50,0.1); color: #d04030; }
+
+.no-hives {
+  font-size: 12px; color: var(--text-3);
+  text-align: center; padding: 8px 0 2px; font-style: italic;
 }
 
 /* MAIN */
-.main{
-max-width:1200px;
-margin:auto;
-padding:60px 20px 60px;
-text-align:center;
+.main {
+  max-width: 1060px; margin: 0 auto;
+  padding: 60px 24px 80px; text-align: center;
 }
 
-#welcomeText{
-font-size:38px;
-font-weight:800;
-margin-bottom:10px;
+/* WELCOME HEADING */
+.welcome-heading {
+  font-family: 'Lora', serif;
+  font-size: 42px; font-weight: 600;
+  line-height: 1.2; letter-spacing: -0.2px;
+  margin-bottom: 6px;
+  animation: riseIn 0.5s 0.07s ease both;
 }
 
-.subtitle{
-color:#777;
-margin-bottom:45px;
-font-size:16px;
+.welcome-tagline {
+  font-size: 15px; color: var(--text-2);
+  font-weight: 400;
+  margin-bottom: 54px;
+  animation: riseIn 0.5s 0.13s ease both;
+}
+
+@keyframes riseIn {
+  from { opacity:0; transform:translateY(14px); }
+  to   { opacity:1; transform:translateY(0); }
 }
 
 /* CARDS */
-.cards{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:28px;
+.cards {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 16px;
+  animation: riseIn 0.5s 0.18s ease both;
 }
 
-.card{
-background:white;
-padding:35px;
-border-radius:24px;
-box-shadow:var(--shadow);
-cursor:pointer;
-transition:.3s ease;
-border:3px solid rgba(244,180,0,.15);
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 28px 24px 22px; text-align: left;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.2,1,0.4,1);
+  position: relative; overflow: hidden;
+}
+.card::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--amber), #B07808);
+  opacity: 0; transition: opacity 0.22s;
+}
+.card:hover {
+  transform: translateY(-5px);
+  border-color: var(--amber-border);
+  box-shadow: var(--shadow-md), 0 0 0 1px var(--amber-border);
+}
+.card:hover::after { opacity: 1; }
+
+.card-badge {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--amber-light); border: 1px solid var(--amber-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 21px; margin-bottom: 16px;
+  transition: transform 0.22s;
+}
+.card:hover .card-badge { transform: scale(1.1) rotate(-4deg); }
+
+.card h3 {
+  font-size: 15.5px; font-weight: 700; margin-bottom: 7px; color: var(--text);
+}
+.card p { font-size: 13px; color: var(--text-2); line-height: 1.58; font-weight: 400; }
+
+.card-cta {
+  display: inline-flex; align-items: center; gap: 3px;
+  margin-top: 14px; font-size: 12px; font-weight: 600;
+  color: var(--amber); opacity: 0; transition: opacity 0.2s;
+}
+.card:hover .card-cta { opacity: 1; }
+.card-cta::after { content: '→'; font-size: 13px; }
+
+@media(max-width: 960px) {
+  .cards { grid-template-columns: repeat(2,1fr); }
 }
 
-.card:hover{
-transform:translateY(-8px);
-border-color:var(--primary);
-}
-
-.card h3{
-font-size:20px;
-margin-bottom:12px;
-}
-
-.card p{
-font-size:15px;
-color:#666;
-}
-
-@media(max-width:950px){
-.cards{grid-template-columns:repeat(2,1fr);}
-}
-
-@media(max-width:600px){
-
-.cards{grid-template-columns:1fr;}
-#welcomeText{font-size:24px;}
-
-.topbar{
-padding:14px 10px;
-}
-
-.brand{
-font-size:18px;
-}
-
-.menu-btn{
-width:42px;
-height:42px;
-font-size:20px;
-left:8px;
-}
-
-}
-
-/* Paired Hives */
-.hive-item{
-display:flex;
-justify-content:space-between;
-margin-bottom:8px;
+@media(max-width: 580px) {
+  .cards { grid-template-columns: 1fr; }
+  .welcome-heading { font-size: 28px; }
+  .welcome-tagline { font-size: 14px; margin-bottom: 36px; }
+  .main { padding: 40px 16px 60px; }
+  .brand { font-size: 17px; }
 }
 </style>
 </head>
-
 <body>
 
 <div class="topbar">
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-<button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <div class="dropdown" id="menuDropdown">
 
-<div class="dropdown" id="menuDropdown">
+    <div onclick="openProfile()" class="menu-rich">
+      <div class="menu-icon">👤</div>
+      <div class="menu-text">
+        <span class="menu-title">My Profile</span>
+        <span class="menu-desc">Account details &amp; preferences</span>
+      </div>
+    </div>
 
-<a onclick="openProfile()">👤 Profile</a>
-<a onclick="openDemo()">📊 Demo Dashboard</a>
-<a onclick="pairHive()">➕ Add New Hive</a>
+    <div onclick="openDemo()" class="menu-rich">
+      <div class="menu-icon">📊</div>
+      <div class="menu-text">
+        <span class="menu-title">Demo Dashboard</span>
+        <span class="menu-desc">Explore simulated hive analytics</span>
+      </div>
+    </div>
 
-<div class="section-title">Paired Hives</div>
-<div id="dashboardList"></div>
+    <div onclick="pairHive()" class="menu-rich">
+      <div class="menu-icon">➕</div>
+      <div class="menu-text">
+        <span class="menu-title">Add New Hive</span>
+        <span class="menu-desc">Connect via Hive ID &amp; PIN</span>
+      </div>
+    </div>
 
-<hr style="margin:10px 0;">
+    <div class="section-label">My Paired Hives</div>
+    <div id="dashboardList"></div>
 
-<a href="calculator.html">🍯 Honey Calculator</a>
-<a href="videos.html">🎓 Learning Centre</a>
-<a href="market.html">📈 Market Analysis</a>
-<a href="chatbot.html">🤖 Kanasu Chatbot</a>
-<a href="image-disease.html">🐝 Bee Scan AI</a>
-<a href="about.html">ℹ️ About Project</a>
+    <hr class="menu-divider">
 
-<hr style="margin:10px 0;">
-<a onclick="logout()" style="color:#e74c3c;">Logout</a>
+    <div class="section-label">Features</div>
 
-</div>
+    <a href="calculator.html" class="menu-rich">
+      <div class="menu-icon">🍯</div>
+      <div class="menu-text">
+        <span class="menu-title">Honey Calculator</span>
+        <span class="menu-desc">Estimate yield &amp; production value</span>
+      </div>
+    </a>
 
-<div class="brand">
-<span style="color:black;">Kanasu </span>
-<span style="color:#f4b400;">Bee House</span>
-</div>
+    <a href="videos.html" class="menu-rich">
+      <div class="menu-icon">🎓</div>
+      <div class="menu-text">
+        <span class="menu-title">Learning Centre</span>
+        <span class="menu-desc">Videos, guides &amp; tutorials</span>
+      </div>
+    </a>
 
+    <a href="market.html" class="menu-rich">
+      <div class="menu-icon">📈</div>
+      <div class="menu-text">
+        <span class="menu-title">Market Analysis</span>
+        <span class="menu-desc">Honey price trends &amp; insights</span>
+      </div>
+    </a>
+
+    <a href="chatbot.html" class="menu-rich">
+      <div class="menu-icon">🤖</div>
+      <div class="menu-text">
+        <span class="menu-title">Kanasu Chatbot</span>
+        <span class="menu-desc">AI assistant for hive questions</span>
+      </div>
+    </a>
+
+    <a href="image-disease.html" class="menu-rich">
+      <div class="menu-icon">🐝</div>
+      <div class="menu-text">
+        <span class="menu-title">Bee Scan AI</span>
+        <span class="menu-desc">Detect disease by image &amp; sound</span>
+      </div>
+    </a>
+
+    <a href="about.html" class="menu-rich">
+      <div class="menu-icon">ℹ️</div>
+      <div class="menu-text">
+        <span class="menu-title">About Project</span>
+        <span class="menu-desc">Our mission &amp; the Kanasu team</span>
+      </div>
+    </a>
+
+    <hr class="menu-divider">
+
+    <div onclick="logout()" class="menu-rich" style="color:#C04030;">
+      <div class="menu-icon" style="font-size:15px;">🚪</div>
+      <div class="menu-text">
+        <span class="menu-title" style="color:#C04030;">Logout</span>
+        <span class="menu-desc">Sign out of your account</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="brand">
+    <span style="color:var(--text);">Kanasu </span><span style="color:var(--amber);">Bee House</span>
+  </div>
+
+  <div class="topbar-spacer"></div>
 </div>
 
 <div class="main">
 
-<h1 id="welcomeText">Loading...</h1>
-<p class="subtitle">Let’s take care of your hives today.</p>
+  <h1 class="welcome-heading" id="welcomeText">Loading...</h1>
+  <p class="welcome-tagline">Let's take care of your hives today</p>
 
-<div class="cards">
+  <div class="cards">
 
-<div class="card" onclick="openDemo()">
-<h3>📊 Demo Dashboard</h3>
-<p>Explore real-time simulated hive analytics.</p>
-</div>
+    <div class="card" onclick="openDemo()">
+      <div class="card-badge">📊</div>
+      <h3>Demo Dashboard</h3>
+      <p>Explore real-time simulated hive metrics — temperature, humidity, weight, and alerts — before connecting a live hive.</p>
+      <span class="card-cta">Open dashboard</span>
+    </div>
 
-<div class="card" onclick="pairHive()">
-<h3>➕ Add New Hive</h3>
-<p>Connect your registered hive using Hive ID and PIN.</p>
-</div>
+    <div class="card" onclick="pairHive()">
+      <div class="card-badge">➕</div>
+      <h3>Add New Hive</h3>
+      <p>Connect your smart hive device using your unique Hive ID and security PIN. Begin real-time monitoring instantly.</p>
+      <span class="card-cta">Pair a hive</span>
+    </div>
 
-<div class="card" onclick="location.href='calculator.html'">
-<h3>🍯 Honey Calculator</h3>
-<p>Estimate honey production and yield.</p>
-</div>
+    <div class="card" onclick="location.href='calculator.html'">
+      <div class="card-badge">🍯</div>
+      <h3>Honey Calculator</h3>
+      <p>Estimate expected yield based on colony strength, season, and forage conditions — then forecast your production value.</p>
+      <span class="card-cta">Calculate yield</span>
+    </div>
 
-<div class="card" onclick="location.href='videos.html'">
-<h3>🎓 Learning Centre</h3>
-<p>Educational resources and training materials.</p>
-</div>
+    <div class="card" onclick="location.href='videos.html'">
+      <div class="card-badge">🎓</div>
+      <h3>Learning Centre</h3>
+      <p>Access curated videos, guides, and tutorials on hive inspections, seasonal management, and beekeeping best practices.</p>
+      <span class="card-cta">Start learning</span>
+    </div>
 
-<div class="card" onclick="location.href='chatbot.html'">
-<h3>🤖 Kanasu Chatbot</h3>
-<p>Your AI-powered hive assistant.</p>
-</div>
+    <div class="card" onclick="location.href='chatbot.html'">
+      <div class="card-badge">🤖</div>
+      <h3>Kanasu Chatbot</h3>
+      <p>Ask your AI-powered assistant anything — from queen health to mite control — and get expert-backed answers instantly.</p>
+      <span class="card-cta">Ask a question</span>
+    </div>
 
-<div class="card" onclick="location.href='image-disease.html'">
-<h3>🐝 Bee Scan AI</h3>
-<p>Sound & image based disease detection.</p>
-</div>
+    <div class="card" onclick="location.href='image-disease.html'">
+      <div class="card-badge">🐝</div>
+      <h3>Bee Scan AI</h3>
+      <p>Upload a photo or hive audio to detect diseases early. AI identifies threats like varroa mites, foulbrood, and more.</p>
+      <span class="card-cta">Scan now</span>
+    </div>
 
-</div>
+  </div>
 
 </div>
 
 <script>
-let pairedHives=JSON.parse(localStorage.getItem("pairedHives"))||[];
+let pairedHives = JSON.parse(localStorage.getItem("pairedHives")) || [];
 
 function toggleMenu(){
-menuDropdown.classList.toggle("active");
+  document.getElementById("menuDropdown").classList.toggle("active");
 }
 
-function openProfile(){
-window.location.href="profile.html";
-}
+document.addEventListener("click", function(e){
+  const dd = document.getElementById("menuDropdown");
+  const btn = document.querySelector(".menu-btn");
+  if(dd.classList.contains("active") && !dd.contains(e.target) && e.target !== btn){
+    dd.classList.remove("active");
+  }
+});
+
+function openProfile(){ window.location.href = "profile.html"; }
 
 firebase.auth().onAuthStateChanged(user => {
-    if (user) {
-
-        firebase.database().ref("users/" + user.uid).once("value")
-        .then(snapshot => {
-
-            let data = snapshot.val();
-
-            // ✅ Always show something
-            let name = (data && data.name) ? data.name : "User";
-
-            // ✅ Welcome text
-            document.getElementById("welcomeText").innerHTML =
-                `<span style="color:black;">Welcome </span>
-                 <span style="color:#f4b400;">${name}</span>`;
-
-        });
-
-    } else {
-        window.location.href = "index.html";
-    }
+  if(user){
+    firebase.database().ref("users/" + user.uid).once("value").then(snapshot => {
+      let data = snapshot.val();
+      let name = (data && data.name) ? data.name : "User";
+      document.getElementById("welcomeText").innerHTML =
+        `Welcome, <em style="font-style:italic;color:var(--amber);">${name}</em>`;
+    });
+  } else {
+    window.location.href = "index.html";
+  }
 });
 
-function openDemo(){
-window.location.href="dashboard.html";
-}
+function openDemo(){ window.location.href = "dashboard.html"; }
 
 function pairHive(){
-let hiveId=prompt("Enter Hive ID");
-if(!hiveId) return;
-let pin=prompt("Enter Hive PIN");
-if(!pin) return;
-let customName=prompt("Enter Custom Hive Name");
-if(!customName) return;
-
-firebase.database().ref("hives/"+hiveId).once("value").then(snapshot=>{
-if(!snapshot.exists()){
-alert("Hive not found!");
-return;
-}
-if(String(snapshot.val().pin)===String(pin)){
-alert("Hive Paired Successfully!");
-pairedHives.push({id:hiveId,name:customName});
-localStorage.setItem("pairedHives",JSON.stringify(pairedHives));
-renderList();
-}else{
-alert("Incorrect PIN");
-}
-});
+  let hiveId = prompt("Enter Hive ID");
+  if(!hiveId) return;
+  let pin = prompt("Enter Hive PIN");
+  if(!pin) return;
+  let customName = prompt("Enter Custom Hive Name");
+  if(!customName) return;
+  firebase.database().ref("hives/" + hiveId).once("value").then(snapshot => {
+    if(!snapshot.exists()){ alert("❌ Hive not found!"); return; }
+    const hiveData = snapshot.val();
+    const storedPin = hiveData.info?.pin;
+    if(String(storedPin) === String(pin)){
+      alert("✅ Hive Paired Successfully!");
+      pairedHives.push({ id: hiveId, name: customName });
+      localStorage.setItem("pairedHives", JSON.stringify(pairedHives));
+      renderList();
+      window.location.href = "live-dashboard.html?hive=" + hiveId;
+    } else {
+      alert("❌ Incorrect PIN");
+    }
+  }).catch(err => { alert("❌ Error: " + err.message); });
 }
 
 function renderList(){
-dashboardList.innerHTML="";
-pairedHives.forEach((h,index)=>{
-let div=document.createElement("div");
-div.className="hive-item";
-let name=document.createElement("span");
-name.innerText=h.name;
-name.onclick=()=>{
-localStorage.setItem("activeHiveId",h.id);
-localStorage.setItem("activeHiveName",h.name);
-window.location.href="live-dashboard.html";
-};
-let del=document.createElement("span");
-del.innerText="❌";
-del.onclick=()=>{
-pairedHives.splice(index,1);
-localStorage.setItem("pairedHives",JSON.stringify(pairedHives));
-renderList();
-};
-div.appendChild(name);
-div.appendChild(del);
-dashboardList.appendChild(div);
-});
+  const list = document.getElementById("dashboardList");
+  list.innerHTML = "";
+
+  if(pairedHives.length === 0){
+    const msg = document.createElement("div");
+    msg.className = "no-hives";
+    msg.textContent = "No hives paired yet";
+    list.appendChild(msg);
+    return;
+  }
+
+  pairedHives.forEach((h, index) => {
+    const div = document.createElement("div");
+    div.className = "hive-item";
+
+    const dot = document.createElement("div");
+    dot.className = "hive-dot";
+    dot.textContent = "🐝";
+
+    const info = document.createElement("div");
+    info.className = "hive-info";
+
+    const name = document.createElement("span");
+    name.className = "hive-name";
+    name.textContent = h.name;
+
+    const sub = document.createElement("span");
+    sub.className = "hive-sub";
+    sub.textContent = "Tap to open live dashboard";
+
+    info.appendChild(name);
+    info.appendChild(sub);
+
+    const del = document.createElement("button");
+    del.className = "hive-del";
+    del.textContent = "✕";
+    del.title = "Remove hive";
+    del.onclick = (e) => {
+      e.stopPropagation();
+      pairedHives.splice(index, 1);
+      localStorage.setItem("pairedHives", JSON.stringify(pairedHives));
+      renderList();
+    };
+
+    div.onclick = () => {
+      localStorage.setItem("activeHiveName", h.name);
+      window.location.href = "live-dashboard.html?hive=" + h.id;
+    };
+
+    div.appendChild(dot);
+    div.appendChild(info);
+    div.appendChild(del);
+    list.appendChild(div);
+  });
 }
 
 function logout(){
-firebase.auth().signOut().then(()=>window.location.href="index.html");
+  firebase.auth().signOut().then(() => window.location.href = "index.html");
 }
 
 renderList();
 </script>
-
 </body>
 </html>
