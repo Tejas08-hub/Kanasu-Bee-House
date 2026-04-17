@@ -319,6 +319,34 @@ body { background:var(--bg); color:#2d3436; }
       <p><b>Hive Sound Status</b></p>
       <div class="status-pill" id="hiveCondition">Waiting for data...</div>
       <p id="message" style="margin-top:8px;font-size:13px;color:#666;"></p>
+
+      <!-- THRESHOLD ALERT PANEL -->
+      <div id="thresholdPanel" style="margin-top:12px;padding:12px;background:#fffcf0;border:1.5px solid #fde68a;border-radius:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;">Sound Threshold Trigger</span>
+          <span id="threshBadge" style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;background:#eee;color:#777;">IDLE</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="font-size:11px;color:#888;white-space:nowrap;">Threshold (dB):</span>
+          <input type="range" id="threshSlider" min="30" max="90" value="55" style="flex:1;accent-color:#f4b400;" oninput="document.getElementById('threshVal').innerText=this.value"/>
+          <span id="threshVal" style="font-size:12px;font-weight:700;color:#f4b400;min-width:28px;">55</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:11px;color:#888;">Current Sound:</span>
+          <span id="liveDbDisplay" style="font-size:13px;font-weight:700;color:#2d3436;">-- dB</span>
+        </div>
+        <!-- live bar -->
+        <div style="height:7px;background:#eee;border-radius:6px;overflow:hidden;margin-bottom:8px;position:relative;">
+          <div id="liveDbBar" style="height:100%;width:0%;border-radius:6px;background:#f4b400;transition:width .4s ease;"></div>
+          <div id="threshLine" style="position:absolute;top:0;height:100%;width:2px;background:#e53935;"></div>
+        </div>
+        <div id="threshAlert" style="display:none;padding:10px 12px;border-radius:10px;background:#ffebee;border:1.5px solid #ef9a9a;text-align:center;">
+          <span style="font-size:20px;">🚨</span>
+          <p style="font-size:13px;font-weight:700;color:#c62828;margin-top:4px;">Sound Threshold Exceeded!</p>
+          <p style="font-size:11px;color:#e57373;margin-top:2px;">Auto-prediction triggered by high dB</p>
+          <p id="threshTriggerVal" style="font-size:12px;font-weight:700;color:#c62828;margin-top:4px;"></p>
+        </div>
+      </div>
     </div>
 
     <div class="info-box">
@@ -461,6 +489,12 @@ dbRef.on("value", (snapshot) => {
   document.getElementById("weight").innerText   = data.sensors?.weight      ?? "--";
   document.getElementById("gas").innerText      = data.sensors?.gas_level   ?? "--";
 
+  /* ── THRESHOLD MONITOR (MAX9814 live dB) ── */
+  const rawDb = parseFloat(data.sensors?.sound_db);
+  if (!isNaN(rawDb)) {
+    updateThresholdUI(rawDb);
+  }
+
   /* Sound ML */
   const mlStatus  = data.sound_ml?.status ?? "--";
   const condBox   = document.getElementById("hiveCondition");
@@ -588,6 +622,67 @@ async function analyzeSound() {
 
   analyzeBtn.disabled = false;
   analyzeBtn.innerHTML = "Analyze Hive Sound";
+}
+
+/* ── THRESHOLD MONITOR LOGIC ── */
+let lastTriggerTime = 0;
+const TRIGGER_COOLDOWN_MS = 10000; // don't re-trigger within 10s
+
+function updateThresholdUI(currentDb) {
+  const threshold  = parseInt(document.getElementById("threshSlider").value);
+  const badge      = document.getElementById("threshBadge");
+  const alert      = document.getElementById("threshAlert");
+  const bar        = document.getElementById("liveDbBar");
+  const threshLine = document.getElementById("threshLine");
+  const display    = document.getElementById("liveDbDisplay");
+
+  // Update display
+  display.innerText = currentDb.toFixed(1) + " dB";
+
+  // Bar: map 30–90 dB range to 0–100%
+  const pct = Math.min(100, Math.max(0, ((currentDb - 30) / 60) * 100));
+  bar.style.width = pct + "%";
+  bar.style.background = currentDb >= threshold ? "#e53935" : "#f4b400";
+
+  // Threshold line position
+  const linePct = Math.min(100, Math.max(0, ((threshold - 30) / 60) * 100));
+  threshLine.style.left = linePct + "%";
+
+  if (currentDb >= threshold) {
+    badge.style.background = "#ffebee";
+    badge.style.color      = "#c62828";
+    badge.innerText        = "TRIGGERED";
+    alert.style.display    = "block";
+    document.getElementById("threshTriggerVal").innerText =
+      "Detected: " + currentDb.toFixed(1) + " dB  (threshold: " + threshold + " dB)";
+
+    // Auto-trigger prediction once per cooldown window
+    const now = Date.now();
+    if (now - lastTriggerTime > TRIGGER_COOLDOWN_MS) {
+      lastTriggerTime = now;
+      autoTriggerFromThreshold(currentDb);
+    }
+  } else {
+    badge.style.background = "#e8f5e9";
+    badge.style.color      = "#2e7d32";
+    badge.innerText        = "MONITORING";
+    alert.style.display    = "none";
+  }
+}
+
+function autoTriggerFromThreshold(detectedDb) {
+  // Flash the AI Sound Analysis box to signal auto-detection
+  const mlBox = document.getElementById("mlStatusText");
+  const origText = mlBox.innerText;
+  mlBox.style.color = "#e65100";
+  mlBox.innerText   = "⚡ High sound detected (" + detectedDb.toFixed(1) + " dB) — check hive status!";
+  setTimeout(() => {
+    mlBox.style.color = "#555";
+    mlBox.innerText   = origText;
+  }, 8000);
+
+  // Also scroll to the section for visibility
+  document.getElementById("thresholdPanel").scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 function showUploadError(msg) {
