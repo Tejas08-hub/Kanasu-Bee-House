@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- 🔥 Firebase -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="firebase.js"></script>
@@ -20,272 +20,267 @@
   --glass:   rgba(255,255,255,.9);
   --shadow:  0 8px 32px rgba(0,0,0,.05);
 }
-
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Montserrat',sans-serif; }
-
 body { background:var(--bg); color:#2d3436; }
 
 /* ── TOPBAR ── */
 .topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 20px;
-  background: var(--glass);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  border-bottom: 2px solid rgba(244,180,0,.35);
+  display:flex; justify-content:space-between; align-items:center;
+  padding:12px 20px; background:var(--glass);
+  position:sticky; top:0; z-index:1000;
+  border-bottom:2px solid rgba(244,180,0,.35);
 }
 .back-btn {
-  background: white;
-  border: 1px solid #eee;
-  padding: 8px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 13px;
+  background:white; border:1px solid #eee; padding:8px 14px;
+  border-radius:10px; cursor:pointer; font-weight:600;
+  font-family:'Montserrat',sans-serif; font-size:13px;
 }
-.back-btn:hover { background: #fffbeb; }
-
+.back-btn:hover { background:#fffbeb; }
 .live-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--primary);
-  color: white;
-  padding: 5px 12px;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 10px;
+  display:flex; align-items:center; gap:6px;
+  background:var(--primary); color:white;
+  padding:5px 12px; border-radius:8px; font-weight:700; font-size:10px;
 }
 .live-dot {
-  width: 6px; height: 6px;
-  background: white;
-  border-radius: 50%;
-  animation: blink 1.5s ease-in-out infinite;
+  width:6px; height:6px; background:white;
+  border-radius:50%; animation:blink 1.5s ease-in-out infinite;
 }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
 /* ── MAIN ── */
-.main { padding: 15px; max-width: 1400px; margin: auto; }
+.main { padding:15px; max-width:1400px; margin:auto; }
+
+/* ── ESP DISCONNECTED BANNER ── */
+#espAlert {
+  display:none; margin-bottom:12px; padding:14px 18px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#fff3e0,#fff8f0);
+  border:1.5px solid #ffcc80;
+}
+#espAlert.show { display:flex; align-items:flex-start; gap:12px; animation:fadeUp .3s ease; }
+.esp-alert-icon { font-size:26px; flex-shrink:0; }
+.esp-alert-body h4 { font-size:13px; font-weight:800; color:#e65100; margin-bottom:4px; }
+.esp-alert-body p  { font-size:12px; color:#fb8c00; line-height:1.5; }
+
+/* ── MASTER ALERT BANNER ── */
+#masterAlert {
+  display:none; margin-bottom:12px; padding:14px 18px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#ffebee,#fff5f5);
+  border:1.5px solid #ef9a9a;
+}
+#masterAlert.show { display:flex; align-items:flex-start; gap:12px; animation:fadeUp .3s ease; }
+.master-alert-icon { font-size:26px; flex-shrink:0; }
+.master-alert-body h4 { font-size:13px; font-weight:800; color:#c62828; margin-bottom:4px; }
+.master-alert-body p  { font-size:12px; color:#e57373; line-height:1.5; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
 
 /* ── SENSOR CARDS ── */
 .cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-bottom: 12px;
+  display:grid; grid-template-columns:repeat(2,1fr);
+  gap:12px; margin-bottom:12px;
 }
 .card {
-  background: white;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: var(--shadow);
-  border: 1.5px solid #fde68a;
-  transition: border-color .2s, box-shadow .2s;
+  background:white; padding:20px; border-radius:20px;
+  box-shadow:var(--shadow); border:1.5px solid #fde68a;
+  transition:border-color .2s, box-shadow .2s;
 }
-.card:hover { border-color: var(--primary); box-shadow: 0 8px 32px rgba(244,180,0,.15); }
-.card h3 { font-size: 10px; color: #999; text-transform: uppercase; margin-bottom: 5px; letter-spacing: .5px; }
-.value { font-size: 22px; font-weight: 800; }
+.card:hover { border-color:var(--primary); box-shadow:0 8px 32px rgba(244,180,0,.15); }
+.card h3 { font-size:10px; color:#999; text-transform:uppercase; margin-bottom:5px; letter-spacing:.5px; }
+.value { font-size:22px; font-weight:800; }
+.alert-badge {
+  display:none; font-size:9px; font-weight:800;
+  padding:2px 7px; border-radius:20px; margin-top:5px;
+  text-transform:uppercase; letter-spacing:.5px;
+}
+.card.alert-danger {
+  border-color:#e53935 !important; background:#fff5f5;
+  animation:pulseRed 2s ease-in-out infinite;
+}
+.card.alert-warn  { border-color:#fb8c00 !important; background:#fff8f0; box-shadow:0 0 0 3px rgba(251,140,0,.12); }
+.card.alert-good  { border-color:#43a047 !important; background:#f5fff6; }
+.card.alert-danger .alert-badge { display:inline-block; background:#ffebee; color:#c62828; }
+.card.alert-warn  .alert-badge  { display:inline-block; background:#fff3e0; color:#e65100; }
+@keyframes pulseRed {
+  0%,100%{box-shadow:0 0 0 3px rgba(229,57,53,.15),var(--shadow);}
+  50%     {box-shadow:0 0 0 8px rgba(229,57,53,.05),var(--shadow);}
+}
 
-/* ── INFO GRID ── */
+/* ── INFO GRID — all boxes same style ── */
 .info-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-  margin-bottom: 12px;
+  display:grid; grid-template-columns:1fr;
+  gap:12px; margin-bottom:12px;
 }
 .info-box {
-  background: white;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: var(--shadow);
-  border: 1.5px solid #fde68a;
-  transition: border-color .2s, box-shadow .2s;
+  background:white; padding:20px; border-radius:20px;
+  box-shadow:var(--shadow); border:1.5px solid #fde68a;
+  transition:border-color .2s, box-shadow .2s;
 }
-.info-box:hover { border-color: var(--primary); box-shadow: 0 8px 32px rgba(244,180,0,.15); }
-.info-box p { font-size: 13px; line-height: 1.6; }
-
-/* status pill inside info boxes */
+.info-box:hover { border-color:var(--primary); box-shadow:0 8px 32px rgba(244,180,0,.15); }
+.info-box-title { font-size:13px; font-weight:700; color:#2d3436; margin-bottom:10px; }
 .status-pill {
-  margin-top: 10px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-weight: 700;
-  text-align: center;
-  font-size: 13px;
-  background: #f5f5f5;
-  color: #555;
+  padding:10px 14px; border-radius:10px; font-weight:700;
+  text-align:center; font-size:13px; background:#f5f5f5; color:#555;
+  margin-bottom:8px;
 }
+.info-sub { font-size:13px; color:#666; line-height:1.6; }
 
-/* disease / AI box */
-.disease-box { border-left: 4px solid #e67e22; }
+/* health score elements inside info-box */
+.health-score-row {
+  display:flex; align-items:center; gap:14px; margin-bottom:12px;
+}
+.score-dial { position:relative; width:88px; height:88px; flex-shrink:0; }
+.score-dial svg { transform:rotate(-90deg); }
+.score-dial-bg   { fill:none; stroke:#f0f0f0; stroke-width:8; }
+.score-dial-fill {
+  fill:none; stroke-width:8; stroke-linecap:round;
+  transition:stroke-dashoffset .8s ease, stroke .4s ease;
+}
+.score-number {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+}
+.score-number span:first-child { font-size:22px; font-weight:800; line-height:1; }
+.score-number span:last-child  { font-size:9px; font-weight:600; color:#aaa; }
+.score-meta { flex:1; min-width:0; }
+.score-label   { font-size:16px; font-weight:800; margin-bottom:3px; }
+.score-sublabel { font-size:11px; color:#888; line-height:1.5; }
+
+.param-bars { display:flex; flex-direction:column; gap:8px; }
+.param-bar-row { display:flex; align-items:center; gap:7px; }
+.param-bar-icon { font-size:12px; }
+.param-bar-name {
+  font-size:10px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.3px; color:#999; min-width:60px;
+}
+.param-bar-track { flex:1; height:6px; background:#f0f0f0; border-radius:4px; overflow:hidden; }
+.param-bar-fill  { height:100%; border-radius:4px; transition:width .7s ease; }
+.param-bar-score { font-size:11px; font-weight:700; min-width:26px; text-align:right; color:#555; }
+
+.health-history {
+  display:flex; gap:5px; flex-wrap:wrap;
+  margin-top:12px; padding-top:12px; border-top:1px solid #f5f5f5;
+}
+.history-chip {
+  font-size:10px; font-weight:700; padding:3px 9px;
+  border-radius:20px; background:#f5f5f5; color:#888;
+}
+.history-chip.good   { background:#e8f5e9; color:#2e7d32; }
+.history-chip.warn   { background:#fff3e0; color:#e65100; }
+.history-chip.danger { background:#ffebee; color:#c62828; }
 
 /* ── GRAPHS ── */
 .graphs {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 15px;
-  margin-bottom: 12px;
+  display:grid; grid-template-columns:1fr;
+  gap:15px; margin-bottom:12px;
 }
 .graph-card {
-  background: white;
-  padding: 15px;
-  border-radius: 20px;
-  height: 320px;
-  box-shadow: var(--shadow);
-  border: 1.5px solid #fde68a;
-  transition: border-color .2s, box-shadow .2s;
+  background:white; padding:15px 15px 12px; border-radius:20px;
+  height:260px; box-shadow:var(--shadow); border:1.5px solid #fde68a;
+  transition:border-color .2s, box-shadow .2s;
+  display:flex; flex-direction:column;
 }
-.graph-card:hover { border-color: var(--primary); box-shadow: 0 8px 32px rgba(244,180,0,.15); }
+.graph-card:hover { border-color:var(--primary); box-shadow:0 8px 32px rgba(244,180,0,.15); }
 .graph-label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #999;
-  letter-spacing: .5px;
-  margin-bottom: 6px;
+  font-size:10px; font-weight:700; text-transform:uppercase;
+  color:#999; letter-spacing:.5px; margin-bottom:6px; flex-shrink:0;
 }
+.graph-interval-note {
+  font-size:9px; color:#bbb; font-weight:600; margin-bottom:6px; flex-shrink:0;
+}
+.chart-wrap { flex:1; position:relative; min-height:0; }
+.chart-wrap canvas { position:absolute; inset:0; width:100% !important; height:100% !important; }
 
 /* ── UPLOAD SECTION ── */
 .upload-section {
-  background: white;
-  border-radius: 22px;
-  padding: 25px;
-  box-shadow: var(--shadow);
-  border: 1.5px solid #fde68a;
-  margin-bottom: 20px;
-  transition: border-color .2s;
+  background:white; border-radius:22px; padding:25px;
+  box-shadow:var(--shadow); border:1.5px solid #fde68a;
+  margin-bottom:20px; transition:border-color .2s;
 }
-.upload-section:hover { border-color: var(--primary); }
+.upload-section:hover { border-color:var(--primary); }
 .upload-section h2 {
-  font-size: 14px;
-  font-weight: 700;
-  color: #2d3436;
-  margin-bottom: 4px;
-  text-transform: uppercase;
-  letter-spacing: .5px;
+  font-size:14px; font-weight:700; color:#2d3436;
+  margin-bottom:4px; text-transform:uppercase; letter-spacing:.5px;
 }
-.upload-section p.subtitle { font-size: 12px; color: #999; margin-bottom: 18px; }
-
+.upload-section p.subtitle { font-size:12px; color:#999; margin-bottom:18px; }
 .upload-area {
-  border: 2px dashed #f4b400;
-  border-radius: 16px;
-  padding: 30px 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: background .2s;
-  background: #fffcf0;
-  position: relative;
+  border:2px dashed #f4b400; border-radius:16px; padding:30px 20px;
+  text-align:center; cursor:pointer; transition:background .2s;
+  background:#fffcf0; position:relative;
 }
-.upload-area:hover { background: #fff8e1; }
-.upload-area.dragover { background: #fff3cd; border-color: #e6a800; }
+.upload-area:hover { background:#fff8e1; }
+.upload-area.dragover { background:#fff3cd; border-color:#e6a800; }
 .upload-area input[type="file"] {
-  position: absolute; inset: 0; opacity: 0;
-  cursor: pointer; width: 100%; height: 100%;
+  position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%;
 }
-.upload-icon { font-size: 36px; margin-bottom: 8px; }
-.upload-area p { font-size: 13px; color: #666; margin: 0; }
-.upload-area p span { font-weight: 700; color: #f4b400; }
-.upload-formats { margin-top: 4px !important; font-size: 11px !important; color: #bbb !important; }
-
+.upload-icon { font-size:36px; margin-bottom:8px; }
+.upload-area p { font-size:13px; color:#666; margin:0; }
+.upload-area p span { font-weight:700; color:#f4b400; }
+.upload-formats { margin-top:4px !important; font-size:11px !important; color:#bbb !important; }
 .upload-filename {
-  display: none;
-  margin-top: 10px;
-  font-size: 12px;
-  color: #2d3436;
-  font-weight: 600;
-  padding: 8px 12px;
-  background: #fef3c7;
-  border-radius: 8px;
-  border: 1px solid #fde68a;
+  display:none; margin-top:10px; font-size:12px; color:#2d3436;
+  font-weight:600; padding:8px 12px; background:#fef3c7;
+  border-radius:8px; border:1px solid #fde68a;
 }
-
 .analyze-btn {
-  margin-top: 16px; width: 100%; padding: 14px;
-  background: #f4b400; color: white; border: none;
-  border-radius: 14px; font-size: 14px; font-weight: 700;
-  cursor: pointer; font-family: 'Montserrat', sans-serif;
-  transition: background .2s, transform .1s;
+  margin-top:16px; width:100%; padding:14px;
+  background:#f4b400; color:white; border:none; border-radius:14px;
+  font-size:14px; font-weight:700; cursor:pointer;
+  font-family:'Montserrat',sans-serif; transition:background .2s, transform .1s;
 }
-.analyze-btn:hover:not(:disabled) { background: #e6a800; transform: translateY(-1px); }
-.analyze-btn:disabled { background: #ddd; color: #aaa; cursor: not-allowed; transform: none; }
+.analyze-btn:hover:not(:disabled) { background:#e6a800; transform:translateY(-1px); }
+.analyze-btn:disabled { background:#ddd; color:#aaa; cursor:not-allowed; }
 
-/* ── UPLOAD RESULT ── */
+/* upload result */
 .upload-result {
-  display: none;
-  margin-top: 18px;
-  border-radius: 16px;
-  padding: 20px;
-  border: 1.5px solid #fde68a;
-  background: #fffcf0;
-  animation: fadeUp .3s ease;
+  display:none; margin-top:18px; border-radius:16px; padding:20px;
+  border:1.5px solid #fde68a; background:#fffcf0; animation:fadeUp .3s ease;
 }
-.upload-result.healthy { background: #e8f5e9; border-color: #a5d6a7; }
-.upload-result.alert   { background: #ffebee; border-color: #ef9a9a; }
-.upload-result.stress  { background: #fff3e0; border-color: #ffcc80; }
-
-@keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
-
-.result-label {
-  font-size: 10px; text-transform: uppercase;
-  color: #999; font-weight: 600; margin-bottom: 6px; letter-spacing: .5px;
-}
+.upload-result.healthy { background:#e8f5e9; border-color:#a5d6a7; }
+.upload-result.alert   { background:#ffebee; border-color:#ef9a9a; }
+.upload-result.stress  { background:#fff3e0; border-color:#ffcc80; }
+.result-label { font-size:10px; text-transform:uppercase; color:#999; font-weight:600; margin-bottom:6px; letter-spacing:.5px; }
 .result-status-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
-.result-status-icon { font-size: 26px; }
-.result-status-text { font-size: 24px; font-weight: 800; }
-.upload-result.healthy .result-status-text { color: #2e7d32; }
-.upload-result.alert   .result-status-text { color: #c62828; }
-.upload-result.stress  .result-status-text { color: #e65100; }
-
-.result-message { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 12px; }
-
+.result-status-icon { font-size:26px; }
+.result-status-text { font-size:24px; font-weight:800; }
+.upload-result.healthy .result-status-text { color:#2e7d32; }
+.upload-result.alert   .result-status-text { color:#c62828; }
+.upload-result.stress  .result-status-text { color:#e65100; }
+.result-message { font-size:13px; color:#555; line-height:1.6; margin-bottom:12px; }
 .confidence-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
-.conf-badge {
-  font-size: 11px; font-weight: 700;
-  padding: 4px 10px; border-radius: 8px;
-  background: rgba(0,0,0,.07); color: #333;
-}
-
-.db-meter-wrap { margin-bottom: 12px; }
-.db-meter-label {
-  font-size: 11px; color: #888; font-weight: 600; margin-bottom: 4px;
-  display: flex; justify-content: space-between;
-}
-.db-meter-bar { height: 8px; border-radius: 6px; background: #eee; overflow: hidden; }
-.db-meter-fill { height: 100%; border-radius: 6px; transition: width .6s ease; }
-.db-meter-fill.level-healthy { background: linear-gradient(90deg,#a5d6a7,#2e7d32); }
-.db-meter-fill.level-alert   { background: linear-gradient(90deg,#ffcc80,#f57c00); }
-.db-meter-fill.level-stress  { background: linear-gradient(90deg,#ef9a9a,#d32f2f); }
-
-.result-file { font-size: 11px; color: #999; }
-
-/* Spinner */
+.conf-badge { font-size:11px; font-weight:700; padding:4px 10px; border-radius:8px; background:rgba(0,0,0,.07); color:#333; }
+.db-meter-wrap { margin-bottom:12px; }
+.db-meter-label { font-size:11px; color:#888; font-weight:600; margin-bottom:4px; display:flex; justify-content:space-between; }
+.db-meter-bar { height:8px; border-radius:6px; background:#eee; overflow:hidden; }
+.db-meter-fill { height:100%; border-radius:6px; transition:width .6s ease; }
+.db-meter-fill.level-healthy { background:linear-gradient(90deg,#a5d6a7,#2e7d32); }
+.db-meter-fill.level-alert   { background:linear-gradient(90deg,#ffcc80,#f57c00); }
+.db-meter-fill.level-stress  { background:linear-gradient(90deg,#ef9a9a,#d32f2f); }
+.result-file { font-size:11px; color:#999; }
 .spinner {
-  display: inline-block; width: 14px; height: 14px;
-  border: 2px solid rgba(255,255,255,.4); border-top-color: white;
-  border-radius: 50%; animation: spin .7s linear infinite;
-  vertical-align: middle; margin-right: 6px;
+  display:inline-block; width:14px; height:14px;
+  border:2px solid rgba(255,255,255,.4); border-top-color:white;
+  border-radius:50%; animation:spin .7s linear infinite;
+  vertical-align:middle; margin-right:6px;
 }
 @keyframes spin { to{ transform:rotate(360deg); } }
 
 /* ── RESPONSIVE ── */
-@media (min-width: 768px) {
-  .cards     { grid-template-columns: repeat(3, 1fr); }
-  .info-grid { grid-template-columns: 1fr 1fr; }
-  .graphs    { grid-template-columns: 1fr 1fr; }
-  .disease-box { grid-column: 1 / -1; }
+@media (min-width:600px) {
+  .cards { grid-template-columns:repeat(3,1fr); }
 }
-
-@media (min-width: 1100px) {
-  .cards { grid-template-columns: repeat(5, 1fr); }
+@media (min-width:768px) {
+  .info-grid { grid-template-columns:1fr 1fr; }
+  .graphs    { grid-template-columns:1fr 1fr; }
 }
-
-@media (max-width: 500px) {
-  .value { font-size: 18px; }
-  .upload-section { padding: 18px 14px; }
+@media (min-width:1100px) {
+  .cards     { grid-template-columns:repeat(5,1fr); }
+  .info-grid { grid-template-columns:1fr 1fr 1fr; }
+}
+@media (max-width:500px) {
+  .value { font-size:18px; }
+  .upload-section { padding:18px 14px; }
+  .score-label { font-size:14px; }
 }
 </style>
 </head>
@@ -295,90 +290,154 @@ body { background:var(--bg); color:#2d3436; }
 <div class="topbar">
   <button class="back-btn" onclick="goBack()">← Back</button>
   <h2 id="title">Live Hive</h2>
-  <div class="live-badge">
-    <div class="live-dot"></div>
-    LIVE
-  </div>
+  <div class="live-badge"><div class="live-dot" id="live-badge-dot"></div>LIVE</div>
 </div>
 
 <div class="main">
 
-  <!-- SENSOR CARDS -->
-  <div class="cards">
-    <div class="card"><h3>Temp</h3><div id="temp" class="value">--</div></div>
-    <div class="card"><h3>Humid</h3><div id="humidity" class="value">--</div></div>
-    <div class="card"><h3>Sound</h3><div id="sound" class="value">--</div></div>
-    <div class="card"><h3>Weight</h3><div id="weight" class="value">--</div></div>
-    <div class="card"><h3>Gas Level</h3><div id="gas" class="value">--</div></div>
+  <!-- ESP DISCONNECTED BANNER -->
+  <div id="espAlert">
+    <div class="esp-alert-icon">📡</div>
+    <div class="esp-alert-body">
+      <h4>Hive Not Connected!</h4>
+      <p>Your hive device has stopped sending data. Please check the power supply, Wi-Fi connection, or sensor wiring.</p>
+    </div>
   </div>
 
-  <!-- ANALYSIS BOXES -->
+  <!-- MASTER ALERT BANNER -->
+  <div id="masterAlert">
+    <div class="master-alert-icon">🚨</div>
+    <div class="master-alert-body">
+      <h4 id="masterAlertTitle">Hive Alert!</h4>
+      <p id="masterAlertMsg"></p>
+    </div>
+  </div>
+
+  <!-- SENSOR CARDS -->
+  <div class="cards">
+    <div class="card" id="cardTemp">
+      <h3>Temp</h3><div id="temp" class="value">--</div>
+      <div class="alert-badge" id="badgeTemp"></div>
+    </div>
+    <div class="card" id="cardHumid">
+      <h3>Humid</h3><div id="humidity" class="value">--</div>
+      <div class="alert-badge" id="badgeHumid"></div>
+    </div>
+    <div class="card" id="cardSound">
+      <h3>Sound</h3><div id="sound" class="value">--</div>
+      <div class="alert-badge" id="badgeSound"></div>
+    </div>
+    <div class="card" id="cardWeight">
+      <h3>Weight</h3><div id="weight" class="value">--</div>
+      <div class="alert-badge" id="badgeWeight"></div>
+    </div>
+    <div class="card" id="cardGas">
+      <h3>Gas Level</h3><div id="gas" class="value">--</div>
+      <div class="alert-badge" id="badgeGas"></div>
+    </div>
+  </div>
+
+  <!-- INFO BOXES -->
   <div class="info-grid">
 
+    <!-- AI Sound Analysis -->
     <div class="info-box">
-      <p><b>Hive Sound Status</b></p>
+      <div class="info-box-title"> AI Sound Analysis</div>
       <div class="status-pill" id="hiveCondition">Waiting for data...</div>
-      <p id="message" style="margin-top:8px;font-size:13px;color:#666;"></p>
+      <div class="info-sub" id="message"></div>
+      <div class="info-sub" id="mlStatusText" style="margin-top:6px;font-weight:600;color:#555;">Waiting for Firebase data...</div>
+    </div>
 
-      <!-- THRESHOLD ALERT PANEL -->
-      <div id="thresholdPanel" style="margin-top:12px;padding:12px;background:#fffcf0;border:1.5px solid #fde68a;border-radius:12px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#999;">Sound Threshold Trigger</span>
-          <span id="threshBadge" style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;background:#eee;color:#777;">IDLE</span>
+    <!-- Gas Analysis -->
+    <div class="info-box">
+      <div class="info-box-title">💨 Gas Analysis</div>
+      <div class="status-pill" id="gasStatusBox">Waiting for data...</div>
+      <div class="info-sub" id="gasMessage"></div>
+    </div>
+
+    <!-- Hive Health Score -->
+    <div class="info-box">
+      <div class="info-box-title">❤️ Hive Health Score</div>
+
+      <div class="health-score-row">
+        <div class="score-dial">
+          <svg width="88" height="88" viewBox="0 0 88 88">
+            <circle class="score-dial-bg"   cx="44" cy="44" r="36"/>
+            <circle class="score-dial-fill" id="scoreArc" cx="44" cy="44" r="36"
+              stroke="#f4b400" stroke-dasharray="226.2" stroke-dashoffset="226.2"/>
+          </svg>
+          <div class="score-number">
+            <span id="scoreNumber" style="color:#f4b400">--</span>
+            <span>/100</span>
+          </div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-          <span style="font-size:11px;color:#888;white-space:nowrap;">Threshold (dB):</span>
-          <input type="range" id="threshSlider" min="30" max="90" value="55" style="flex:1;accent-color:#f4b400;" oninput="document.getElementById('threshVal').innerText=this.value"/>
-          <span id="threshVal" style="font-size:12px;font-weight:700;color:#f4b400;min-width:28px;">55</span>
+        <div class="score-meta">
+          <div class="score-label" id="scoreLabel">Calculating...</div>
+          <div class="score-sublabel" id="scoreSublabel">Waiting for live sensor data.</div>
         </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-          <span style="font-size:11px;color:#888;">Current Sound:</span>
-          <span id="liveDbDisplay" style="font-size:13px;font-weight:700;color:#2d3436;">-- dB</span>
+      </div>
+
+      <div class="param-bars">
+        <div class="param-bar-row">
+          <span class="param-bar-icon">🌡️</span>
+          <span class="param-bar-name">Temp</span>
+          <div class="param-bar-track"><div class="param-bar-fill" id="barTemp" style="width:0%"></div></div>
+          <span class="param-bar-score" id="ptTemp">--</span>
         </div>
-        <!-- live bar -->
-        <div style="height:7px;background:#eee;border-radius:6px;overflow:hidden;margin-bottom:8px;position:relative;">
-          <div id="liveDbBar" style="height:100%;width:0%;border-radius:6px;background:#f4b400;transition:width .4s ease;"></div>
-          <div id="threshLine" style="position:absolute;top:0;height:100%;width:2px;background:#e53935;"></div>
+        <div class="param-bar-row">
+          <span class="param-bar-icon">💧</span>
+          <span class="param-bar-name">Humidity</span>
+          <div class="param-bar-track"><div class="param-bar-fill" id="barHumid" style="width:0%"></div></div>
+          <span class="param-bar-score" id="ptHumid">--</span>
         </div>
-        <div id="threshAlert" style="display:none;padding:10px 12px;border-radius:10px;background:#ffebee;border:1.5px solid #ef9a9a;text-align:center;">
-          <span style="font-size:20px;">🚨</span>
-          <p style="font-size:13px;font-weight:700;color:#c62828;margin-top:4px;">Sound Threshold Exceeded!</p>
-          <p style="font-size:11px;color:#e57373;margin-top:2px;">Auto-prediction triggered by high dB</p>
-          <p id="threshTriggerVal" style="font-size:12px;font-weight:700;color:#c62828;margin-top:4px;"></p>
+        <div class="param-bar-row">
+          <span class="param-bar-icon">🔊</span>
+          <span class="param-bar-name">Sound</span>
+          <div class="param-bar-track"><div class="param-bar-fill" id="barSound" style="width:0%"></div></div>
+          <span class="param-bar-score" id="ptSound">--</span>
         </div>
+        <div class="param-bar-row">
+          <span class="param-bar-icon">⚖️</span>
+          <span class="param-bar-name">Weight</span>
+          <div class="param-bar-track"><div class="param-bar-fill" id="barWeight" style="width:0%"></div></div>
+          <span class="param-bar-score" id="ptWeight">--</span>
+        </div>
+        <div class="param-bar-row">
+          <span class="param-bar-icon">💨</span>
+          <span class="param-bar-name">Gas/Air</span>
+          <div class="param-bar-track"><div class="param-bar-fill" id="barGas" style="width:0%"></div></div>
+          <span class="param-bar-score" id="ptGas">--</span>
+        </div>
+      </div>
+
+      <div class="health-history" id="healthHistory">
+        <span style="font-size:10px;color:#bbb;align-self:center;">Recent:</span>
       </div>
     </div>
 
-    <div class="info-box">
-      <p><b>Gas Analysis</b></p>
-      <div class="status-pill" id="gasStatusBox">Waiting for data...</div>
-      <p id="gasMessage" style="margin-top:8px;font-size:13px;color:#666;"></p>
-    </div>
-
-    <div class="info-box disease-box">
-      <p><b>🦠 AI Sound Analysis</b></p>
-      <p id="mlStatusText" style="margin-top:8px;font-size:13px;font-weight:600;color:#555;">Waiting for Firebase data...</p>
-    </div>
-
-  </div>
+  </div><!-- /.info-grid -->
 
   <!-- GRAPHS -->
   <div class="graphs">
     <div class="graph-card">
-      <div class="graph-label">🌡️ Temperature</div>
-      <canvas id="tChart"></canvas>
+      <div class="graph-label">🌡️ Temperature (°C)</div>
+      <div class="graph-interval-note">📍 One point every 30 sec · last 20 readings shown</div>
+      <div class="chart-wrap"><canvas id="tChart"></canvas></div>
     </div>
     <div class="graph-card">
-      <div class="graph-label">💧 Humidity</div>
-      <canvas id="hChart"></canvas>
+      <div class="graph-label">💧 Humidity (%)</div>
+      <div class="graph-interval-note">📍 One point every 30 sec · last 20 readings shown</div>
+      <div class="chart-wrap"><canvas id="hChart"></canvas></div>
     </div>
     <div class="graph-card">
-      <div class="graph-label">🔊 Sound</div>
-      <canvas id="sChart"></canvas>
+      <div class="graph-label">🔊 Sound (dB)</div>
+      <div class="graph-interval-note">📍 One point every 30 sec · last 20 readings shown</div>
+      <div class="chart-wrap"><canvas id="sChart"></canvas></div>
     </div>
     <div class="graph-card">
-      <div class="graph-label">⚖️ Weight</div>
-      <canvas id="wChart"></canvas>
+      <div class="graph-label">⚖️ Weight (kg)</div>
+      <div class="graph-interval-note">📍 One point every 30 sec · last 20 readings shown</div>
+      <div class="chart-wrap"><canvas id="wChart"></canvas></div>
     </div>
   </div>
 
@@ -386,21 +445,14 @@ body { background:var(--bg); color:#2d3436; }
   <div class="upload-section">
     <h2>🔊 Manual Sound Analysis</h2>
     <p class="subtitle">Upload a hive audio recording to check for queenlessness or healthy queen presence</p>
-
     <div class="upload-area" id="dropZone">
       <input type="file" id="audioFile" accept=".wav,.mp3,.ogg,.flac,.m4a" />
       <div class="upload-icon">🎵</div>
       <p><span>Click to upload</span> or drag & drop audio file</p>
       <p class="upload-formats">WAV · MP3 · OGG · FLAC · M4A</p>
     </div>
-
     <div class="upload-filename" id="uploadFilename">📎 No file selected</div>
-
-    <button class="analyze-btn" id="analyzeBtn" disabled onclick="analyzeSound()">
-      Analyze Hive Sound
-    </button>
-
-    <!-- RESULT -->
+    <button class="analyze-btn" id="analyzeBtn" disabled onclick="analyzeSound()">Analyze Hive Sound</button>
     <div class="upload-result" id="uploadResult">
       <div class="result-label">Manual Analysis Result</div>
       <div class="result-status-row">
@@ -410,35 +462,34 @@ body { background:var(--bg); color:#2d3436; }
       <div class="result-message" id="uploadMessage"></div>
       <div class="db-meter-wrap" id="dbMeterWrap" style="display:none">
         <div class="db-meter-label">
-          <span>Sound Level (RMS dB)</span>
-          <span id="dbValue">-- dB</span>
+          <span>Sound Level (RMS dB)</span><span id="dbValue">-- dB</span>
         </div>
-        <div class="db-meter-bar">
-          <div class="db-meter-fill" id="dbMeterFill" style="width:0%"></div>
-        </div>
+        <div class="db-meter-bar"><div class="db-meter-fill" id="dbMeterFill" style="width:0%"></div></div>
       </div>
       <div class="confidence-row" id="confidenceRow"></div>
       <div class="result-file" id="uploadFileLabel"></div>
     </div>
-
   </div>
 
 </div><!-- /.main -->
 
 <script>
 /* ── Back ── */
-function goBack() {
-  window.location.href = "welcome.html";
-}
+function goBack() { window.location.href = "welcome.html"; }
 
-/* ── Hive Name from localStorage ── */
+/* ── Hive Name ── */
 const storedName = localStorage.getItem("activeHiveName");
-if (storedName) {
-  document.getElementById("title").innerText = storedName;
-}
+if (storedName) document.getElementById("title").innerText = storedName;
 
-/* ── Charts ── */
-function createEmptyChart(id, color, label) {
+/* ══════════════════════════════════════════════
+   CHARTS
+   - X-axis shows HH:MM:SS timestamps
+   - A new point is added every 30 seconds via setInterval
+   - MAX_POINTS = 20 → shows last 10 minutes of data
+   ══════════════════════════════════════════════ */
+const MAX_POINTS = 20;
+
+function makeChart(id, color, yLabel) {
   return new Chart(document.getElementById(id), {
     type: 'line',
     data: {
@@ -457,77 +508,348 @@ function createEmptyChart(id, color, label) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: { duration: 300 },
       plugins: { legend: { display: false } },
       scales: {
-        y: { title: { display: true, text: label, font: { size: 10 } }, ticks: { font: { size: 10 } } }
+        x: {
+          ticks: { font:{size:9}, maxRotation:0, autoSkip:true, maxTicksLimit:5 }
+        },
+        y: {
+          title: { display:true, text:yLabel, font:{size:10} },
+          ticks: { font:{size:10} }
+        }
       }
     }
   });
 }
 
-createEmptyChart("tChart", "#f4b400", "Temperature (°C)");
-createEmptyChart("hChart", "#2e7d32", "Humidity (%)");
-createEmptyChart("sChart", "#e53935", "Sound (dB)");
-createEmptyChart("wChart", "#5e35b1", "Weight (kg)");
+const charts = {
+  temp:   makeChart("tChart", "#f4b400", "°C"),
+  humid:  makeChart("hChart", "#2e7d32", "%"),
+  sound:  makeChart("sChart", "#e53935", "dB"),
+  weight: makeChart("wChart", "#5e35b1", "kg")
+};
 
-/* ── Firebase ── */
+/* ── pushChart: adds one point with current HH:MM:SS label ── */
+function pushChart(chart, value) {
+  const t = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  chart.data.labels.push(t);
+  chart.data.datasets[0].data.push(value);
+  if (chart.data.labels.length > MAX_POINTS) {
+    chart.data.labels.shift();
+    chart.data.datasets[0].data.shift();
+  }
+  chart.update('none');
+}
+
+/* ══════════════════════════════════════════════
+   LATEST SENSOR VALUES
+   Stored so the 30-sec interval can push them
+   to graphs without needing Firebase again.
+   ══════════════════════════════════════════════ */
+let latestSensors = { temp: NaN, humid: NaN, sound: NaN, weight: NaN };
+
+/* ══════════════════════════════════════════════
+   30-SECOND GRAPH INTERVAL
+   Every 30 seconds, push the latest known sensor
+   values as a new data point on each chart.
+   ══════════════════════════════════════════════ */
+setInterval(() => {
+  if (!isNaN(latestSensors.temp))   pushChart(charts.temp,   latestSensors.temp);
+  if (!isNaN(latestSensors.humid))  pushChart(charts.humid,  latestSensors.humid);
+  if (!isNaN(latestSensors.sound))  pushChart(charts.sound,  latestSensors.sound);
+  if (!isNaN(latestSensors.weight)) pushChart(charts.weight, latestSensors.weight);
+}, 30000);
+
+/* ══════════════════════════════════════════════
+   ESP CONNECTION CHECKER
+   - lastDataTime is updated every time Firebase
+     receives fresh data from the ESP
+   - Every 5 seconds we check how long ago that was
+   - If > 60 seconds with no new data → show warning
+   - If ESP comes back online → hide warning automatically
+   ══════════════════════════════════════════════ */
+let lastDataTime = null;
+
+function showESPDisconnected() {
+  document.getElementById("espAlert").classList.add("show");
+  document.getElementById("live-badge-dot").style.background = "#e53935"; // dot turns red
+}
+
+function hideESPDisconnected() {
+  document.getElementById("espAlert").classList.remove("show");
+  document.getElementById("live-badge-dot").style.background = "white"; // dot back to white
+}
+
+setInterval(() => {
+  if (lastDataTime === null) return; // no data received yet, stay quiet
+  const secondsSinceLast = (Date.now() - lastDataTime) / 1000;
+  if (secondsSinceLast > 60) {
+    showESPDisconnected();
+  } else {
+    hideESPDisconnected();
+  }
+}, 5000); // checks every 5 seconds
+
+/* ══════════════════════════════════════════════
+   FIREBASE
+   ══════════════════════════════════════════════ */
 const params = new URLSearchParams(window.location.search);
 const hiveId = params.get("hive");
-
 if (!hiveId) alert("No hive selected!");
-
 const dbRef = firebase.database().ref("hives/" + hiveId);
 
+/* ══════════════════════════════════════════════
+   THRESHOLDS
+   ══════════════════════════════════════════════ */
+const THR = {
+  temp:   { low:28,  warn:38,  danger:45 },
+  humid:  { dangerLo:30, warnLo:40, warnHi:80, dangerHi:90 },
+  sound:  { warn:60, danger:75 },
+  gas:    { danger:40, warn:60 },
+  weight: { dropWarn:0.5, dropDanger:1.5 }
+};
+
+/* ══════════════════════════════════════════════
+   STATE
+   ══════════════════════════════════════════════ */
+let lastWeightKg  = null;
+let healthHistory = [];
+
+/* ══════════════════════════════════════════════
+   CARD ALERT HELPER
+   ══════════════════════════════════════════════ */
+function setCard(cardId, badgeId, level, msg) {
+  const card  = document.getElementById(cardId);
+  const badge = document.getElementById(badgeId);
+  card.classList.remove("alert-danger","alert-warn","alert-good");
+  badge.innerText = msg;
+  if      (level === "danger") card.classList.add("alert-danger");
+  else if (level === "warn")   card.classList.add("alert-warn");
+  else                         card.classList.add("alert-good");
+}
+
+/* ══════════════════════════════════════════════
+   HEALTH SCORE CALCULATOR
+   Weights:
+     Temperature  30%  — brood survival (ideal 32–36°C)
+     Humidity     20%  — larval development (ideal 50–70%)
+     Sound        20%  — colony stress & queen activity (ideal 20–50 dB)
+     Gas / Air    20%  — pesticide / CO₂ exposure (higher % = cleaner)
+     Weight       10%  — colony growth / loss indicator
+   ══════════════════════════════════════════════ */
+function calcHealth(temp, humid, soundDb, weightKg, gasLevel) {
+  let s = {};
+
+  // Temperature
+  if      (temp >= 32 && temp <= 36) s.temp = 100;
+  else if (temp >  36 && temp <= 38) s.temp = Math.round(100 - ((temp-36)/2)*40);
+  else if (temp >  38 && temp <= 45) s.temp = Math.round(60  - ((temp-38)/7)*60);
+  else if (temp <  32 && temp >= 28) s.temp = Math.round(100 - ((32-temp)/4)*40);
+  else s.temp = 0;
+
+  // Humidity
+  if      (humid >= 50 && humid <= 70) s.humid = 100;
+  else if (humid >  70 && humid <= 80) s.humid = Math.round(100 - ((humid-70)/10)*30);
+  else if (humid >  80 && humid <= 90) s.humid = Math.round(70  - ((humid-80)/10)*40);
+  else if (humid >  90)                s.humid = 10;
+  else if (humid >= 40 && humid <  50) s.humid = Math.round(100 - ((50-humid)/10)*30);
+  else if (humid >= 30 && humid <  40) s.humid = Math.round(70  - ((40-humid)/10)*40);
+  else s.humid = 10;
+
+  // Sound
+  if      (soundDb >= 20 && soundDb <= 50) s.sound = 100;
+  else if (soundDb >  50 && soundDb <= 60) s.sound = Math.round(100 - ((soundDb-50)/10)*40);
+  else if (soundDb >  60 && soundDb <= 75) s.sound = Math.round(60  - ((soundDb-60)/15)*50);
+  else if (soundDb >  75)                  s.sound = 10;
+  else s.sound = 80;
+
+  // Gas / air quality
+  if      (gasLevel >= 80) s.gas = 100;
+  else if (gasLevel >= 60) s.gas = Math.round(100 - ((80-gasLevel)/20)*40);
+  else if (gasLevel >= 40) s.gas = Math.round(60  - ((60-gasLevel)/20)*40);
+  else                     s.gas = Math.max(0, gasLevel);
+
+  // Weight stability
+  if (lastWeightKg === null) {
+    s.weight = 80;
+  } else {
+    const drop = lastWeightKg - weightKg;
+    if      (drop <= 0)   s.weight = 100;
+    else if (drop < 0.5)  s.weight = 90;
+    else if (drop < 1.5)  s.weight = Math.round(90 - (drop-0.5)*40);
+    else                  s.weight = Math.max(0, Math.round(50 - (drop-1.5)*20));
+  }
+  lastWeightKg = weightKg;
+
+  const total = Math.round(s.temp*0.30 + s.humid*0.20 + s.sound*0.20 + s.gas*0.20 + s.weight*0.10);
+  return { total, s };
+}
+
+/* ══════════════════════════════════════════════
+   UPDATE HEALTH UI
+   ══════════════════════════════════════════════ */
+function updateHealth(total, s) {
+  const arc    = document.getElementById("scoreArc");
+  const offset = 226.2 - (226.2 * total / 100);
+  arc.style.strokeDashoffset = offset;
+  const col = total >= 75 ? "#43a047" : total >= 50 ? "#fb8c00" : "#e53935";
+  arc.style.stroke = col;
+  document.getElementById("scoreNumber").style.color = col;
+  document.getElementById("scoreNumber").innerText   = total;
+
+  let label, sub;
+  if      (total >= 85) { label="🟢 Excellent"; sub="Colony thriving. All parameters in ideal range."; }
+  else if (total >= 70) { label="🟡 Good";      sub="Hive is healthy with minor deviations."; }
+  else if (total >= 50) { label="🟠 Caution";   sub="Some parameters need attention. Check breakdown."; }
+  else if (total >= 30) { label="🔴 Warning";   sub="Multiple sensors out of range. Inspect soon."; }
+  else                  { label="🆘 Critical";  sub="Colony under severe stress. Take action now!"; }
+  document.getElementById("scoreLabel").innerText    = label;
+  document.getElementById("scoreSublabel").innerText = sub;
+
+  const bc = v => v>=75?"#43a047":v>=50?"#fb8c00":"#e53935";
+  const setBar = (barId, ptId, val) => {
+    document.getElementById(barId).style.width      = val + "%";
+    document.getElementById(barId).style.background = bc(val);
+    document.getElementById(ptId).innerText         = val;
+  };
+  setBar("barTemp",  "ptTemp",   s.temp);
+  setBar("barHumid", "ptHumid",  s.humid);
+  setBar("barSound", "ptSound",  s.sound);
+  setBar("barWeight","ptWeight", s.weight);
+  setBar("barGas",   "ptGas",    s.gas);
+
+  healthHistory.push({ score:total, time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) });
+  if (healthHistory.length > 8) healthHistory.shift();
+  const hist = document.getElementById("healthHistory");
+  hist.innerHTML = '<span style="font-size:10px;color:#bbb;align-self:center;">Recent:</span>';
+  [...healthHistory].reverse().forEach(h => {
+    const chip = document.createElement("span");
+    chip.className = "history-chip " + (h.score>=70?"good":h.score>=50?"warn":"danger");
+    chip.innerText = h.time + " · " + h.score;
+    hist.appendChild(chip);
+  });
+}
+
+/* ══════════════════════════════════════════════
+   MASTER ALERT BANNER
+   ══════════════════════════════════════════════ */
+function updateBanner(alerts) {
+  const el = document.getElementById("masterAlert");
+  if (!alerts.length) { el.classList.remove("show"); return; }
+  el.classList.add("show");
+  document.getElementById("masterAlertTitle").innerText = alerts.length + " Sensor Alert" + (alerts.length>1?"s":"") + " Active!";
+  document.getElementById("masterAlertMsg").innerText   = alerts.join("  •  ");
+}
+
+/* ══════════════════════════════════════════════
+   FIREBASE LIVE LISTENER
+   ══════════════════════════════════════════════ */
 dbRef.on("value", (snapshot) => {
   const data = snapshot.val();
   if (!data) return;
 
-  /* Sensor values */
-  document.getElementById("temp").innerText     = data.sensors?.temperature ?? "--";
-  document.getElementById("humidity").innerText = data.sensors?.humidity    ?? "--";
-  document.getElementById("sound").innerText    = data.sensors?.sound_db    ?? "--";
-  document.getElementById("weight").innerText   = data.sensors?.weight      ?? "--";
-  document.getElementById("gas").innerText      = data.sensors?.gas_level   ?? "--";
+  /* ── Update last-seen timestamp for ESP connection checker ── */
+  lastDataTime = Date.now();
 
-  /* ── THRESHOLD MONITOR (MAX9814 live dB) ── */
-  const rawDb = parseFloat(data.sensors?.sound_db);
-  if (!isNaN(rawDb)) {
-    updateThresholdUI(rawDb);
+  const temp     = parseFloat(data.sensors?.temperature ?? NaN);
+  const humid    = parseFloat(data.sensors?.humidity    ?? NaN);
+  const soundDb  = parseFloat(data.sensors?.sound_db    ?? NaN);
+  const weightKg = parseFloat(data.sensors?.weight      ?? NaN);
+  const gasLevel = parseFloat(data.sensors?.gas_level   ?? NaN);
+
+  /* ── Store latest values for the 30-sec graph interval ── */
+  latestSensors.temp   = temp;
+  latestSensors.humid  = humid;
+  latestSensors.sound  = soundDb;
+  latestSensors.weight = weightKg;
+
+  /* ── Card display values ── */
+  document.getElementById("temp").innerText     = isNaN(temp)     ? "--" : temp.toFixed(1)     + " °C";
+  document.getElementById("humidity").innerText = isNaN(humid)    ? "--" : humid.toFixed(1)    + " %";
+  document.getElementById("sound").innerText    = isNaN(soundDb)  ? "--" : soundDb.toFixed(1)  + " dB";
+  document.getElementById("weight").innerText   = isNaN(weightKg) ? "--" : weightKg.toFixed(2) + " kg";
+  document.getElementById("gas").innerText      = isNaN(gasLevel) ? "--" : gasLevel.toFixed(1) + " %";
+
+  /* ── Push first point immediately when Firebase connects ── */
+  if (charts.temp.data.labels.length === 0) {
+    if (!isNaN(temp))     pushChart(charts.temp,   temp);
+    if (!isNaN(humid))    pushChart(charts.humid,  humid);
+    if (!isNaN(soundDb))  pushChart(charts.sound,  soundDb);
+    if (!isNaN(weightKg)) pushChart(charts.weight, weightKg);
   }
 
-  /* Sound ML */
-  const mlStatus  = data.sound_ml?.status ?? "--";
-  const condBox   = document.getElementById("hiveCondition");
-  document.getElementById("message").innerText      = data.sound_ml?.queen_present ? "Queen Present 🟢" : "Queen Missing 🔴";
-  document.getElementById("mlStatusText").innerText = mlStatus;
+  /* ── Card alert states ── */
+  const alerts = [];
 
+  if (!isNaN(temp)) {
+    if      (temp > THR.temp.danger) { setCard("cardTemp","badgeTemp","danger","⚠ "+temp.toFixed(1)+"°C");  alerts.push("🌡️ Temp critical ("+temp.toFixed(1)+"°C)"); }
+    else if (temp > THR.temp.warn)   { setCard("cardTemp","badgeTemp","warn",  "⚡ Hot "+temp.toFixed(1)+"°C"); alerts.push("🌡️ Temp high"); }
+    else if (temp < THR.temp.low)    { setCard("cardTemp","badgeTemp","warn",  "⚡ Cold "+temp.toFixed(1)+"°C"); alerts.push("🌡️ Temp low"); }
+    else                             { setCard("cardTemp","badgeTemp","good",""); }
+  }
+
+  if (!isNaN(humid)) {
+    if      (humid > THR.humid.dangerHi || humid < THR.humid.dangerLo) { setCard("cardHumid","badgeHumid","danger","⚠ "+humid.toFixed(0)+"%"); alerts.push("💧 Humidity critical"); }
+    else if (humid > THR.humid.warnHi   || humid < THR.humid.warnLo)   { setCard("cardHumid","badgeHumid","warn",  "⚡ "+humid.toFixed(0)+"%"); alerts.push("💧 Humidity abnormal"); }
+    else                                                                 { setCard("cardHumid","badgeHumid","good",""); }
+  }
+
+  if (!isNaN(soundDb)) {
+    if      (soundDb >= THR.sound.danger) { setCard("cardSound","badgeSound","danger","⚠ "+soundDb.toFixed(0)+"dB"); alerts.push("🔊 Sound critical"); }
+    else if (soundDb >= THR.sound.warn)   { setCard("cardSound","badgeSound","warn",  "⚡ "+soundDb.toFixed(0)+"dB"); alerts.push("🔊 Sound high"); }
+    else                                  { setCard("cardSound","badgeSound","good",""); }
+  }
+
+  if (!isNaN(weightKg)) {
+    if (lastWeightKg !== null) {
+      const drop = lastWeightKg - weightKg;
+      if      (drop >= THR.weight.dropDanger) { setCard("cardWeight","badgeWeight","danger","⚠ −"+drop.toFixed(2)+"kg"); alerts.push("⚖️ Weight drop critical"); }
+      else if (drop >= THR.weight.dropWarn)   { setCard("cardWeight","badgeWeight","warn",  "⚡ −"+drop.toFixed(2)+"kg"); alerts.push("⚖️ Weight dropping"); }
+      else                                    { setCard("cardWeight","badgeWeight","good",""); }
+    } else { setCard("cardWeight","badgeWeight","good",""); }
+  }
+
+  if (!isNaN(gasLevel)) {
+    if      (gasLevel < THR.gas.danger) { setCard("cardGas","badgeGas","danger","⚠ Air "+gasLevel.toFixed(0)+"%"); alerts.push("💨 Air quality critical"); }
+    else if (gasLevel < THR.gas.warn)   { setCard("cardGas","badgeGas","warn",  "⚡ Air "+gasLevel.toFixed(0)+"%"); alerts.push("💨 Air quality poor"); }
+    else                                { setCard("cardGas","badgeGas","good",""); }
+  }
+
+  updateBanner(alerts);
+
+  /* ── Health Score ── */
+  const allValid = !isNaN(temp) && !isNaN(humid) && !isNaN(soundDb) && !isNaN(weightKg) && !isNaN(gasLevel);
+  if (allValid) {
+    const { total, s } = calcHealth(temp, humid, soundDb, weightKg, gasLevel);
+    updateHealth(total, s);
+  }
+
+  /* ── AI Sound ML ── */
+  const mlStatus = data.sound_ml?.status ?? "--";
+  const condBox  = document.getElementById("hiveCondition");
+  const qPresent = data.sound_ml?.queen_present;
+  document.getElementById("message").innerText = qPresent === true ? "Queen Present 🟢" : qPresent === false ? "Queen Missing 🔴" : "";
+  document.getElementById("mlStatusText").innerText = mlStatus !== "--" ? mlStatus : "Waiting for Firebase data...";
   condBox.innerText = mlStatus;
-  if (mlStatus === "Healthy") {
-    condBox.style.background = "#e8f5e9";
-    condBox.style.color      = "#2e7d32";
-  } else if (mlStatus !== "--") {
-    condBox.style.background = "#ffebee";
-    condBox.style.color      = "#c62828";
-  }
+  if      (mlStatus === "Healthy") { condBox.style.background="#e8f5e9"; condBox.style.color="#2e7d32"; }
+  else if (mlStatus !== "--")      { condBox.style.background="#ffebee"; condBox.style.color="#c62828"; }
+  else                             { condBox.style.background="#f5f5f5"; condBox.style.color="#555"; }
 
-  /* Gas Analysis */
+  /* ── Gas Analysis ── */
   const gasPest      = data.gas_analysis?.pesticide_detected;
   const gasStatus    = data.gas_analysis?.status ?? "--";
   const gasStatusBox = document.getElementById("gasStatusBox");
-
-  gasStatusBox.innerText                        = gasStatus;
-  document.getElementById("gasMessage").innerText = gasPest ? "⚠️ Pesticide Detected" : "Safe Environment ✅";
-
-  if (gasPest) {
-    gasStatusBox.style.background = "#ffebee";
-    gasStatusBox.style.color      = "#c62828";
-  } else if (gasStatus !== "--") {
-    gasStatusBox.style.background = "#e8f5e9";
-    gasStatusBox.style.color      = "#2e7d32";
-  }
+  gasStatusBox.innerText = gasStatus;
+  document.getElementById("gasMessage").innerText = gasPest ? "⚠️ Pesticide Detected" : gasStatus !== "--" ? "Safe Environment ✅" : "";
+  if      (gasPest)           { gasStatusBox.style.background="#ffebee"; gasStatusBox.style.color="#c62828"; }
+  else if (gasStatus !== "--") { gasStatusBox.style.background="#e8f5e9"; gasStatusBox.style.color="#2e7d32"; }
+  else                         { gasStatusBox.style.background="#f5f5f5"; gasStatusBox.style.color="#555"; }
 });
 
-/* ── Manual Sound Upload ── */
+/* ══════════════════════════════════════════════
+   MANUAL SOUND UPLOAD
+   ══════════════════════════════════════════════ */
 const BACKEND_URL    = "https://kanasu-bee-sound-api.onrender.com";
 const audioFileInput = document.getElementById("audioFile");
 const analyzeBtn     = document.getElementById("analyzeBtn");
@@ -538,157 +860,69 @@ audioFileInput.addEventListener("change", () => {
   const file = audioFileInput.files[0];
   if (file) {
     filenameLabel.style.display = "block";
-    filenameLabel.innerText = "📎 " + file.name + " (" + (file.size / 1024).toFixed(1) + " KB)";
+    filenameLabel.innerText = "📎 " + file.name + " (" + (file.size/1024).toFixed(1) + " KB)";
     analyzeBtn.disabled = false;
   }
 });
-
-dropZone.addEventListener("dragover",  (e) => { e.preventDefault(); dropZone.classList.add("dragover"); });
-dropZone.addEventListener("dragleave", ()  => dropZone.classList.remove("dragover"));
-dropZone.addEventListener("drop", (e) => {
-  e.preventDefault();
-  dropZone.classList.remove("dragover");
+dropZone.addEventListener("dragover",  e => { e.preventDefault(); dropZone.classList.add("dragover"); });
+dropZone.addEventListener("dragleave", ()=> dropZone.classList.remove("dragover"));
+dropZone.addEventListener("drop", e => {
+  e.preventDefault(); dropZone.classList.remove("dragover");
   const file = e.dataTransfer.files[0];
   if (file) {
-    const dt = new DataTransfer();
-    dt.items.add(file);
+    const dt = new DataTransfer(); dt.items.add(file);
     audioFileInput.files = dt.files;
     filenameLabel.style.display = "block";
-    filenameLabel.innerText = "📎 " + file.name + " (" + (file.size / 1024).toFixed(1) + " KB)";
+    filenameLabel.innerText = "📎 " + file.name + " (" + (file.size/1024).toFixed(1) + " KB)";
     analyzeBtn.disabled = false;
   }
 });
 
-const STATUS_ICONS = { Healthy: "🐝", Queenless: "⚠️", Stress: "🚨", Error: "❌" };
+const STATUS_ICONS = { Healthy:"🐝", Queenless:"⚠️", Stress:"🚨", Error:"❌" };
 
 async function analyzeSound() {
   const file = audioFileInput.files[0];
   if (!file) return;
-
   analyzeBtn.disabled = true;
   analyzeBtn.innerHTML = '<span class="spinner"></span> Analyzing...';
-
-  const resultCard = document.getElementById("uploadResult");
-  resultCard.style.display = "none";
-  resultCard.className = "upload-result";
-
+  const rc = document.getElementById("uploadResult");
+  rc.style.display = "none"; rc.className = "upload-result";
   try {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    const response = await fetch(BACKEND_URL + "/predict", {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await response.json();
-
+    const fd = new FormData(); fd.append("file", file);
+    const res  = await fetch(BACKEND_URL + "/predict", { method:"POST", body:fd });
+    const data = await res.json();
     if (data.error) { showUploadError(data.error); return; }
-
-    resultCard.style.display = "block";
-    resultCard.classList.add(data.status_class);
-
+    rc.style.display = "block"; rc.classList.add(data.status_class);
     document.getElementById("resultIcon").innerText      = STATUS_ICONS[data.prediction] || "🔍";
     document.getElementById("uploadStatus").innerText    = data.prediction;
     document.getElementById("uploadMessage").innerText   = data.message;
     document.getElementById("uploadFileLabel").innerText = "📂 " + data.filename;
-
-    /* Confidence badges */
     const confRow = document.getElementById("confidenceRow");
     confRow.innerHTML = "";
-    if (data.confidence && Object.keys(data.confidence).length > 0) {
+    if (data.confidence) {
       for (const [cls, pct] of Object.entries(data.confidence)) {
-        const badge = document.createElement("span");
-        badge.className = "conf-badge";
-        badge.innerText = cls + " " + pct + "%";
-        confRow.appendChild(badge);
+        const b = document.createElement("span"); b.className="conf-badge"; b.innerText=cls+" "+pct+"%"; confRow.appendChild(b);
       }
     }
-
-    /* dB meter */
     if (data.acoustics) {
       document.getElementById("dbMeterWrap").style.display = "block";
       const rmsDb = data.acoustics.rms_db;
       document.getElementById("dbValue").innerText = rmsDb + " dB";
-      const pct  = Math.min(100, Math.max(0, ((rmsDb + 60) / 60) * 100));
+      const pct  = Math.min(100, Math.max(0, ((rmsDb+60)/60)*100));
       const fill = document.getElementById("dbMeterFill");
       fill.style.width = pct + "%";
       fill.className   = "db-meter-fill level-" + data.status_class;
     }
-
-  } catch (err) {
+  } catch(err) {
     showUploadError("Could not connect to the prediction server. Check your backend URL or try again.");
   }
-
   analyzeBtn.disabled = false;
   analyzeBtn.innerHTML = "Analyze Hive Sound";
 }
 
-/* ── THRESHOLD MONITOR LOGIC ── */
-let lastTriggerTime = 0;
-const TRIGGER_COOLDOWN_MS = 10000; // don't re-trigger within 10s
-
-function updateThresholdUI(currentDb) {
-  const threshold  = parseInt(document.getElementById("threshSlider").value);
-  const badge      = document.getElementById("threshBadge");
-  const alert      = document.getElementById("threshAlert");
-  const bar        = document.getElementById("liveDbBar");
-  const threshLine = document.getElementById("threshLine");
-  const display    = document.getElementById("liveDbDisplay");
-
-  // Update display
-  display.innerText = currentDb.toFixed(1) + " dB";
-
-  // Bar: map 30–90 dB range to 0–100%
-  const pct = Math.min(100, Math.max(0, ((currentDb - 30) / 60) * 100));
-  bar.style.width = pct + "%";
-  bar.style.background = currentDb >= threshold ? "#e53935" : "#f4b400";
-
-  // Threshold line position
-  const linePct = Math.min(100, Math.max(0, ((threshold - 30) / 60) * 100));
-  threshLine.style.left = linePct + "%";
-
-  if (currentDb >= threshold) {
-    badge.style.background = "#ffebee";
-    badge.style.color      = "#c62828";
-    badge.innerText        = "TRIGGERED";
-    alert.style.display    = "block";
-    document.getElementById("threshTriggerVal").innerText =
-      "Detected: " + currentDb.toFixed(1) + " dB  (threshold: " + threshold + " dB)";
-
-    // Auto-trigger prediction once per cooldown window
-    const now = Date.now();
-    if (now - lastTriggerTime > TRIGGER_COOLDOWN_MS) {
-      lastTriggerTime = now;
-      autoTriggerFromThreshold(currentDb);
-    }
-  } else {
-    badge.style.background = "#e8f5e9";
-    badge.style.color      = "#2e7d32";
-    badge.innerText        = "MONITORING";
-    alert.style.display    = "none";
-  }
-}
-
-function autoTriggerFromThreshold(detectedDb) {
-  // Flash the AI Sound Analysis box to signal auto-detection
-  const mlBox = document.getElementById("mlStatusText");
-  const origText = mlBox.innerText;
-  mlBox.style.color = "#e65100";
-  mlBox.innerText   = "⚡ High sound detected (" + detectedDb.toFixed(1) + " dB) — check hive status!";
-  setTimeout(() => {
-    mlBox.style.color = "#555";
-    mlBox.innerText   = origText;
-  }, 8000);
-
-  // Also scroll to the section for visibility
-  document.getElementById("thresholdPanel").scrollIntoView({ behavior: "smooth", block: "center" });
-}
-
 function showUploadError(msg) {
-  const resultCard = document.getElementById("uploadResult");
-  resultCard.style.display = "block";
-  resultCard.className = "upload-result alert";
+  const rc = document.getElementById("uploadResult");
+  rc.style.display = "block"; rc.className = "upload-result alert";
   document.getElementById("resultIcon").innerText      = "❌";
   document.getElementById("uploadStatus").innerText    = "Error";
   document.getElementById("uploadMessage").innerText   = msg;
