@@ -23,7 +23,6 @@
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Montserrat',sans-serif; }
 body { background:var(--bg); color:#2d3436; }
 
-/* ── TOPBAR ── */
 .topbar {
   display:flex; justify-content:space-between; align-items:center;
   padding:12px 20px; background:var(--glass);
@@ -47,10 +46,8 @@ body { background:var(--bg); color:#2d3436; }
 }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-/* ── MAIN ── */
 .main { padding:15px; max-width:1400px; margin:auto; }
 
-/* ── ESP DISCONNECTED BANNER ── */
 #espAlert {
   display:none; margin-bottom:12px; padding:14px 18px;
   border-radius:16px;
@@ -62,7 +59,6 @@ body { background:var(--bg); color:#2d3436; }
 .esp-alert-body h4 { font-size:13px; font-weight:800; color:#e65100; margin-bottom:4px; }
 .esp-alert-body p  { font-size:12px; color:#fb8c00; line-height:1.5; }
 
-/* ── MASTER ALERT BANNER ── */
 #masterAlert {
   display:none; margin-bottom:12px; padding:14px 18px;
   border-radius:16px;
@@ -75,7 +71,6 @@ body { background:var(--bg); color:#2d3436; }
 .master-alert-body p  { font-size:12px; color:#e57373; line-height:1.5; }
 @keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
 
-/* ── SENSOR CARDS ── */
 .cards {
   display:grid; grid-template-columns:repeat(2,1fr);
   gap:12px; margin-bottom:12px;
@@ -106,7 +101,6 @@ body { background:var(--bg); color:#2d3436; }
   50%     {box-shadow:0 0 0 8px rgba(229,57,53,.05),var(--shadow);}
 }
 
-/* ── INFO GRID — all boxes same style ── */
 .info-grid {
   display:grid; grid-template-columns:1fr;
   gap:12px; margin-bottom:12px;
@@ -125,7 +119,6 @@ body { background:var(--bg); color:#2d3436; }
 }
 .info-sub { font-size:13px; color:#666; line-height:1.6; }
 
-/* health score elements inside info-box */
 .health-score-row {
   display:flex; align-items:center; gap:14px; margin-bottom:12px;
 }
@@ -169,7 +162,6 @@ body { background:var(--bg); color:#2d3436; }
 .history-chip.warn   { background:#fff3e0; color:#e65100; }
 .history-chip.danger { background:#ffebee; color:#c62828; }
 
-/* ── GRAPHS ── */
 .graphs {
   display:grid; grid-template-columns:1fr;
   gap:15px; margin-bottom:12px;
@@ -191,7 +183,6 @@ body { background:var(--bg); color:#2d3436; }
 .chart-wrap { flex:1; position:relative; min-height:0; }
 .chart-wrap canvas { position:absolute; inset:0; width:100% !important; height:100% !important; }
 
-/* ── UPLOAD SECTION ── */
 .upload-section {
   background:white; border-radius:22px; padding:25px;
   box-shadow:var(--shadow); border:1.5px solid #fde68a;
@@ -231,7 +222,6 @@ body { background:var(--bg); color:#2d3436; }
 .analyze-btn:hover:not(:disabled) { background:#e6a800; transform:translateY(-1px); }
 .analyze-btn:disabled { background:#ddd; color:#aaa; cursor:not-allowed; }
 
-/* upload result */
 .upload-result {
   display:none; margin-top:18px; border-radius:16px; padding:20px;
   border:1.5px solid #fde68a; background:#fffcf0; animation:fadeUp .3s ease;
@@ -265,28 +255,14 @@ body { background:var(--bg); color:#2d3436; }
 }
 @keyframes spin { to{ transform:rotate(360deg); } }
 
-/* ── RESPONSIVE ── */
-@media (min-width:600px) {
-  .cards { grid-template-columns:repeat(3,1fr); }
-}
-@media (min-width:768px) {
-  .info-grid { grid-template-columns:1fr 1fr; }
-  .graphs    { grid-template-columns:1fr 1fr; }
-}
-@media (min-width:1100px) {
-  .cards     { grid-template-columns:repeat(5,1fr); }
-  .info-grid { grid-template-columns:1fr 1fr 1fr; }
-}
-@media (max-width:500px) {
-  .value { font-size:18px; }
-  .upload-section { padding:18px 14px; }
-  .score-label { font-size:14px; }
-}
+@media (min-width:600px)  { .cards { grid-template-columns:repeat(3,1fr); } }
+@media (min-width:768px)  { .info-grid { grid-template-columns:1fr 1fr; } .graphs { grid-template-columns:1fr 1fr; } }
+@media (min-width:1100px) { .cards { grid-template-columns:repeat(5,1fr); } .info-grid { grid-template-columns:1fr 1fr 1fr; } }
+@media (max-width:500px)  { .value { font-size:18px; } .upload-section { padding:18px 14px; } .score-label { font-size:14px; } }
 </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
 <div class="topbar">
   <button class="back-btn" onclick="goBack()">← Back</button>
   <h2 id="title">Live Hive</h2>
@@ -295,7 +271,6 @@ body { background:var(--bg); color:#2d3436; }
 
 <div class="main">
 
-  <!-- ESP DISCONNECTED BANNER -->
   <div id="espAlert">
     <div class="esp-alert-icon">📡</div>
     <div class="esp-alert-body">
@@ -304,7 +279,6 @@ body { background:var(--bg); color:#2d3436; }
     </div>
   </div>
 
-  <!-- MASTER ALERT BANNER -->
   <div id="masterAlert">
     <div class="master-alert-icon">🚨</div>
     <div class="master-alert-body">
@@ -313,7 +287,6 @@ body { background:var(--bg); color:#2d3436; }
     </div>
   </div>
 
-  <!-- SENSOR CARDS -->
   <div class="cards">
     <div class="card" id="cardTemp">
       <h3>Temp</h3><div id="temp" class="value">--</div>
@@ -337,28 +310,23 @@ body { background:var(--bg); color:#2d3436; }
     </div>
   </div>
 
-  <!-- INFO BOXES -->
   <div class="info-grid">
 
-    <!-- AI Sound Analysis -->
     <div class="info-box">
-      <div class="info-box-title"> AI Sound Analysis</div>
+      <div class="info-box-title">🐝 AI Sound Analysis</div>
       <div class="status-pill" id="hiveCondition">Waiting for data...</div>
       <div class="info-sub" id="message"></div>
       <div class="info-sub" id="mlStatusText" style="margin-top:6px;font-weight:600;color:#555;">Waiting for Firebase data...</div>
     </div>
 
-    <!-- Gas Analysis -->
     <div class="info-box">
       <div class="info-box-title">💨 Gas Analysis</div>
       <div class="status-pill" id="gasStatusBox">Waiting for data...</div>
       <div class="info-sub" id="gasMessage"></div>
     </div>
 
-    <!-- Hive Health Score -->
     <div class="info-box">
       <div class="info-box-title">❤️ Hive Health Score</div>
-
       <div class="health-score-row">
         <div class="score-dial">
           <svg width="88" height="88" viewBox="0 0 88 88">
@@ -376,7 +344,6 @@ body { background:var(--bg); color:#2d3436; }
           <div class="score-sublabel" id="scoreSublabel">Waiting for live sensor data.</div>
         </div>
       </div>
-
       <div class="param-bars">
         <div class="param-bar-row">
           <span class="param-bar-icon">🌡️</span>
@@ -409,15 +376,13 @@ body { background:var(--bg); color:#2d3436; }
           <span class="param-bar-score" id="ptGas">--</span>
         </div>
       </div>
-
       <div class="health-history" id="healthHistory">
         <span style="font-size:10px;color:#bbb;align-self:center;">Recent:</span>
       </div>
     </div>
 
-  </div><!-- /.info-grid -->
+  </div>
 
-  <!-- GRAPHS -->
   <div class="graphs">
     <div class="graph-card">
       <div class="graph-label">🌡️ Temperature (°C)</div>
@@ -441,7 +406,6 @@ body { background:var(--bg); color:#2d3436; }
     </div>
   </div>
 
-  <!-- MANUAL SOUND UPLOAD -->
   <div class="upload-section">
     <h2>🔊 Manual Sound Analysis</h2>
     <p class="subtitle">Upload a hive audio recording to check for queenlessness or healthy queen presence</p>
@@ -471,89 +435,46 @@ body { background:var(--bg); color:#2d3436; }
     </div>
   </div>
 
-</div><!-- /.main -->
+</div>
 
 <script>
-/* ── Back ── */
 function goBack() { window.location.href = "welcome.html"; }
 
-/* ── Hive Name ── */
 const storedName = localStorage.getItem("activeHiveName");
 if (storedName) document.getElementById("title").innerText = storedName;
 
-/* ══════════════════════════════════════════════
-   CHARTS
-   - X-axis shows HH:MM:SS timestamps
-   - A new point is added every 30 seconds via setInterval
-   - MAX_POINTS = 20 → shows last 10 minutes of data
-   ══════════════════════════════════════════════ */
+/* ── Charts ── */
 const MAX_POINTS = 20;
-
 function makeChart(id, color, yLabel) {
   return new Chart(document.getElementById(id), {
     type: 'line',
-    data: {
-      labels: [],
-      datasets: [{
-        data: [],
-        borderColor: color,
-        backgroundColor: color + "22",
-        fill: true,
-        tension: 0.4,
-        pointRadius: 3,
-        pointBackgroundColor: color,
-        borderWidth: 2
-      }]
-    },
+    data: { labels: [], datasets: [{ data: [], borderColor: color,
+      backgroundColor: color+"22", fill:true, tension:0.4,
+      pointRadius:3, pointBackgroundColor:color, borderWidth:2 }] },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: { duration: 300 },
-      plugins: { legend: { display: false } },
+      responsive:true, maintainAspectRatio:false, animation:{duration:300},
+      plugins:{ legend:{display:false} },
       scales: {
-        x: {
-          ticks: { font:{size:9}, maxRotation:0, autoSkip:true, maxTicksLimit:5 }
-        },
-        y: {
-          title: { display:true, text:yLabel, font:{size:10} },
-          ticks: { font:{size:10} }
-        }
+        x: { ticks:{font:{size:9}, maxRotation:0, autoSkip:true, maxTicksLimit:5} },
+        y: { title:{display:true, text:yLabel, font:{size:10}}, ticks:{font:{size:10}} }
       }
     }
   });
 }
-
 const charts = {
-  temp:   makeChart("tChart", "#f4b400", "°C"),
-  humid:  makeChart("hChart", "#2e7d32", "%"),
-  sound:  makeChart("sChart", "#e53935", "dB"),
-  weight: makeChart("wChart", "#5e35b1", "kg")
+  temp:   makeChart("tChart","#f4b400","°C"),
+  humid:  makeChart("hChart","#2e7d32","%"),
+  sound:  makeChart("sChart","#e53935","dB"),
+  weight: makeChart("wChart","#5e35b1","kg")
 };
-
-/* ── pushChart: adds one point with current HH:MM:SS label ── */
 function pushChart(chart, value) {
-  const t = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  const t = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   chart.data.labels.push(t);
   chart.data.datasets[0].data.push(value);
-  if (chart.data.labels.length > MAX_POINTS) {
-    chart.data.labels.shift();
-    chart.data.datasets[0].data.shift();
-  }
+  if (chart.data.labels.length > MAX_POINTS) { chart.data.labels.shift(); chart.data.datasets[0].data.shift(); }
   chart.update('none');
 }
-
-/* ══════════════════════════════════════════════
-   LATEST SENSOR VALUES
-   Stored so the 30-sec interval can push them
-   to graphs without needing Firebase again.
-   ══════════════════════════════════════════════ */
-let latestSensors = { temp: NaN, humid: NaN, sound: NaN, weight: NaN };
-
-/* ══════════════════════════════════════════════
-   30-SECOND GRAPH INTERVAL
-   Every 30 seconds, push the latest known sensor
-   values as a new data point on each chart.
-   ══════════════════════════════════════════════ */
+let latestSensors = { temp:NaN, humid:NaN, sound:NaN, weight:NaN };
 setInterval(() => {
   if (!isNaN(latestSensors.temp))   pushChart(charts.temp,   latestSensors.temp);
   if (!isNaN(latestSensors.humid))  pushChart(charts.humid,  latestSensors.humid);
@@ -561,64 +482,49 @@ setInterval(() => {
   if (!isNaN(latestSensors.weight)) pushChart(charts.weight, latestSensors.weight);
 }, 30000);
 
-/* ══════════════════════════════════════════════
-   ESP CONNECTION CHECKER
-   - lastDataTime is updated every time Firebase
-     receives fresh data from the ESP
-   - Every 5 seconds we check how long ago that was
-   - If > 60 seconds with no new data → show warning
-   - If ESP comes back online → hide warning automatically
-   ══════════════════════════════════════════════ */
+/* ── ESP checker ── */
 let lastDataTime = null;
-
 function showESPDisconnected() {
   document.getElementById("espAlert").classList.add("show");
-  document.getElementById("live-badge-dot").style.background = "#e53935"; // dot turns red
+  document.getElementById("live-badge-dot").style.background = "#e53935";
 }
-
 function hideESPDisconnected() {
   document.getElementById("espAlert").classList.remove("show");
-  document.getElementById("live-badge-dot").style.background = "white"; // dot back to white
+  document.getElementById("live-badge-dot").style.background = "white";
 }
-
 setInterval(() => {
-  if (lastDataTime === null) return; // no data received yet, stay quiet
-  const secondsSinceLast = (Date.now() - lastDataTime) / 1000;
-  if (secondsSinceLast > 60) {
-    showESPDisconnected();
-  } else {
-    hideESPDisconnected();
-  }
-}, 5000); // checks every 5 seconds
+  if (lastDataTime === null) return;
+  if ((Date.now() - lastDataTime) / 1000 > 60) showESPDisconnected();
+  else hideESPDisconnected();
+}, 5000);
 
-/* ══════════════════════════════════════════════
-   FIREBASE
-   ══════════════════════════════════════════════ */
+/* ── Firebase ── */
 const params = new URLSearchParams(window.location.search);
 const hiveId = params.get("hive");
 if (!hiveId) alert("No hive selected!");
 const dbRef = firebase.database().ref("hives/" + hiveId);
 
 /* ══════════════════════════════════════════════
-   THRESHOLDS
+   THRESHOLDS — updated to match Arduino code
+   Arduino TEMP_WARN=32, TEMP_DANGER=35
+   Arduino GAS_WARN_RAW=1200 → gas_level=(1200/4095)*100 = ~29.3%
+   Arduino GAS_DANGER_RAW=2000 → gas_level=(2000/4095)*100 = ~48.8%
+   Sound: same as before (warn=60dB, danger=75dB)
+   Humidity: unchanged
+   Weight drop: unchanged
    ══════════════════════════════════════════════ */
 const THR = {
-  temp:   { low:28,  warn:38,  danger:45 },
-  humid:  { dangerLo:30, warnLo:40, warnHi:80, dangerHi:90 },
-  sound:  { warn:60, danger:75 },
-  gas:    { danger:40, warn:60 },
-  weight: { dropWarn:0.5, dropDanger:1.5 }
+  temp:   { low: 20,   warn: 32,   danger: 35   },  // ← CHANGED: warn 38→32, danger 45→35
+  humid:  { dangerLo:30, warnLo:40, warnHi:80, dangerHi:90 },  // unchanged
+  sound:  { warn: 60,  danger: 75  },                // unchanged
+  gas:    { danger: 29, warn: 49   },                // ← CHANGED: mapped from raw 1200/2000
+  weight: { dropWarn: 0.5, dropDanger: 1.5 }         // unchanged
 };
 
-/* ══════════════════════════════════════════════
-   STATE
-   ══════════════════════════════════════════════ */
 let lastWeightKg  = null;
 let healthHistory = [];
 
-/* ══════════════════════════════════════════════
-   CARD ALERT HELPER
-   ══════════════════════════════════════════════ */
+/* ── Card helper ── */
 function setCard(cardId, badgeId, level, msg) {
   const card  = document.getElementById(cardId);
   const badge = document.getElementById(badgeId);
@@ -629,48 +535,39 @@ function setCard(cardId, badgeId, level, msg) {
   else                         card.classList.add("alert-good");
 }
 
-/* ══════════════════════════════════════════════
-   HEALTH SCORE CALCULATOR
-   Weights:
-     Temperature  30%  — brood survival (ideal 32–36°C)
-     Humidity     20%  — larval development (ideal 50–70%)
-     Sound        20%  — colony stress & queen activity (ideal 20–50 dB)
-     Gas / Air    20%  — pesticide / CO₂ exposure (higher % = cleaner)
-     Weight       10%  — colony growth / loss indicator
-   ══════════════════════════════════════════════ */
+/* ── Health score — scoring bands updated to match new thresholds ── */
 function calcHealth(temp, humid, soundDb, weightKg, gasLevel) {
   let s = {};
 
-  // Temperature
-  if      (temp >= 32 && temp <= 36) s.temp = 100;
-  else if (temp >  36 && temp <= 38) s.temp = Math.round(100 - ((temp-36)/2)*40);
-  else if (temp >  38 && temp <= 45) s.temp = Math.round(60  - ((temp-38)/7)*60);
-  else if (temp <  32 && temp >= 28) s.temp = Math.round(100 - ((32-temp)/4)*40);
-  else s.temp = 0;
+  // Temperature — ideal 20–32°C for demo, warn at 32, danger at 35
+  if      (temp >= 20  && temp <= 32)  s.temp = 100;
+  else if (temp >  32  && temp <= 35)  s.temp = Math.round(100 - ((temp-32)/3)*60);
+  else if (temp >  35)                 s.temp = Math.max(0, Math.round(40 - (temp-35)*10));
+  else if (temp <  20  && temp >= 15)  s.temp = Math.round(100 - ((20-temp)/5)*40);
+  else                                 s.temp = 0;
 
-  // Humidity
+  // Humidity — unchanged
   if      (humid >= 50 && humid <= 70) s.humid = 100;
   else if (humid >  70 && humid <= 80) s.humid = Math.round(100 - ((humid-70)/10)*30);
   else if (humid >  80 && humid <= 90) s.humid = Math.round(70  - ((humid-80)/10)*40);
   else if (humid >  90)                s.humid = 10;
   else if (humid >= 40 && humid <  50) s.humid = Math.round(100 - ((50-humid)/10)*30);
   else if (humid >= 30 && humid <  40) s.humid = Math.round(70  - ((40-humid)/10)*40);
-  else s.humid = 10;
+  else                                 s.humid = 10;
 
-  // Sound
+  // Sound — unchanged
   if      (soundDb >= 20 && soundDb <= 50) s.sound = 100;
   else if (soundDb >  50 && soundDb <= 60) s.sound = Math.round(100 - ((soundDb-50)/10)*40);
   else if (soundDb >  60 && soundDb <= 75) s.sound = Math.round(60  - ((soundDb-60)/15)*50);
   else if (soundDb >  75)                  s.sound = 10;
-  else s.sound = 80;
+  else                                     s.sound = 80;
 
-  // Gas / air quality
-  if      (gasLevel >= 80) s.gas = 100;
-  else if (gasLevel >= 60) s.gas = Math.round(100 - ((80-gasLevel)/20)*40);
-  else if (gasLevel >= 40) s.gas = Math.round(60  - ((60-gasLevel)/20)*40);
-  else                     s.gas = Math.max(0, gasLevel);
+  // Gas — updated to match new gas thresholds (warn<49%, danger<29%)
+  if      (gasLevel >= 49) s.gas = 100;
+  else if (gasLevel >= 29) s.gas = Math.round(100 - ((49-gasLevel)/20)*60);
+  else                     s.gas = Math.max(0, Math.round(gasLevel));
 
-  // Weight stability
+  // Weight — unchanged
   if (lastWeightKg === null) {
     s.weight = 80;
   } else {
@@ -686,9 +583,7 @@ function calcHealth(temp, humid, soundDb, weightKg, gasLevel) {
   return { total, s };
 }
 
-/* ══════════════════════════════════════════════
-   UPDATE HEALTH UI
-   ══════════════════════════════════════════════ */
+/* ── Health UI ── */
 function updateHealth(total, s) {
   const arc    = document.getElementById("scoreArc");
   const offset = 226.2 - (226.2 * total / 100);
@@ -697,7 +592,6 @@ function updateHealth(total, s) {
   arc.style.stroke = col;
   document.getElementById("scoreNumber").style.color = col;
   document.getElementById("scoreNumber").innerText   = total;
-
   let label, sub;
   if      (total >= 85) { label="🟢 Excellent"; sub="Colony thriving. All parameters in ideal range."; }
   else if (total >= 70) { label="🟡 Good";      sub="Hive is healthy with minor deviations."; }
@@ -706,7 +600,6 @@ function updateHealth(total, s) {
   else                  { label="🆘 Critical";  sub="Colony under severe stress. Take action now!"; }
   document.getElementById("scoreLabel").innerText    = label;
   document.getElementById("scoreSublabel").innerText = sub;
-
   const bc = v => v>=75?"#43a047":v>=50?"#fb8c00":"#e53935";
   const setBar = (barId, ptId, val) => {
     document.getElementById(barId).style.width      = val + "%";
@@ -718,7 +611,6 @@ function updateHealth(total, s) {
   setBar("barSound", "ptSound",  s.sound);
   setBar("barWeight","ptWeight", s.weight);
   setBar("barGas",   "ptGas",    s.gas);
-
   healthHistory.push({ score:total, time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) });
   if (healthHistory.length > 8) healthHistory.shift();
   const hist = document.getElementById("healthHistory");
@@ -731,9 +623,7 @@ function updateHealth(total, s) {
   });
 }
 
-/* ══════════════════════════════════════════════
-   MASTER ALERT BANNER
-   ══════════════════════════════════════════════ */
+/* ── Master alert banner ── */
 function updateBanner(alerts) {
   const el = document.getElementById("masterAlert");
   if (!alerts.length) { el.classList.remove("show"); return; }
@@ -742,14 +632,10 @@ function updateBanner(alerts) {
   document.getElementById("masterAlertMsg").innerText   = alerts.join("  •  ");
 }
 
-/* ══════════════════════════════════════════════
-   FIREBASE LIVE LISTENER
-   ══════════════════════════════════════════════ */
+/* ── Firebase listener ── */
 dbRef.on("value", (snapshot) => {
   const data = snapshot.val();
   if (!data) return;
-
-  /* ── Update last-seen timestamp for ESP connection checker ── */
   lastDataTime = Date.now();
 
   const temp     = parseFloat(data.sensors?.temperature ?? NaN);
@@ -758,20 +644,14 @@ dbRef.on("value", (snapshot) => {
   const weightKg = parseFloat(data.sensors?.weight      ?? NaN);
   const gasLevel = parseFloat(data.sensors?.gas_level   ?? NaN);
 
-  /* ── Store latest values for the 30-sec graph interval ── */
-  latestSensors.temp   = temp;
-  latestSensors.humid  = humid;
-  latestSensors.sound  = soundDb;
-  latestSensors.weight = weightKg;
+  latestSensors = { temp, humid, sound:soundDb, weight:weightKg };
 
-  /* ── Card display values ── */
   document.getElementById("temp").innerText     = isNaN(temp)     ? "--" : temp.toFixed(1)     + " °C";
   document.getElementById("humidity").innerText = isNaN(humid)    ? "--" : humid.toFixed(1)    + " %";
   document.getElementById("sound").innerText    = isNaN(soundDb)  ? "--" : soundDb.toFixed(1)  + " dB";
   document.getElementById("weight").innerText   = isNaN(weightKg) ? "--" : weightKg.toFixed(2) + " kg";
   document.getElementById("gas").innerText      = isNaN(gasLevel) ? "--" : gasLevel.toFixed(1) + " %";
 
-  /* ── Push first point immediately when Firebase connects ── */
   if (charts.temp.data.labels.length === 0) {
     if (!isNaN(temp))     pushChart(charts.temp,   temp);
     if (!isNaN(humid))    pushChart(charts.humid,  humid);
@@ -779,83 +659,81 @@ dbRef.on("value", (snapshot) => {
     if (!isNaN(weightKg)) pushChart(charts.weight, weightKg);
   }
 
-  /* ── Card alert states ── */
   const alerts = [];
 
+  // Temperature alerts — warn>=32, danger>=35
   if (!isNaN(temp)) {
-    if      (temp > THR.temp.danger) { setCard("cardTemp","badgeTemp","danger","⚠ "+temp.toFixed(1)+"°C");  alerts.push("🌡️ Temp critical ("+temp.toFixed(1)+"°C)"); }
-    else if (temp > THR.temp.warn)   { setCard("cardTemp","badgeTemp","warn",  "⚡ Hot "+temp.toFixed(1)+"°C"); alerts.push("🌡️ Temp high"); }
-    else if (temp < THR.temp.low)    { setCard("cardTemp","badgeTemp","warn",  "⚡ Cold "+temp.toFixed(1)+"°C"); alerts.push("🌡️ Temp low"); }
-    else                             { setCard("cardTemp","badgeTemp","good",""); }
+    if      (temp >= THR.temp.danger) { setCard("cardTemp","badgeTemp","danger","⚠ "+temp.toFixed(1)+"°C"); alerts.push("🌡️ Temp DANGER ("+temp.toFixed(1)+"°C)"); }
+    else if (temp >= THR.temp.warn)   { setCard("cardTemp","badgeTemp","warn",  "⚡ "+temp.toFixed(1)+"°C"); alerts.push("🌡️ Temp high ("+temp.toFixed(1)+"°C)"); }
+    else if (temp <  THR.temp.low)    { setCard("cardTemp","badgeTemp","warn",  "⚡ Cold "+temp.toFixed(1)+"°C"); alerts.push("🌡️ Temp low"); }
+    else                              { setCard("cardTemp","badgeTemp","good",""); }
   }
 
+  // Humidity alerts — unchanged
   if (!isNaN(humid)) {
     if      (humid > THR.humid.dangerHi || humid < THR.humid.dangerLo) { setCard("cardHumid","badgeHumid","danger","⚠ "+humid.toFixed(0)+"%"); alerts.push("💧 Humidity critical"); }
     else if (humid > THR.humid.warnHi   || humid < THR.humid.warnLo)   { setCard("cardHumid","badgeHumid","warn",  "⚡ "+humid.toFixed(0)+"%"); alerts.push("💧 Humidity abnormal"); }
     else                                                                 { setCard("cardHumid","badgeHumid","good",""); }
   }
 
+  // Sound alerts — unchanged (60/75 dB)
   if (!isNaN(soundDb)) {
-    if      (soundDb >= THR.sound.danger) { setCard("cardSound","badgeSound","danger","⚠ "+soundDb.toFixed(0)+"dB"); alerts.push("🔊 Sound critical"); }
+    if      (soundDb >= THR.sound.danger) { setCard("cardSound","badgeSound","danger","⚠ "+soundDb.toFixed(0)+"dB"); alerts.push("🔊 Sound DANGER"); }
     else if (soundDb >= THR.sound.warn)   { setCard("cardSound","badgeSound","warn",  "⚡ "+soundDb.toFixed(0)+"dB"); alerts.push("🔊 Sound high"); }
     else                                  { setCard("cardSound","badgeSound","good",""); }
   }
 
-  if (!isNaN(weightKg)) {
-    if (lastWeightKg !== null) {
-      const drop = lastWeightKg - weightKg;
-      if      (drop >= THR.weight.dropDanger) { setCard("cardWeight","badgeWeight","danger","⚠ −"+drop.toFixed(2)+"kg"); alerts.push("⚖️ Weight drop critical"); }
-      else if (drop >= THR.weight.dropWarn)   { setCard("cardWeight","badgeWeight","warn",  "⚡ −"+drop.toFixed(2)+"kg"); alerts.push("⚖️ Weight dropping"); }
-      else                                    { setCard("cardWeight","badgeWeight","good",""); }
-    } else { setCard("cardWeight","badgeWeight","good",""); }
-  }
+  // Weight alerts — unchanged
+  if (!isNaN(weightKg) && lastWeightKg !== null) {
+    const drop = lastWeightKg - weightKg;
+    if      (drop >= THR.weight.dropDanger) { setCard("cardWeight","badgeWeight","danger","⚠ −"+drop.toFixed(2)+"kg"); alerts.push("⚖️ Weight drop critical"); }
+    else if (drop >= THR.weight.dropWarn)   { setCard("cardWeight","badgeWeight","warn",  "⚡ −"+drop.toFixed(2)+"kg"); alerts.push("⚖️ Weight dropping"); }
+    else                                    { setCard("cardWeight","badgeWeight","good",""); }
+  } else if (!isNaN(weightKg)) { setCard("cardWeight","badgeWeight","good",""); }
 
+  // Gas alerts — warn<49%, danger<29% (matches Arduino raw 1200/2000)
   if (!isNaN(gasLevel)) {
-    if      (gasLevel < THR.gas.danger) { setCard("cardGas","badgeGas","danger","⚠ Air "+gasLevel.toFixed(0)+"%"); alerts.push("💨 Air quality critical"); }
+    if      (gasLevel < THR.gas.danger) { setCard("cardGas","badgeGas","danger","⚠ Air "+gasLevel.toFixed(0)+"%"); alerts.push("💨 Air quality DANGER"); }
     else if (gasLevel < THR.gas.warn)   { setCard("cardGas","badgeGas","warn",  "⚡ Air "+gasLevel.toFixed(0)+"%"); alerts.push("💨 Air quality poor"); }
     else                                { setCard("cardGas","badgeGas","good",""); }
   }
 
   updateBanner(alerts);
 
-  /* ── Health Score ── */
   const allValid = !isNaN(temp) && !isNaN(humid) && !isNaN(soundDb) && !isNaN(weightKg) && !isNaN(gasLevel);
   if (allValid) {
     const { total, s } = calcHealth(temp, humid, soundDb, weightKg, gasLevel);
     updateHealth(total, s);
   }
 
-  /* ── AI Sound ML ── */
+  // AI Sound ML
   const mlStatus = data.sound_ml?.status ?? "--";
   const condBox  = document.getElementById("hiveCondition");
   const qPresent = data.sound_ml?.queen_present;
-  document.getElementById("message").innerText = qPresent === true ? "Queen Present 🟢" : qPresent === false ? "Queen Missing 🔴" : "";
+  document.getElementById("message").innerText      = qPresent === true ? "Queen Present 🟢" : qPresent === false ? "Queen Missing 🔴" : "";
   document.getElementById("mlStatusText").innerText = mlStatus !== "--" ? mlStatus : "Waiting for Firebase data...";
   condBox.innerText = mlStatus;
   if      (mlStatus === "Healthy") { condBox.style.background="#e8f5e9"; condBox.style.color="#2e7d32"; }
   else if (mlStatus !== "--")      { condBox.style.background="#ffebee"; condBox.style.color="#c62828"; }
   else                             { condBox.style.background="#f5f5f5"; condBox.style.color="#555"; }
 
-  /* ── Gas Analysis ── */
+  // Gas Analysis
   const gasPest      = data.gas_analysis?.pesticide_detected;
   const gasStatus    = data.gas_analysis?.status ?? "--";
   const gasStatusBox = document.getElementById("gasStatusBox");
   gasStatusBox.innerText = gasStatus;
   document.getElementById("gasMessage").innerText = gasPest ? "⚠️ Pesticide Detected" : gasStatus !== "--" ? "Safe Environment ✅" : "";
-  if      (gasPest)           { gasStatusBox.style.background="#ffebee"; gasStatusBox.style.color="#c62828"; }
+  if      (gasPest)            { gasStatusBox.style.background="#ffebee"; gasStatusBox.style.color="#c62828"; }
   else if (gasStatus !== "--") { gasStatusBox.style.background="#e8f5e9"; gasStatusBox.style.color="#2e7d32"; }
   else                         { gasStatusBox.style.background="#f5f5f5"; gasStatusBox.style.color="#555"; }
 });
 
-/* ══════════════════════════════════════════════
-   MANUAL SOUND UPLOAD
-   ══════════════════════════════════════════════ */
+/* ── Manual Sound Upload ── */
 const BACKEND_URL    = "https://kanasu-bee-sound-api.onrender.com";
 const audioFileInput = document.getElementById("audioFile");
 const analyzeBtn     = document.getElementById("analyzeBtn");
 const filenameLabel  = document.getElementById("uploadFilename");
 const dropZone       = document.getElementById("dropZone");
-
 audioFileInput.addEventListener("change", () => {
   const file = audioFileInput.files[0];
   if (file) {
@@ -877,9 +755,7 @@ dropZone.addEventListener("drop", e => {
     analyzeBtn.disabled = false;
   }
 });
-
 const STATUS_ICONS = { Healthy:"🐝", Queenless:"⚠️", Stress:"🚨", Error:"❌" };
-
 async function analyzeSound() {
   const file = audioFileInput.files[0];
   if (!file) return;
@@ -910,8 +786,7 @@ async function analyzeSound() {
       document.getElementById("dbValue").innerText = rmsDb + " dB";
       const pct  = Math.min(100, Math.max(0, ((rmsDb+60)/60)*100));
       const fill = document.getElementById("dbMeterFill");
-      fill.style.width = pct + "%";
-      fill.className   = "db-meter-fill level-" + data.status_class;
+      fill.style.width = pct + "%"; fill.className = "db-meter-fill level-" + data.status_class;
     }
   } catch(err) {
     showUploadError("Could not connect to the prediction server. Check your backend URL or try again.");
@@ -919,7 +794,6 @@ async function analyzeSound() {
   analyzeBtn.disabled = false;
   analyzeBtn.innerHTML = "Analyze Hive Sound";
 }
-
 function showUploadError(msg) {
   const rc = document.getElementById("uploadResult");
   rc.style.display = "block"; rc.className = "upload-result alert";
