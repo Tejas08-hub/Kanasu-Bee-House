@@ -312,7 +312,7 @@ body { background:var(--bg); color:#2d3436; }
       <div class="alert-badge" id="badgeHumid"></div>
     </div>
     <div class="card" id="cardSound">
-      <h3>Sound</h3><div id="sound" class="value">--</div>
+      <h3>Sound (INMP441)</h3><div id="sound" class="value">--</div>
       <div class="alert-badge" id="badgeSound"></div>
     </div>
     <div class="card" id="cardWeight">
@@ -415,7 +415,7 @@ body { background:var(--bg); color:#2d3436; }
       <div class="chart-wrap"><canvas id="hChart"></canvas></div>
     </div>
     <div class="graph-card">
-      <div class="graph-label">🔊 Sound (raw ADC)</div>
+      <div class="graph-label">🔊 Sound — INMP441 (dB)</div>
       <div class="graph-interval-note">📍 One point every 30 sec · last 20 readings shown</div>
       <div class="chart-wrap"><canvas id="sChart"></canvas></div>
     </div>
@@ -489,7 +489,7 @@ function makeChart(id, color, yLabel) {
 const charts = {
   temp:   makeChart("tChart", "#f4b400", "°C"),
   humid:  makeChart("hChart", "#2e7d32", "%"),
-  sound:  makeChart("sChart", "#e53935", "raw"),
+  sound:  makeChart("sChart", "#e53935", "dB"),   // INMP441 dB
   weight: makeChart("wChart", "#5e35b1", "kg")
 };
 function pushChart(chart, value) {
@@ -540,25 +540,20 @@ if (!hiveId) alert("No hive selected!");
 const dbRef = firebase.database().ref("hives/" + hiveId);
 
 /* ══════════════════════════════════════════════
-   THRESHOLDS — exactly matching Arduino v5 code
+   THRESHOLDS — exactly matching Arduino v6 code
    -----------------------------------------------
-   TEMPERATURE:
-     Arduino: TEMP_LOW=20, TEMP_WARN=32, TEMP_DANGER=35
-   HUMIDITY:
-     Arduino: HUMID_DANGER_LO=30, HUMID_WARN_LO=40,
-              HUMID_WARN_HI=80, HUMID_DANGER_HI=90
-   SOUND (raw ADC, no dB):
-     Arduino: SOUND_WARN=500, SOUND_DANGER=700
-   GAS (gas_level = gasRaw/4095*100, higher % = more gas = worse):
-     Arduino: GAS_LEVEL_WARN=49, GAS_LEVEL_DANGER=69
-   WEIGHT DROP:
-     Arduino: WEIGHT_DROP_WARN=0.5, WEIGHT_DROP_DANGER=1.5
+   TEMPERATURE : low=20, warn=32, danger=35
+   HUMIDITY    : dangerLo=30, warnLo=40, warnHi=80, dangerHi=90
+   SOUND (dB)  : INMP441 I2S — warn=60dB, danger=75dB
+                 (800 raw I2S ≈ 60 dB with DB_OFFSET=120)
+   GAS         : gas_level % — warn>=49, danger>=69 (higher=worse)
+   WEIGHT DROP : warn=0.5kg, danger=1.5kg
    ══════════════════════════════════════════════ */
 const THR = {
-  temp:   { low:20,   warn:32,   danger:35   },
+  temp:   { low:20,    warn:32,   danger:35   },
   humid:  { dangerLo:30, warnLo:40, warnHi:80, dangerHi:90 },
-  sound:  { warn:500, danger:700 },   // raw ADC — matches Arduino SOUND_WARN / SOUND_DANGER
-  gas:    { warn:49,  danger:69  },   // gas_level % — matches Arduino GAS_LEVEL_WARN / DANGER
+  sound:  { warn:60,   danger:75  },   // dB from INMP441
+  gas:    { warn:49,   danger:69  },   // gas_level % — higher = worse
   weight: { dropWarn:0.5, dropDanger:1.5 }
 };
 
@@ -584,16 +579,16 @@ function setCard(cardId, badgeId, level, msg) {
 /* ══════════════════════════════════════════════
    HEALTH SCORE CALCULATOR
    Weights:
-     Temperature  30%  — brood survival (ideal 20–32°C, warn 32, danger 35)
+     Temperature  30%  — brood survival (ideal 20–32°C)
      Humidity     20%  — larval development (ideal 50–70%)
-     Sound        20%  — colony stress (raw ADC, ideal <500)
+     Sound        20%  — colony stress (INMP441 dB, ideal <60)
      Gas / Air    20%  — air quality (gas_level %, warn>=49, danger>=69)
      Weight       10%  — colony stability (drop warn 0.5kg, danger 1.5kg)
    ══════════════════════════════════════════════ */
-function calcHealth(temp, humid, soundRaw, weightKg, gasLevel) {
+function calcHealth(temp, humid, soundDb, weightKg, gasLevel) {
   let s = {};
 
-  /* Temperature — ideal 20–32°C */
+  /* Temperature — ideal 20–32°C, warn 32, danger 35 */
   if      (temp >= 20 && temp <= 32) s.temp = 100;
   else if (temp >  32 && temp <= 35) s.temp = Math.round(100 - ((temp-32)/3)*60);
   else if (temp >  35)               s.temp = Math.max(0, Math.round(40 - (temp-35)*10));
@@ -609,13 +604,12 @@ function calcHealth(temp, humid, soundRaw, weightKg, gasLevel) {
   else if (humid >= 30 && humid <  40) s.humid = Math.round(70  - ((40-humid)/10)*40);
   else                                 s.humid = 10;
 
-  /* Sound — raw ADC, ideal < 500, warn 500–700, danger > 700 */
-  if      (soundRaw <  500) s.sound = 100;
-  else if (soundRaw <= 700) s.sound = Math.round(100 - ((soundRaw-500)/200)*60);
-  else                      s.sound = Math.max(0, Math.round(40 - (soundRaw-700)/50));
+  /* Sound — INMP441 dB, ideal < 60 dB */
+  if      (soundDb <  60) s.sound = 100;
+  else if (soundDb <= 75) s.sound = Math.round(100 - ((soundDb-60)/15)*60);
+  else                    s.sound = Math.max(0, Math.round(40 - (soundDb-75)*2));
 
-  /* Gas — gas_level %, higher % = more gas = worse
-     ideal < 49%, warn 49–69%, danger >= 69% */
+  /* Gas — gas_level %, higher = worse, warn>=49, danger>=69 */
   if      (gasLevel <  49) s.gas = 100;
   else if (gasLevel <= 69) s.gas = Math.round(100 - ((gasLevel-49)/20)*60);
   else                     s.gas = Math.max(0, Math.round(40 - (gasLevel-69)*2));
@@ -707,34 +701,35 @@ dbRef.on("value", (snapshot) => {
   if (!data) return;
   lastDataTime = Date.now();
 
+  /* Read sensors — sound comes from INMP441 via "sound_db" */
   const temp      = parseFloat(data.sensors?.temperature ?? NaN);
   const humid     = parseFloat(data.sensors?.humidity    ?? NaN);
-  const soundRaw  = parseFloat(data.sensors?.sound_raw   ?? NaN);  // raw ADC from Arduino v5
+  const soundDb   = parseFloat(data.sensors?.sound_db    ?? NaN);  // INMP441 dB
   const weightKg  = parseFloat(data.sensors?.weight      ?? NaN);
   const gasLevel  = parseFloat(data.sensors?.gas_level   ?? NaN);
 
-  /* Store for 30s graph timer */
-  latestSensors = { temp, humid, sound:soundRaw, weight:weightKg };
+  /* Store for 30s graph interval */
+  latestSensors = { temp, humid, sound:soundDb, weight:weightKg };
 
   /* ── Card display values ── */
-  document.getElementById("temp").innerText     = isNaN(temp)     ? "--" : temp.toFixed(1)     + " °C";
-  document.getElementById("humidity").innerText = isNaN(humid)    ? "--" : humid.toFixed(1)    + " %";
-  document.getElementById("sound").innerText    = isNaN(soundRaw) ? "--" : soundRaw.toFixed(0) + " raw";
-  document.getElementById("weight").innerText   = isNaN(weightKg) ? "--" : weightKg.toFixed(2) + " kg";
-  document.getElementById("gas").innerText      = isNaN(gasLevel) ? "--" : gasLevel.toFixed(1) + " %";
+  document.getElementById("temp").innerText     = isNaN(temp)     ? "--" : temp.toFixed(1)    + " °C";
+  document.getElementById("humidity").innerText = isNaN(humid)    ? "--" : humid.toFixed(1)   + " %";
+  document.getElementById("sound").innerText    = isNaN(soundDb)  ? "--" : soundDb.toFixed(1) + " dB";  // shown as dB
+  document.getElementById("weight").innerText   = isNaN(weightKg) ? "--" : weightKg.toFixed(2)+ " kg";
+  document.getElementById("gas").innerText      = isNaN(gasLevel) ? "--" : gasLevel.toFixed(1)+ " %";
 
   /* Push first point immediately on load */
   if (charts.temp.data.labels.length === 0) {
-    if (!isNaN(temp))     pushChart(charts.temp,   temp);
-    if (!isNaN(humid))    pushChart(charts.humid,  humid);
-    if (!isNaN(soundRaw)) pushChart(charts.sound,  soundRaw);
-    if (!isNaN(weightKg)) pushChart(charts.weight, weightKg);
+    if (!isNaN(temp))    pushChart(charts.temp,   temp);
+    if (!isNaN(humid))   pushChart(charts.humid,  humid);
+    if (!isNaN(soundDb)) pushChart(charts.sound,  soundDb);
+    if (!isNaN(weightKg))pushChart(charts.weight, weightKg);
   }
 
   /* ── Card alerts ── */
   const alerts = [];
 
-  /* Temperature — TEMP_LOW=20, TEMP_WARN=32, TEMP_DANGER=35 */
+  /* Temperature — low=20, warn=32, danger=35 */
   if (!isNaN(temp)) {
     if      (temp >= THR.temp.danger) {
       setCard("cardTemp","badgeTemp","danger","⚠ "+temp.toFixed(1)+"°C");
@@ -750,7 +745,7 @@ dbRef.on("value", (snapshot) => {
     }
   }
 
-  /* Humidity — DANGER<30/>90, WARN<40/>80 */
+  /* Humidity — dangerLo=30, warnLo=40, warnHi=80, dangerHi=90 */
   if (!isNaN(humid)) {
     if      (humid > THR.humid.dangerHi || humid < THR.humid.dangerLo) {
       setCard("cardHumid","badgeHumid","danger","⚠ "+humid.toFixed(0)+"%");
@@ -763,20 +758,20 @@ dbRef.on("value", (snapshot) => {
     }
   }
 
-  /* Sound — raw ADC, WARN=500, DANGER=700 */
-  if (!isNaN(soundRaw)) {
-    if      (soundRaw >= THR.sound.danger) {
-      setCard("cardSound","badgeSound","danger","⚠ "+soundRaw.toFixed(0));
-      alerts.push("🔊 Sound DANGER ("+soundRaw.toFixed(0)+" raw)");
-    } else if (soundRaw >= THR.sound.warn) {
-      setCard("cardSound","badgeSound","warn","⚡ "+soundRaw.toFixed(0));
-      alerts.push("🔊 Sound high ("+soundRaw.toFixed(0)+" raw)");
+  /* Sound — INMP441 dB, warn=60, danger=75 */
+  if (!isNaN(soundDb)) {
+    if      (soundDb >= THR.sound.danger) {
+      setCard("cardSound","badgeSound","danger","⚠ "+soundDb.toFixed(1)+"dB");
+      alerts.push("🔊 Sound DANGER ("+soundDb.toFixed(1)+" dB)");
+    } else if (soundDb >= THR.sound.warn) {
+      setCard("cardSound","badgeSound","warn","⚡ "+soundDb.toFixed(1)+"dB");
+      alerts.push("🔊 Sound high ("+soundDb.toFixed(1)+" dB)");
     } else {
       setCard("cardSound","badgeSound","good","");
     }
   }
 
-  /* Weight — drop WARN=0.5kg, DANGER=1.5kg */
+  /* Weight — drop warn=0.5kg, danger=1.5kg */
   if (!isNaN(weightKg)) {
     if (lastWeightKg !== null) {
       const drop = lastWeightKg - weightKg;
@@ -794,7 +789,7 @@ dbRef.on("value", (snapshot) => {
     }
   }
 
-  /* Gas — gas_level %, higher = worse, WARN>=49, DANGER>=69 */
+  /* Gas — gas_level %, higher = more pollution, warn>=49, danger>=69 */
   if (!isNaN(gasLevel)) {
     if      (gasLevel >= THR.gas.danger) {
       setCard("cardGas","badgeGas","danger","⚠ "+gasLevel.toFixed(0)+"%");
@@ -810,17 +805,15 @@ dbRef.on("value", (snapshot) => {
   updateBanner(alerts);
 
   /* ── Health Score ── */
-  const allValid = !isNaN(temp) && !isNaN(humid) && !isNaN(soundRaw) && !isNaN(weightKg) && !isNaN(gasLevel);
+  const allValid = !isNaN(temp) && !isNaN(humid) && !isNaN(soundDb) && !isNaN(weightKg) && !isNaN(gasLevel);
   if (allValid) {
-    const { total, s } = calcHealth(temp, humid, soundRaw, weightKg, gasLevel);
+    const { total, s } = calcHealth(temp, humid, soundDb, weightKg, gasLevel);
     updateHealth(total, s);
   }
 
-  /* ── AI Sound Analysis ──────────────────────────────────────
-     FIX: "Healthy" → green pill, anything else → red pill.
-     The status-pill background/color is set based on mlStatus
-     value, not just whether it's not "--".
-  ─────────────────────────────────────────────────────────── */
+  /* ── AI Sound Analysis ──
+     Healthy → GREEN pill, anything else → RED pill, waiting → grey
+  ── */
   const mlStatus = data.sound_ml?.status ?? "--";
   const condBox  = document.getElementById("hiveCondition");
   const qPresent = data.sound_ml?.queen_present;
@@ -834,19 +827,12 @@ dbRef.on("value", (snapshot) => {
 
   condBox.innerText = mlStatus;
 
-  /* Colour logic — green ONLY for Healthy, red for everything else */
   if (mlStatus === "--") {
-    /* waiting — neutral grey */
-    condBox.style.background = "#f5f5f5";
-    condBox.style.color      = "#555";
+    condBox.style.background = "#f5f5f5"; condBox.style.color = "#555";
   } else if (mlStatus === "Healthy") {
-    /* ✅ Healthy → GREEN */
-    condBox.style.background = "#e8f5e9";
-    condBox.style.color      = "#2e7d32";
+    condBox.style.background = "#e8f5e9"; condBox.style.color = "#2e7d32";  // GREEN
   } else {
-    /* ⚠️ Queenless / Stress / any other → RED */
-    condBox.style.background = "#ffebee";
-    condBox.style.color      = "#c62828";
+    condBox.style.background = "#ffebee"; condBox.style.color = "#c62828";  // RED
   }
 
   /* ── Gas Analysis ── */
@@ -856,18 +842,15 @@ dbRef.on("value", (snapshot) => {
 
   gasStatusBox.innerText = gasStatus;
   document.getElementById("gasMessage").innerText =
-    gasPest         ? "⚠️ Pesticide Detected" :
-    gasStatus !== "--" ? "Safe Environment ✅"  : "";
+    gasPest            ? "⚠️ Pesticide Detected"  :
+    gasStatus !== "--" ? "Safe Environment ✅"     : "";
 
   if (gasPest) {
-    gasStatusBox.style.background = "#ffebee";
-    gasStatusBox.style.color      = "#c62828";
+    gasStatusBox.style.background = "#ffebee"; gasStatusBox.style.color = "#c62828";
   } else if (gasStatus !== "--") {
-    gasStatusBox.style.background = "#e8f5e9";
-    gasStatusBox.style.color      = "#2e7d32";
+    gasStatusBox.style.background = "#e8f5e9"; gasStatusBox.style.color = "#2e7d32";
   } else {
-    gasStatusBox.style.background = "#f5f5f5";
-    gasStatusBox.style.color      = "#555";
+    gasStatusBox.style.background = "#f5f5f5"; gasStatusBox.style.color = "#555";
   }
 });
 
