@@ -13,13 +13,13 @@
       --honey-dark:  #c07a00;
       --honey-deep:  #92400e;
       --honey-light: #fef3c7;
-      --pale-yellow: #fffbeb; /* Added for the requested background theme */
+      --pale-yellow: #fffbeb; 
       --ink:         #1c1710;
       --ink-mid:     #4a4030;
       --ink-soft:    #8a7a60;
       --white:       #ffffff;
-      --border:      rgba(192,122,0,0.22);
-      --border-soft: rgba(192,122,0,0.13);
+      --border:      rgba(192,122,0,0.35); /* Increased opacity for card borders */
+      --border-soft: rgba(192,122,0,0.2);
       --radius:      16px;
       --radius-sm:   10px;
     }
@@ -34,7 +34,6 @@
       overflow-x: hidden;
     }
 
-    /* ── PALE YELLOW BACKGROUND ── */
     .bg {
       position: fixed;
       inset: 0;
@@ -42,10 +41,9 @@
       background: 
         radial-gradient(circle at 20% 20%, #fef3c7 0%, transparent 40%),
         radial-gradient(circle at 80% 80%, #fde68a 0%, transparent 40%),
-        var(--pale-yellow); /* Pale yellow primary background */
+        var(--pale-yellow);
     }
 
-    /* Honeycomb SVG tile */
     .bg-comb {
       position: fixed;
       inset: 0;
@@ -54,7 +52,6 @@
       background-size: 60px 104px;
     }
 
-    /* Top amber bar */
     .bg-bar {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -63,7 +60,6 @@
       z-index: 20;
     }
 
-    /* ── PAGE ── */
     .page {
       position: relative;
       z-index: 2;
@@ -91,17 +87,17 @@
 
     .headline h1 {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(42px, 5vw, 70px);
+      font-size: clamp(38px, 4.5vw, 64px);
       font-weight: 700;
       line-height: 1.05;
       letter-spacing: -1px;
       color: var(--ink);
+      white-space: nowrap;
     }
 
-    /* Changed from Italics to Solid/Straight */
     .headline h1 .accent {
       font-style: normal; 
-      color: var(--honey-deep);
+      color: #f59e0b;
     }
 
     .subtitle {
@@ -125,29 +121,9 @@
     }
 
     .stat { display: flex; flex-direction: column; gap: 4px; }
-
-    .stat-val {
-      font-family: 'Playfair Display', serif;
-      font-size: 30px;
-      font-weight: 700;
-      color: var(--ink);
-      line-height: 1;
-    }
-
-    .stat-key {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--ink-mid);
-    }
-
-    .stat-sep {
-      width: 1px;
-      background: rgba(26,23,16,0.2);
-      align-self: stretch;
-    }
+    .stat-val { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 700; color: var(--ink); line-height: 1; }
+    .stat-key { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-mid); }
+    .stat-sep { width: 1px; background: rgba(26,23,16,0.2); align-self: stretch; }
 
     .pillars {
       display: grid;
@@ -159,7 +135,7 @@
 
     .pillar {
       background: rgba(255, 255, 255, 0.75);
-      border: 1px solid var(--border);
+      border: 1.5px solid var(--border); /* Thicker border for tech cards */
       border-radius: var(--radius);
       padding: 22px 20px;
       display: flex;
@@ -173,32 +149,11 @@
       overflow: hidden;
     }
 
-    .pillar::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 55%);
-      pointer-events: none;
-      border-radius: inherit;
-    }
-
-    .pillar::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--honey), transparent);
-      opacity: 0;
-      transition: opacity 0.25s;
-      border-radius: var(--radius) var(--radius) 0 0;
-    }
-
     .pillar:hover {
       transform: translateY(-4px);
       box-shadow: 0 14px 36px rgba(146,64,14,0.18);
-      border-color: rgba(192,122,0,0.45);
+      border-color: var(--honey-dark);
     }
-    .pillar:hover::before { opacity: 1; }
 
     .pillar-icon {
       width: 38px; height: 38px;
@@ -208,30 +163,15 @@
       flex-shrink: 0;
     }
     .pillar-icon svg { width: 19px; height: 19px; }
-
-    .pillar-title {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 11.5px;
-      font-weight: 800;
-      letter-spacing: 1.3px;
-      text-transform: uppercase;
-      color: var(--honey-deep);
-    }
-
-    .pillar-desc {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13.5px;
-      font-weight: 400;
-      color: var(--ink-mid);
-      line-height: 1.55;
-    }
+    .pillar-title { font-family: 'DM Sans', sans-serif; font-size: 11.5px; font-weight: 800; letter-spacing: 1.3px; text-transform: uppercase; color: var(--honey-deep); }
+    .pillar-desc { font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 400; color: var(--ink-mid); line-height: 1.55; }
 
     /* ══════════════════════════
-        RIGHT PANEL — pure white
+        RIGHT PANEL
     ══════════════════════════ */
     .right {
       background: #ffffff;
-      border-left: 1px solid rgba(192,122,0,0.18);
+      border-left: 2px solid var(--border-soft); /* Defined side border */
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -241,60 +181,14 @@
       animation: slideIn 0.8s cubic-bezier(0.22,1,0.36,1) 0.2s forwards;
     }
 
-    .auth-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 32px;
-      font-weight: 700;
-      color: var(--ink);
-      margin-bottom: 28px;
-      line-height: 1.15;
-    }
+    .auth-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: var(--ink); margin-bottom: 28px; line-height: 1.15; }
 
-    /* Tabs */
-    .tabs {
-      display: flex;
-      background: #f5f0e8;
-      border: 1px solid rgba(192,122,0,0.12);
-      border-radius: 12px;
-      padding: 4px;
-      gap: 4px;
-      margin-bottom: 26px;
-    }
+    .tabs { display: flex; background: #f5f0e8; border: 1.5px solid var(--border-soft); border-radius: 12px; padding: 4px; gap: 4px; margin-bottom: 26px; }
+    .tab { flex: 1; padding: 10px; border: none; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 700; cursor: pointer; border-radius: 9px; color: var(--ink-soft); transition: all 0.25s; }
+    .tab.active { background: #ffffff; color: var(--ink); box-shadow: 0 2px 10px rgba(146,64,14,0.08); border: 1px solid var(--border-soft); }
 
-    .tab {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      background: transparent;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13.5px;
-      font-weight: 700;
-      cursor: pointer;
-      border-radius: 9px;
-      color: var(--ink-soft);
-      transition: all 0.25s;
-    }
-
-    .tab.active {
-      background: #ffffff;
-      color: var(--ink);
-      box-shadow: 0 2px 10px rgba(146,64,14,0.08);
-    }
-
-    /* Fields */
     .field { margin-bottom: 16px; }
-
-    .field label {
-      display: block;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      color: var(--ink-mid);
-      margin-bottom: 7px;
-    }
-
+    .field label { display: block; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--ink-mid); margin-bottom: 7px; }
     .field input {
       width: 100%;
       padding: 12px 15px;
@@ -303,62 +197,26 @@
       font-weight: 500;
       color: var(--ink);
       background: #f9f6f0;
-      border: 1.5px solid #e8dfc8;
+      border: 1.5px solid #e8dfc8; /* Defined input borders */
       border-radius: var(--radius-sm);
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      transition: all 0.2s;
     }
 
-    .field input::placeholder {
-      color: #b0a080;
-      font-weight: 400;
+    .field input:focus { background: #ffffff; border-color: var(--honey-dark); box-shadow: 0 0 0 3px rgba(192,122,0,0.1); }
+
+    .forgot-link {
+      display: block;
+      text-align: right;
+      font-size: 12px;
+      color: var(--honey-dark);
+      text-decoration: none;
+      font-weight: 700;
+      margin-top: -8px;
+      margin-bottom: 20px;
+      cursor: pointer;
     }
 
-    .field input:focus {
-      background: #ffffff;
-      border-color: var(--honey-dark);
-      box-shadow: 0 0 0 3px rgba(192,122,0,0.1);
-    }
-
-    .field input.err {
-      border-color: #dc2626;
-      box-shadow: 0 0 0 3px rgba(220,38,38,0.08);
-    }
-
-    .errmsg {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 11.5px;
-      font-weight: 600;
-      color: #dc2626;
-      margin-top: 5px;
-      display: none;
-    }
-    .errmsg.show { display: block; }
-
-    /* Password strength */
-    .strength { margin-top: 7px; display: none; }
-    .strength.show { display: block; }
-    .strength-track {
-      height: 4px;
-      background: #f0e8d0;
-      border-radius: 4px;
-      overflow: hidden;
-      margin-bottom: 4px;
-    }
-    .strength-fill {
-      height: 100%;
-      width: 0;
-      border-radius: 4px;
-      transition: width 0.35s, background 0.35s;
-    }
-    .strength-lbl {
-      font-size: 10.5px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    /* Submit button */
     .btn-submit {
       width: 100%;
       padding: 14px;
@@ -376,127 +234,32 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: background 0.22s, transform 0.15s, box-shadow 0.22s;
+      transition: all 0.22s;
     }
 
-    .btn-submit:hover {
-      background: var(--honey-dark);
-      box-shadow: 0 8px 24px rgba(192,122,0,0.28);
-      transform: translateY(-2px);
-    }
+    .btn-submit:hover { background: var(--honey-dark); box-shadow: 0 8px 24px rgba(192,122,0,0.28); transform: translateY(-2px); }
 
-    .btn-submit:active { transform: translateY(0); }
+    .divider { display: flex; align-items: center; gap: 10px; margin: 18px 0 14px; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #e8dfc8; }
+    .divider span { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; color: var(--ink-soft); white-space: nowrap; }
 
-    .btn-arrow { display: inline-block; transition: transform 0.2s; }
-    .btn-submit:hover .btn-arrow { transform: translateX(4px); }
+    .btn-ghost { width: 100%; padding: 12px; background: transparent; border: 1.5px solid #e8dfc8; border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 700; color: var(--ink-mid); cursor: pointer; transition: all 0.2s; }
+    .btn-ghost:hover { border-color: var(--honey-dark); color: var(--honey-dark); background: #fffbf0; }
 
-    /* Divider */
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 18px 0 14px;
-    }
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #e8dfc8;
-    }
-    .divider span {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--ink-soft);
-      white-space: nowrap;
-    }
+    .errmsg { font-family: 'DM Sans', sans-serif; font-size: 11.5px; font-weight: 600; color: #dc2626; margin-top: 5px; display: none; }
+    .errmsg.show { display: block; }
 
-    /* Ghost button */
-    .btn-ghost {
-      width: 100%;
-      padding: 12px;
-      background: transparent;
-      border: 1.5px solid #e8dfc8;
-      border-radius: var(--radius-sm);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13.5px;
-      font-weight: 700;
-      color: var(--ink-mid);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-ghost:hover {
-      border-color: var(--honey-dark);
-      color: var(--honey-dark);
-      background: #fffbf0;
-    }
+    .toast { display: none; align-items: center; gap: 10px; margin-top: 14px; padding: 12px 16px; border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; }
+    .toast.success { display: flex; background: #f0fdf4; border: 1px solid rgba(34,197,94,0.3); color: #166534; animation: rise 0.35s ease; }
+    .toast-dot { width: 8px; height: 8px; background: currentColor; border-radius: 50%; flex-shrink: 0; }
 
-    /* Toast */
-    .toast {
-      display: none;
-      align-items: center;
-      gap: 10px;
-      margin-top: 14px;
-      padding: 12px 16px;
-      background: #f0fdf4;
-      border: 1px solid rgba(34,197,94,0.3);
-      border-radius: var(--radius-sm);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      color: #166534;
-    }
-    .toast.show { display: flex; animation: rise 0.35s ease; }
-    .toast-dot {
-      width: 8px; height: 8px;
-      background: #22c55e;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
+    @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: translateX(0); } }
 
-    /* Footer */
-    .auth-footer {
-      margin-top: 22px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 11px;
-      color: #b0a080;
-      text-align: center;
-      line-height: 1.7;
-    }
-
-    /* Animations */
-    @keyframes rise {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(24px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-
-    /* Responsive */
     @media (max-width: 1080px) {
       .page { grid-template-columns: 1fr; }
       .left { padding: 80px 40px 48px; text-align: center; }
-      .subtitle { margin-left: auto; margin-right: auto; }
-      .stats { justify-content: center; }
-      .pillars { max-width: 580px; margin: 0 auto; }
-      .right {
-        min-height: unset;
-        border-left: none;
-        border-top: 1px solid rgba(192,122,0,0.18);
-        padding: 56px 40px 72px;
-        animation: none;
-        opacity: 1;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .left { padding: 60px 22px 40px; }
-      .headline h1 { font-size: 42px; }
-      .pillars { grid-template-columns: 1fr; }
-      .right { padding: 40px 22px 64px; }
-      .stats { gap: 20px; }
+      .right { border-left: none; border-top: 2px solid var(--border-soft); padding: 56px 40px 72px; animation: none; opacity: 1; }
     }
   </style>
 </head>
@@ -507,89 +270,48 @@
 <div class="bg-bar"></div>
 
 <div class="page">
-
   <div class="left">
-
     <div class="headline">
       <h1>Kanasu <span class="accent">Bee House</span></h1>
     </div>
-
     <p class="subtitle">Hybrid Acoustic–Vision AI Platform for Smart Apiculture</p>
 
     <div class="stats">
-      <div class="stat">
-        <span class="stat-val">24/7</span>
-        <span class="stat-key">Monitoring</span>
-      </div>
+      <div class="stat"><span class="stat-val">24/7</span><span class="stat-key">Monitoring</span></div>
       <div class="stat-sep"></div>
-      <div class="stat">
-        <span class="stat-val">99.9%</span>
-        <span class="stat-key">Uptime</span>
-      </div>
+      <div class="stat"><span class="stat-val">99.9%</span><span class="stat-key">Uptime</span></div>
       <div class="stat-sep"></div>
-      <div class="stat">
-        <span class="stat-val">Live</span>
-        <span class="stat-key">AI Alerts</span>
-      </div>
+      <div class="stat"><span class="stat-val">Live</span><span class="stat-key">AI Alerts</span></div>
     </div>
 
     <div class="pillars">
-
       <div class="pillar">
-        <div class="pillar-icon">
-          <svg viewBox="0 0 19 19" fill="none">
-            <rect x="3.5" y="8.5" width="12" height="8" rx="2" stroke="#92400e" stroke-width="1.4"/>
-            <path d="M6.5 8.5V6.5a3 3 0 016 0v2" stroke="#92400e" stroke-width="1.4"/>
-            <circle cx="9.5" cy="12.5" r="1.5" fill="#92400e"/>
-          </svg>
-        </div>
+        <div class="pillar-icon"><svg viewBox="0 0 19 19" fill="none"><rect x="3.5" y="8.5" width="12" height="8" rx="2" stroke="#92400e" stroke-width="1.4"/><path d="M6.5 8.5V6.5a3 3 0 016 0v2" stroke="#92400e" stroke-width="1.4"/><circle cx="9.5" cy="12.5" r="1.5" fill="#92400e"/></svg></div>
         <div class="pillar-title">Smart Sensors</div>
         <div class="pillar-desc">Real-time hive temperature &amp; humidity monitoring around the clock.</div>
       </div>
-
       <div class="pillar">
-        <div class="pillar-icon">
-          <svg viewBox="0 0 19 19" fill="none">
-            <circle cx="9.5" cy="9.5" r="5.5" stroke="#92400e" stroke-width="1.4"/>
-            <path d="M9.5 6.5v3l2 1.5" stroke="#92400e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M14 4.5l2-2" stroke="#92400e" stroke-width="1.2" stroke-linecap="round"/>
-            <circle cx="15.5" cy="3" r="1.2" fill="#92400e"/>
-          </svg>
-        </div>
+        <div class="pillar-icon"><svg viewBox="0 0 19 19" fill="none"><circle cx="9.5" cy="9.5" r="5.5" stroke="#92400e" stroke-width="1.4"/><path d="M9.5 6.5v3l2 1.5" stroke="#92400e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4.5l2-2" stroke="#92400e" stroke-width="1.2" stroke-linecap="round"/><circle cx="15.5" cy="3" r="1.2" fill="#92400e"/></svg></div>
         <div class="pillar-title">Cloud Sync</div>
         <div class="pillar-desc">Live dashboard streaming via Firebase with zero latency.</div>
       </div>
-
       <div class="pillar">
-        <div class="pillar-icon">
-          <svg viewBox="0 0 19 19" fill="none">
-            <path d="M3 15L6.5 10 9.5 12.5 13 7 16 9.5" stroke="#92400e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="9.5" cy="4.5" r="2.5" stroke="#92400e" stroke-width="1.3"/>
-          </svg>
-        </div>
+        <div class="pillar-icon"><svg viewBox="0 0 19 19" fill="none"><path d="M3 15L6.5 10 9.5 12.5 13 7 16 9.5" stroke="#92400e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="4.5" r="2.5" stroke="#92400e" stroke-width="1.3"/></svg></div>
         <div class="pillar-title">AI Diagnosis</div>
         <div class="pillar-desc">Machine learning identifying colony stress before it escalates.</div>
       </div>
-
       <div class="pillar">
-        <div class="pillar-icon">
-          <svg viewBox="0 0 19 19" fill="none">
-            <path d="M9.5 2v2M9.5 15v2M2 9.5h2M15 9.5h2M4.4 4.4l1.4 1.4M13.2 13.2l1.4 1.4M4.4 14.6l1.4-1.4M13.2 5.8l1.4-1.4" stroke="#92400e" stroke-width="1.3" stroke-linecap="round"/>
-            <circle cx="9.5" cy="9.5" r="3" stroke="#92400e" stroke-width="1.3"/>
-          </svg>
-        </div>
+        <div class="pillar-icon"><svg viewBox="0 0 19 19" fill="none"><path d="M9.5 2v2M9.5 15v2M2 9.5h2M15 9.5h2M4.4 4.4l1.4 1.4M13.2 13.2l1.4 1.4M4.4 14.6l1.4-1.4M13.2 5.8l1.4-1.4" stroke="#92400e" stroke-width="1.3" stroke-linecap="round"/><circle cx="9.5" cy="9.5" r="3" stroke="#92400e" stroke-width="1.3"/></svg></div>
         <div class="pillar-title">Early Alerts</div>
-        <div class="pillar-desc">Acoustic analysis detecting disease before it spreads in the colony.</div>
+        <div class="pillar-desc">Acoustic analysis detecting disease before it spreads.</div>
       </div>
-
     </div>
   </div>
 
   <div class="right">
-
     <h2 class="auth-title" id="authTitle">Welcome Back</h2>
 
-    <div class="tabs">
+    <div class="tabs" id="authTabs">
       <button class="tab active" id="tabLogin" onclick="showLogin()">Sign In</button>
       <button class="tab" id="tabSignup" onclick="showSignup()">Sign Up</button>
     </div>
@@ -605,19 +327,15 @@
         <input type="password" id="loginPassword" placeholder="••••••••" oninput="clearErr(this)">
         <div class="errmsg" id="loginPassErr">Minimum 8 characters required.</div>
       </div>
-      <button class="btn-submit" onclick="doLogin()">
-        Sign In <span class="btn-arrow">→</span>
-      </button>
-      <div class="toast" id="toastLogin">
-        <span class="toast-dot"></span> Signed in — redirecting you now…
-      </div>
+      <a class="forgot-link" onclick="showForgot()">Forgot Password?</a>
+      <button class="btn-submit" onclick="doLogin()">Sign In <span>→</span></button>
+      <div class="toast" id="toastLogin"><span class="toast-dot"></span> Signed in — redirecting...</div>
     </div>
 
     <div id="viewSignup" style="display:none">
       <div class="field">
         <label>Full Name</label>
         <input type="text" id="signupName" placeholder="e.g. Sitha Ram" oninput="clearErr(this)">
-        <div class="errmsg" id="signupNameErr">Full name is required.</div>
       </div>
       <div class="field">
         <label>Email Address</label>
@@ -626,27 +344,26 @@
       </div>
       <div class="field">
         <label>Create Password</label>
-        <input type="password" id="signupPassword" placeholder="Min 8 chars, uppercase &amp; symbol" oninput="checkStrength(this.value)">
-        <div class="strength" id="strengthWrap">
-          <div class="strength-track">
-            <div class="strength-fill" id="strengthFill"></div>
-          </div>
-          <span class="strength-lbl" id="strengthLabel"></span>
-        </div>
-        <div class="errmsg" id="signupPassErr">Use 8+ chars with uppercase, number &amp; symbol.</div>
+        <input type="password" id="signupPassword" placeholder="8+ chars, uppercase & symbol" oninput="checkStrength(this.value)">
       </div>
-      <button class="btn-submit" onclick="doSignup()">
-        Create Account <span class="btn-arrow">→</span>
-      </button>
+      <button class="btn-submit" onclick="doSignup()">Create Account <span>→</span></button>
       <div class="divider"><span>Already have an account?</span></div>
       <button class="btn-ghost" onclick="showLogin()">Sign In Instead</button>
-      <div class="toast" id="toastSignup">
-        <span class="toast-dot"></span> Account created — redirecting you now…
+    </div>
+
+    <div id="viewForgot" style="display:none">
+      <p style="font-size: 13.5px; color: var(--ink-mid); margin-bottom: 20px;">Enter your email to receive a password reset link.</p>
+      <div class="field">
+        <label>Email Address</label>
+        <input type="email" id="forgotEmail" placeholder="you@example.com" oninput="clearErr(this)">
+        <div class="errmsg" id="forgotEmailErr">Please enter a registered email.</div>
       </div>
+      <button class="btn-submit" onclick="doReset()">Send Reset Link <span>→</span></button>
+      <button class="btn-ghost" style="margin-top:12px; border:none;" onclick="showLogin()">Back to Login</button>
+      <div class="toast" id="toastReset"><span class="toast-dot"></span> Reset link sent to your email!</div>
     </div>
 
     <p class="auth-footer">Protected by Firebase Authentication · End-to-end encrypted</p>
-
   </div>
 </div>
 
@@ -657,11 +374,10 @@
 
 <script>
   function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
-  function isStrongPassword(v) { return v.length >= 8 && /[A-Z]/.test(v) && /[0-9]/.test(v) && /[^A-Za-z0-9]/.test(v); }
-
+  
   function showErr(el, msgId) {
     el.classList.add('err');
-    document.getElementById(msgId).classList.add('show');
+    if(msgId) document.getElementById(msgId).classList.add('show');
   }
 
   function clearErr(el) {
@@ -670,77 +386,71 @@
     if (e) e.classList.remove('show');
   }
 
-  function checkStrength(val) {
-    const wrap  = document.getElementById('strengthWrap');
-    const fill  = document.getElementById('strengthFill');
-    const label = document.getElementById('strengthLabel');
-    if (!val) { wrap.classList.remove('show'); return; }
-    wrap.classList.add('show');
-    let s = 0;
-    if (val.length >= 8)          s++;
-    if (/[A-Z]/.test(val))        s++;
-    if (/[0-9]/.test(val))        s++;
-    if (/[^A-Za-z0-9]/.test(val)) s++;
-    const lvl = [
-      { pct: '25%',  color: '#dc2626', text: 'Weak'   },
-      { pct: '50%',  color: '#d97706', text: 'Fair'   },
-      { pct: '75%',  color: '#65a30d', text: 'Good'   },
-      { pct: '100%', color: '#16a34a', text: 'Strong' },
-    ][Math.max(s - 1, 0)];
-    fill.style.width      = lvl.pct;
-    fill.style.background = lvl.color;
-    label.textContent     = lvl.text;
-    label.style.color     = lvl.color;
-  }
-
   function showLogin() {
-    document.getElementById('viewLogin').style.display  = 'block';
-    document.getElementById('viewSignup').style.display = 'none';
-    document.getElementById('authTitle').textContent    = 'Welcome Back';
+    document.querySelectorAll('#viewLogin, #viewSignup, #viewForgot').forEach(v => v.style.display = 'none');
+    document.getElementById('viewLogin').style.display = 'block';
+    document.getElementById('authTabs').style.display = 'flex';
+    document.getElementById('authTitle').textContent = 'Welcome Back';
     document.getElementById('tabLogin').classList.add('active');
     document.getElementById('tabSignup').classList.remove('active');
   }
 
   function showSignup() {
-    document.getElementById('viewLogin').style.display  = 'none';
+    document.querySelectorAll('#viewLogin, #viewSignup, #viewForgot').forEach(v => v.style.display = 'none');
     document.getElementById('viewSignup').style.display = 'block';
-    document.getElementById('authTitle').textContent    = 'Create Account';
+    document.getElementById('authTabs').style.display = 'flex';
+    document.getElementById('authTitle').textContent = 'Create Account';
     document.getElementById('tabSignup').classList.add('active');
     document.getElementById('tabLogin').classList.remove('active');
   }
 
+  function showForgot() {
+    document.querySelectorAll('#viewLogin, #viewSignup').forEach(v => v.style.display = 'none');
+    document.getElementById('viewForgot').style.display = 'block';
+    document.getElementById('authTabs').style.display = 'none';
+    document.getElementById('authTitle').textContent = 'Reset Password';
+  }
+
   function doLogin() {
-    const emailEl = document.getElementById('loginEmail');
-    const passEl  = document.getElementById('loginPassword');
-    let ok = true;
-    if (!isValidEmail(emailEl.value)) { showErr(emailEl, 'loginEmailErr'); ok = false; }
-    if (passEl.value.length < 8)      { showErr(passEl,  'loginPassErr');  ok = false; }
-    if (!ok) return;
-    firebase.auth().signInWithEmailAndPassword(emailEl.value.trim(), passEl.value)
+    const email = document.getElementById('loginEmail');
+    const pass = document.getElementById('loginPassword');
+    if (!isValidEmail(email.value)) return showErr(email, 'loginEmailErr');
+    if (pass.value.length < 8) return showErr(pass, 'loginPassErr');
+
+    firebase.auth().signInWithEmailAndPassword(email.value.trim(), pass.value)
       .then(() => {
-        document.getElementById('toastLogin').classList.add('show');
+        document.getElementById('toastLogin').classList.add('success');
         setTimeout(() => window.location.href = 'welcome.html', 1400);
       })
       .catch(err => alert(err.message));
   }
 
+  function doReset() {
+    const email = document.getElementById('forgotEmail');
+    if (!isValidEmail(email.value)) return showErr(email, 'forgotEmailErr');
+
+    firebase.auth().sendPasswordResetEmail(email.value.trim())
+      .then(() => {
+        document.getElementById('toastReset').classList.add('success');
+        setTimeout(showLogin, 3000);
+      })
+      .catch(err => alert(err.message));
+  }
+
   function doSignup() {
-    const nameEl  = document.getElementById('signupName');
-    const emailEl = document.getElementById('signupEmail');
-    const passEl  = document.getElementById('signupPassword');
-    let ok = true;
-    if (!nameEl.value.trim())            { showErr(nameEl,  'signupNameErr');  ok = false; }
-    if (!isValidEmail(emailEl.value))    { showErr(emailEl, 'signupEmailErr'); ok = false; }
-    if (!isStrongPassword(passEl.value)) { showErr(passEl,  'signupPassErr');  ok = false; }
-    if (!ok) return;
-    firebase.auth().createUserWithEmailAndPassword(emailEl.value.trim(), passEl.value)
+    const name = document.getElementById('signupName');
+    const email = document.getElementById('signupEmail');
+    const pass = document.getElementById('signupPassword');
+    if (!name.value.trim()) return showErr(name);
+    if (!isValidEmail(email.value)) return showErr(email, 'signupEmailErr');
+    
+    firebase.auth().createUserWithEmailAndPassword(email.value.trim(), pass.value)
       .then(uc => firebase.database().ref('users/' + uc.user.uid).set({
-        name:  nameEl.value.trim(),
-        email: emailEl.value.trim()
+        name: name.value.trim(),
+        email: email.value.trim()
       }))
       .then(() => {
-        document.getElementById('toastSignup').classList.add('show');
-        setTimeout(() => window.location.href = 'welcome.html', 1400);
+        window.location.href = 'welcome.html';
       })
       .catch(err => alert(err.message));
   }
