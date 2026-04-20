@@ -9,13 +9,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Render provides the PORT variable automatically
-const port = process.env.PORT || 3000;
+// Render uses port 10000 by default, this line handles that
+const port = process.env.PORT || 10000;
 
-// Initialize the AI with the key from Render's environment
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
-// Use the stable model name
+// Using 'gemini-1.5-flash' - ensure this matches exactly
 const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash" 
 });
@@ -31,10 +30,11 @@ app.post('/chat', async (req, res) => {
 
     } catch (error) {
         console.error("Chat Error:", error.message);
-        res.status(500).json({ reply: "The hive is a bit smoky. Please try again." });
+        // If you see '429' in logs, it means you've hit the free limit for the day
+        res.status(500).json({ reply: "The hive is a bit smoky. Please try again in a moment." });
     }
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
     console.log(`Server running on port ${port}`);
 });
