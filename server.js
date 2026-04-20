@@ -9,10 +9,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Render uses port 10000 by default
+// Render uses port 10000; this line handles it automatically
 const port = process.env.PORT || 10000;
 
-// Initialize the API with your key from Render Environment Variables
+// Initialize the API with your key
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 app.post('/chat', async (req, res) => {
@@ -20,30 +20,30 @@ app.post('/chat', async (req, res) => {
         const { message } = req.body;
         if (!message) return res.status(400).json({ error: "No message" });
 
-        // APRIL 2026 STABLE CONFIGURATION
+        // APRIL 2026 CONFIGURATION: Using Gemini 3.1 Flash Lite
         const model = genAI.getGenerativeModel({ 
             model: "gemini-3.1-flash-lite-preview",
-            // This is the instruction that prevents ### and ***
-            systemInstruction: "You are the Kanasu Bee House assistant. Provide helpful advice for beekeepers. Use PLAIN TEXT ONLY. Never use bolding, asterisks, hashtags, or markdown formatting. Keep the tone friendly and professional."
+            // This instruction stops the AI from using Markdown
+            systemInstruction: "You are the Kanasu Bee House assistant. Use PLAIN TEXT ONLY. Never use bolding, asterisks (**), hashtags (#), or bulleted lists. Keep answers concise and friendly for beekeepers."
         });
 
         const result = await model.generateContent(message);
         const response = await result.response;
         
-        // Final cleaning step: This removes any accidental formatting symbols 
-        // that the AI might have included despite the instruction.
+        // Final cleaning step: Remove any accidental symbols the AI might include
         let cleanReply = response.text()
             .replace(/\*/g, '')   // Removes all asterisks
             .replace(/#/g, '')    // Removes all hashtags
             .replace(/__/g, '')   // Removes underscores
-            .trim();              // Removes extra spaces
+            .replace(/---/g, '')  // Removes horizontal lines
+            .trim();              // Removes extra whitespace
         
         res.json({ reply: cleanReply });
 
     } catch (error) {
         console.error("API ERROR:", error.message);
         res.status(500).json({ 
-            reply: "The hive is a bit busy right now. Please try again in 10 seconds! 🐝" 
+            reply: "The bees are busy collecting nectar. Please try again in a few seconds! 🐝" 
         });
     }
 });
