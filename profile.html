@@ -229,8 +229,8 @@ body::before {
   overflow: hidden; border: 1px solid var(--border);
   margin-bottom: 18px;
 }
-.p-stat { background: var(--surface2); padding: 12px 6px; text-align: center; }
-.p-stat-num { font-size: 20px; font-weight: 900; color: var(--honey-deep); letter-spacing: -.5px; line-height: 1; margin-bottom: 3px; }
+.p-stat { background: var(--surface2); padding: 12px 4px; text-align: center; }
+.p-stat-num { font-size: 16px; font-weight: 900; color: var(--honey-deep); letter-spacing: -.5px; line-height: 1; margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .p-stat-lbl { font-size: 9px; font-weight: 700; color: var(--ink4); text-transform: uppercase; letter-spacing: .6px; }
 
 .p-meta { text-align: left; display: flex; flex-direction: column; gap: 9px; padding-top: 6px; border-top: 1px solid var(--border); }
@@ -460,6 +460,7 @@ textarea.field-in { resize: vertical; min-height: 90px; }
 <div class="topbar">
   <button class="back-btn" onclick="goBack()">← Dashboard</button>
   <div class="topbar-brand">
+    <div class="brand-hex">🐝</div>
     <span class="brand-text">Kanasu <em>Bee House</em></span>
   </div>
   <div class="topbar-actions">
@@ -493,15 +494,15 @@ textarea.field-in { resize: vertical; min-height: 90px; }
         <div class="p-stats">
           <div class="p-stat">
             <div class="p-stat-num" id="statHives">—</div>
-            <div class="p-stat-lbl">Hives</div>
+            <div class="p-stat-lbl">Colonies</div>
           </div>
           <div class="p-stat">
-            <div class="p-stat-num" id="statHealth">A+</div>
-            <div class="p-stat-lbl">Health</div>
+            <div class="p-stat-num" id="statRevenue">—</div>
+            <div class="p-stat-lbl">Revenue</div>
           </div>
           <div class="p-stat">
-            <div class="p-stat-num" id="statRank">Pro</div>
-            <div class="p-stat-lbl">Rank</div>
+            <div class="p-stat-num" id="statHoney">—</div>
+            <div class="p-stat-lbl">Honey Type</div>
           </div>
         </div>
 
@@ -518,10 +519,6 @@ textarea.field-in { resize: vertical; min-height: 90px; }
       <div class="nav-item" onclick="document.getElementById('sec-profile').scrollIntoView({behavior:'smooth'})">
         <div class="nav-left"><span class="nav-icon">🧑‍🌾</span>Profile Details</div>
         <span class="nav-chevron">›</span>
-      </div>
-      <div class="nav-item" onclick="document.getElementById('sec-hives').scrollIntoView({behavior:'smooth'})">
-        <div class="nav-left"><span class="nav-icon">🍯</span>My Hives</div>
-        <span class="nav-chip" id="hiveNavChip">0</span>
       </div>
       <div class="nav-item" onclick="document.getElementById('sec-notifs').scrollIntoView({behavior:'smooth'})">
         <div class="nav-left"><span class="nav-icon">🔔</span>Notifications</div>
@@ -587,24 +584,6 @@ textarea.field-in { resize: vertical; min-height: 90px; }
             <textarea class="field-in" id="bioInput" rows="3" placeholder="Tell us about your apiary journey…"></textarea>
           </div>
 
-        </div>
-      </div>
-    </div>
-
-    <!-- ── My Hives ── -->
-    <div class="card" id="sec-hives">
-      <div class="card-header">
-        <div class="card-title"><span class="card-title-icon">🍯</span>My Hives</div>
-        <a href="welcome.html" style="font-size:12px;font-weight:700;color:var(--honey-deep);text-decoration:none;">Manage →</a>
-      </div>
-      <div class="card-body">
-        <div class="hive-list" id="hiveList">
-          <div style="text-align:center;padding:24px;color:var(--ink4);font-size:13px;">Loading hives…</div>
-        </div>
-        <!-- Hive credentials section — only shown when hives with credentials exist -->
-        <div class="hive-creds-section" id="hiveCreds" style="display:none">
-          <div class="hive-creds-title">🔐 Hive Credentials</div>
-          <div id="hiveCredsList"></div>
         </div>
       </div>
     </div>
@@ -677,7 +656,6 @@ auth.onAuthStateChanged(user => {
   currentUser = user;
   document.getElementById("displayEmail").innerText = user.email || "—";
   loadUserData(user.uid);
-  loadHives();
 });
 
 /* ═══════════════════════════════
@@ -697,21 +675,33 @@ function loadUserData(uid) {
     setField("revenueDisplay",  "revenue",       d.totalRevenue || "");
     setField("bioDisplay",      "bioInput",      d.bio || "");
 
-    // honey type
-    const honeyVal = d.honeyType || "Wild Honey";
-    setField("honeyDisplay", "honeyType", honeyVal);
+    // honey type — no default, show blank if not set
+    const honeyVal = d.honeyType || "";
+    document.getElementById("honeyDisplay").innerText = honeyVal || "—";
     document.getElementById("honeyType").value = honeyVal;
+
+    // sidebar stats — only real data, no predictions
+    document.getElementById("statHives").innerText   = d.totalHives   || "—";
+    document.getElementById("statRevenue").innerText = d.totalRevenue ? "₹" + Number(d.totalRevenue).toLocaleString("en-IN") : "—";
+    document.getElementById("statHoney").innerText   = d.honeyType ? d.honeyType.split(" ")[0] : "—";
 
     // sidebar meta
     document.getElementById("metaLocation").innerText = d.location  || "Not set";
     document.getElementById("metaHoney").innerText    = d.honeyType || "Not set";
-    document.getElementById("statHives").innerText    = d.totalHives || "—";
 
     // joined date
     const joined = d.joinedAt || Date.now();
     if (!d.joinedAt) db.ref("users/" + uid).update({ joinedAt: joined });
     const dt = new Date(joined);
     document.getElementById("metaJoined").innerText = "Joined " + dt.toLocaleDateString("en-IN",{month:"short",year:"numeric"});
+
+    // restore profile photo from Firebase
+    if (d.profileImageBase64) {
+      const img = document.getElementById("profileDisplay");
+      img.src = d.profileImageBase64;
+      img.style.display = "block";
+      document.getElementById("avatarEmoji").style.display = "none";
+    }
 
     // toggles
     [["notif_alerts","togAlerts"],["notif_sound","togSound"],["notif_gas","togGas"],
@@ -790,103 +780,6 @@ function handleAvatarUpload(input) {
     toast("Profile photo updated 📷");
   };
   reader.readAsDataURL(file);
-}
-
-/* ═══════════════════════════════
-   HIVES FROM FIREBASE
-   Only shows hive credentials for hives that have a hiveId / credentials set
-═══════════════════════════════ */
-function loadHives() {
-  try {
-    firebase.database().ref("hives").once("value", snap => renderHives(snap.val())).catch(()=>renderHives(null));
-  } catch{ renderHives(null); }
-}
-
-function renderHives(data) {
-  const list = document.getElementById("hiveList");
-  const credsSection = document.getElementById("hiveCreds");
-  const credsList = document.getElementById("hiveCredsList");
-
-  if (!data || !Object.keys(data).length) {
-    list.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state-icon">🍯</div>
-        <div class="empty-state-text">No hives registered yet</div>
-        <div class="empty-state-sub">Head to the dashboard to <a href="welcome.html">add your first hive →</a></div>
-      </div>`;
-    document.getElementById("hiveNavChip").innerText = "0";
-    credsSection.style.display = "none";
-    return;
-  }
-
-  const ids = Object.keys(data);
-  document.getElementById("hiveNavChip").innerText = ids.length;
-  document.getElementById("statHives").innerText   = ids.length;
-
-  // Render hive rows
-  list.innerHTML = ids.map(id => {
-    const h = data[id];
-    const name   = h.name || id;
-    const temp   = h.sensors?.temperature != null ? h.sensors.temperature + "°C" : "--";
-    const humid  = h.sensors?.humidity    != null ? h.sensors.humidity    + "%" : "--";
-    const status = h.sound_ml?.status || "Unknown";
-    const online = h.sensors?.temperature != null;
-    const tagClass = status === "Healthy" ? "htag-ok" : (["Unknown","--"].includes(status)) ? "htag-unk" : "htag-bad";
-    return `<a class="hive-row" href="dashboard.html?hive=${id}">
-      <div class="hive-hex">🍯</div>
-      <div class="hive-body">
-        <div class="hive-name">${name}</div>
-        <div class="hive-sub">Temp: ${temp} &nbsp;·&nbsp; Humidity: ${humid}</div>
-      </div>
-      <div class="hive-right">
-        <div class="${online?'dot-on':'dot-off'}"></div>
-        <span class="htag ${tagClass}">${status}</span>
-      </div>
-      <div class="nav-chevron">›</div>
-    </a>`;
-  }).join("");
-
-  // Only show credentials section for hives that actually have hiveId or credentials stored
-  const hivesWithCreds = ids.filter(id => {
-    const h = data[id];
-    return h.hiveId || h.credentials || h.deviceId || h.apiKey || h.token;
-  });
-
-  if (hivesWithCreds.length > 0) {
-    credsSection.style.display = "block";
-    credsList.innerHTML = hivesWithCreds.map(id => {
-      const h = data[id];
-      const hiveName = h.name || id;
-      const hiveId   = h.hiveId || h.deviceId || id;
-      const apiKey   = h.apiKey  || h.token || null;
-      const credRows = [];
-
-      credRows.push(`
-        <div class="hive-cred-item">
-          <div class="hive-cred-label">Hive ID</div>
-          <div class="hive-cred-val">${hiveId}</div>
-        </div>`);
-
-      if (apiKey) {
-        credRows.push(`
-          <div class="hive-cred-item">
-            <div class="hive-cred-label">API Key / Token</div>
-            <div class="hive-cred-val" style="font-size:11px;letter-spacing:.5px">${apiKey}</div>
-          </div>`);
-      }
-
-      return `
-        <div style="margin-bottom:16px">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-            <span class="hive-cred-badge">✅ Registered</span>
-            <span style="font-size:12px;font-weight:700;color:var(--ink2)">${hiveName}</span>
-          </div>
-          <div class="hive-creds-grid">${credRows.join("")}</div>
-        </div>`;
-    }).join("");
-  } else {
-    credsSection.style.display = "none";
-  }
 }
 
 /* ═══════════════════════════════
