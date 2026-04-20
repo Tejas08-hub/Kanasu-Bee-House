@@ -85,4 +85,3 @@ Acknowledgment
 
 We thank CMTI Bengaluru for organizing the Design and Innovation Clinic 2026 and providing the opportunity to present our work.
 
-Authors
