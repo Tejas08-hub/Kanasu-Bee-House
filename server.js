@@ -9,16 +9,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Render provides the PORT variable automatically
 const port = process.env.PORT || 3000;
 
-// 1. Check if the API Key exists before trying to use it
-if (!process.env.GEMINI_API_KEY) {
-    console.error("CRITICAL ERROR: GEMINI_API_KEY is missing from environment variables!");
-}
-
+// Initialize the AI with the key from Render's environment
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
-// 2. Using 'gemini-1.5-flash' but with a fallback to 'gemini-pro'
+// Use the stable model name
 const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash" 
 });
@@ -33,13 +30,8 @@ app.post('/chat', async (req, res) => {
         res.json({ reply: response.text() });
 
     } catch (error) {
-        console.error("--- API Error ---", error.message);
-
-        // If 1.5-flash still fails, this usually means the API key 
-        // hasn't synced or doesn't have access yet.
-        res.status(500).json({ 
-            reply: "The hive is waking up. If this persists, please check Render Environment variables." 
-        });
+        console.error("Chat Error:", error.message);
+        res.status(500).json({ reply: "The hive is a bit smoky. Please try again." });
     }
 });
 
