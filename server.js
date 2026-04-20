@@ -12,6 +12,7 @@ app.use(express.json());
 // Render uses port 10000 by default
 const port = process.env.PORT || 10000;
 
+// Initialize the API with your key from Render Environment Variables
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 app.post('/chat', async (req, res) => {
@@ -19,27 +20,30 @@ app.post('/chat', async (req, res) => {
         const { message } = req.body;
         if (!message) return res.status(400).json({ error: "No message" });
 
-        // APRIL 2026 STABLE MODELS
-        // We use gemini-3.1-flash-lite-preview as it is the most reliable current model
-        let model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite-preview" });
+        // APRIL 2026 STABLE CONFIGURATION
+        const model = genAI.getGenerativeModel({ 
+            model: "gemini-3.1-flash-lite-preview",
+            // This is the instruction that prevents ### and ***
+            systemInstruction: "You are the Kanasu Bee House assistant. Provide helpful advice for beekeepers. Use PLAIN TEXT ONLY. Never use bolding, asterisks, hashtags, or markdown formatting. Keep the tone friendly and professional."
+        });
 
-        try {
-            const result = await model.generateContent(message);
-            const response = await result.response;
-            return res.json({ reply: response.text() });
-        } catch (err) {
-            console.log("3.1 Lite failed, trying 3.1 Pro fallback...");
-            // Fallback to the 3.1 Pro preview if Lite is busy
-            model = genAI.getGenerativeModel({ model: "gemini-3.1-pro-preview" });
-            const result = await model.generateContent(message);
-            const response = await result.response;
-            return res.json({ reply: response.text() });
-        }
+        const result = await model.generateContent(message);
+        const response = await result.response;
+        
+        // Final cleaning step: This removes any accidental formatting symbols 
+        // that the AI might have included despite the instruction.
+        let cleanReply = response.text()
+            .replace(/\*/g, '')   // Removes all asterisks
+            .replace(/#/g, '')    // Removes all hashtags
+            .replace(/__/g, '')   // Removes underscores
+            .trim();              // Removes extra spaces
+        
+        res.json({ reply: cleanReply });
 
     } catch (error) {
         console.error("API ERROR:", error.message);
         res.status(500).json({ 
-            reply: "The hive is busy with the spring bloom. Please try again in a few seconds! 🐝" 
+            reply: "The hive is a bit busy right now. Please try again in 10 seconds! 🐝" 
         });
     }
 });
