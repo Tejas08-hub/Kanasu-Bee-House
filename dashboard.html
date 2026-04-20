@@ -23,21 +23,35 @@ body{background:var(--bg);color:#2d3436}
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:12px 20px;
+padding:10px 20px;
 background:var(--glass);
 position:sticky;
 top:0;
 z-index:1000;
-border-bottom:1px solid rgba(244,180,0,.2)
+border-bottom:1px solid rgba(244,180,0,.2);
+gap:12px;
+}
+
+.topbar h2{
+font-size:14px;
+font-weight:700;
+color:#2d3436;
+text-align:center;
+flex:1;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
 }
 
 .back-btn{
 background:white;
 border:1px solid #eee;
-padding:8px 14px;
+padding:7px 13px;
 border-radius:10px;
 cursor:pointer;
 font-weight:600;
+font-size:13px;
+flex-shrink:0;
 }
 
 /* MAIN */
@@ -68,7 +82,7 @@ font-weight:600;
 <div class="topbar">
 <button class="back-btn" onclick="goBack()">← Back</button>
 <h2 id="title">Dashboard</h2>
-<span id="badge" style="background:var(--primary);color:white;padding:5px 12px;border-radius:8px;font-weight:700;font-size:10px;">MODE</span>
+<span id="badge" style="background:var(--primary);color:white;padding:5px 12px;border-radius:8px;font-weight:700;font-size:10px;flex-shrink:0;white-space:nowrap;">MODE</span>
 </div>
 
 <div class="main">
