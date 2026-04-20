@@ -5,200 +5,180 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kanasu Bee House | Secure Access</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --amber:       #c07a00;
-      --amber-light: #f4b400;
-      --amber-pale:  #fef3c7;
-      --amber-faint: #fffbf0;
-      --ink:         #1a1610;
-      --ink-mid:     #4a4438;
-      --ink-soft:    #8a8070;
-      --cream:       #faf7f0;
-      --cream-dark:  #f0ebe0;
+      --honey:       #f4b400;
+      --honey-dark:  #c07a00;
+      --honey-deep:  #92400e;
+      --honey-light: #fef3c7;
+      --ink:         #1c1710;
+      --ink-mid:     #4a4030;
+      --ink-soft:    #8a7a60;
       --white:       #ffffff;
-      --border:      rgba(192,122,0,0.15);
-      --border-soft: rgba(26,22,16,0.08);
+      --border:      rgba(192,122,0,0.22);
+      --border-soft: rgba(192,122,0,0.13);
+      --radius:      16px;
+      --radius-sm:   10px;
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    html { scroll-behavior: smooth; }
-
     body {
-      font-family: 'Syne', sans-serif;
+      font-family: 'DM Sans', sans-serif;
       min-height: 100vh;
-      background-color: var(--cream);
       color: var(--ink);
+      line-height: 1.5;
       overflow-x: hidden;
     }
 
-    /* ── BACKGROUND TEXTURE ── */
-    body::before {
-      content: '';
+    /* ── HONEY BACKGROUND (left side only) ── */
+    .bg {
       position: fixed;
       inset: 0;
-      background-image:
-        radial-gradient(ellipse 80% 60% at 70% 20%, rgba(244,180,0,0.08) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 50% at 10% 80%, rgba(192,122,0,0.05) 0%, transparent 50%);
-      pointer-events: none;
       z-index: 0;
+      background:
+        radial-gradient(ellipse 75% 55% at 40% 5%,  #fbbf24 0%, transparent 55%),
+        radial-gradient(ellipse 55% 45% at 5%  90%,  #f59e0b 0%, transparent 50%),
+        radial-gradient(ellipse 45% 40% at 75% 75%,  #fcd34d 0%, transparent 40%),
+        linear-gradient(155deg, #fde68a 0%, #fbbf24 25%, #f59e0b 55%, #d97706 80%, #b45309 100%);
     }
 
-    /* ── HONEYCOMB BG PATTERN ── */
-    body::after {
-      content: '';
+    /* Honeycomb SVG tile */
+    .bg-comb {
       position: fixed;
-      top: -10%; right: -5%;
-      width: 55vw; height: 110vh;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50V18L28 2l28 16v32L28 66zM28 100L0 84V66l28 16 28-16v18L28 100z' fill='none' stroke='rgba(192%2C122%2C0%2C0.07)' stroke-width='1'/%3E%3C/svg%3E");
-      background-size: 56px 100px;
-      pointer-events: none;
-      z-index: 0;
+      inset: 0;
+      z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='104'%3E%3Cpath d='M30 4 L56 19 L56 49 L30 64 L4 49 L4 19 Z' fill='none' stroke='rgba(120%2C53%2C15%2C0.16)' stroke-width='1.3'/%3E%3Cpath d='M30 64 L56 79 L56 104' fill='none' stroke='rgba(120%2C53%2C15%2C0.16)' stroke-width='1.3'/%3E%3Cpath d='M30 64 L4 79 L4 104' fill='none' stroke='rgba(120%2C53%2C15%2C0.16)' stroke-width='1.3'/%3E%3C/svg%3E");
+      background-size: 60px 104px;
     }
 
-    /* ── LAYOUT ── */
+    /* Top amber bar */
+    .bg-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #92400e 0%, #c07a00 30%, #f4b400 50%, #c07a00 70%, #92400e 100%);
+      z-index: 20;
+    }
+
+    /* ── PAGE ── */
     .page {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       min-height: 100vh;
       display: grid;
-      grid-template-columns: 1fr 480px;
-      grid-template-rows: 1fr;
+      grid-template-columns: 1fr 450px;
+      align-items: stretch;
     }
 
-    /* ── LEFT PANEL ── */
+    /* ══════════════════════════
+       LEFT PANEL
+    ══════════════════════════ */
     .left {
+      padding: 88px 64px 88px 72px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 80px 72px 80px 80px;
-      position: relative;
     }
 
-    .left::after {
-      content: '';
-      position: absolute;
-      right: 0; top: 10%; bottom: 10%;
-      width: 1px;
-      background: linear-gradient(to bottom, transparent, var(--border), transparent);
-    }
-
-    /* ── WORDMARK ── */
-    .wordmark {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 64px;
-      opacity: 0;
-      animation: rise 0.7s cubic-bezier(0.22,1,0.36,1) 0.1s forwards;
-    }
-
-    .wordmark-hex {
-      width: 38px; height: 38px;
-      position: relative;
-      flex-shrink: 0;
-    }
-
-    .wordmark-hex svg { width: 100%; height: 100%; }
-
-    .wordmark-text {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--ink-mid);
-    }
-
-    /* ── HEADING ── */
     .headline {
       opacity: 0;
-      animation: rise 0.8s cubic-bezier(0.22,1,0.36,1) 0.2s forwards;
-      margin-bottom: 20px;
+      animation: rise 0.7s cubic-bezier(0.22,1,0.36,1) 0.15s forwards;
+      margin-bottom: 14px;
     }
 
     .headline h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(48px, 5.5vw, 76px);
-      font-weight: 600;
-      line-height: 1.0;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(42px, 5vw, 70px);
+      font-weight: 700;
+      line-height: 1.05;
       letter-spacing: -1px;
       color: var(--ink);
     }
 
-    .headline h1 em {
+    .headline h1 .accent {
       font-style: italic;
-      color: var(--amber);
+      color: var(--honey-deep);
     }
 
     .subtitle {
-      font-size: 15px;
-      font-weight: 400;
-      color: var(--ink-soft);
-      line-height: 1.7;
-      max-width: 420px;
-      letter-spacing: 0.2px;
-      margin-bottom: 56px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--ink-mid);
+      max-width: 440px;
+      line-height: 1.65;
+      margin-bottom: 52px;
       opacity: 0;
-      animation: rise 0.8s cubic-bezier(0.22,1,0.36,1) 0.3s forwards;
+      animation: rise 0.7s cubic-bezier(0.22,1,0.36,1) 0.25s forwards;
     }
 
-    /* ── STATS ROW ── */
     .stats {
       display: flex;
-      gap: 40px;
-      margin-bottom: 56px;
+      gap: 36px;
+      margin-bottom: 52px;
       opacity: 0;
-      animation: rise 0.8s cubic-bezier(0.22,1,0.36,1) 0.4s forwards;
+      animation: rise 0.7s cubic-bezier(0.22,1,0.36,1) 0.35s forwards;
     }
 
     .stat { display: flex; flex-direction: column; gap: 4px; }
 
     .stat-val {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 32px;
-      font-weight: 600;
-      color: var(--amber);
+      font-family: 'Playfair Display', serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--ink);
       line-height: 1;
     }
 
     .stat-key {
-      font-size: 10.5px;
-      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: var(--ink-soft);
+      color: var(--ink-mid);
     }
 
-    .stat-divider {
+    .stat-sep {
       width: 1px;
-      background: var(--border-soft);
+      background: rgba(26,23,16,0.2);
       align-self: stretch;
     }
 
-    /* ── FEATURE PILLARS ── */
     .pillars {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      gap: 14px;
       opacity: 0;
-      animation: rise 0.8s cubic-bezier(0.22,1,0.36,1) 0.5s forwards;
+      animation: rise 0.7s cubic-bezier(0.22,1,0.36,1) 0.45s forwards;
     }
 
     .pillar {
-      background: var(--white);
-      border: 1px solid var(--border-soft);
-      border-radius: 16px;
-      padding: 24px 22px;
+      background: rgba(255, 251, 240, 0.82);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 20px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+      gap: 10px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s;
       cursor: default;
       position: relative;
       overflow: hidden;
+    }
+
+    .pillar::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 55%);
+      pointer-events: none;
+      border-radius: inherit;
     }
 
     .pillar::before {
@@ -206,83 +186,78 @@
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 2px;
-      background: linear-gradient(90deg, var(--amber-light), transparent);
+      background: linear-gradient(90deg, var(--honey), transparent);
       opacity: 0;
-      transition: opacity 0.3s;
+      transition: opacity 0.25s;
+      border-radius: var(--radius) var(--radius) 0 0;
     }
 
     .pillar:hover {
-      border-color: rgba(192,122,0,0.25);
-      box-shadow: 0 8px 24px rgba(192,122,0,0.08);
-      transform: translateY(-3px);
+      transform: translateY(-4px);
+      box-shadow: 0 14px 36px rgba(146,64,14,0.18);
+      border-color: rgba(192,122,0,0.45);
     }
-
     .pillar:hover::before { opacity: 1; }
 
     .pillar-icon {
-      width: 36px; height: 36px;
-      background: var(--amber-pale);
+      width: 38px; height: 38px;
+      background: rgba(244,180,0,0.28);
       border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
     }
-
-    .pillar-icon svg { width: 18px; height: 18px; }
+    .pillar-icon svg { width: 19px; height: 19px; }
 
     .pillar-title {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 1.2px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 1.3px;
       text-transform: uppercase;
-      color: var(--ink);
+      color: var(--honey-deep);
     }
 
     .pillar-desc {
-      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
       font-weight: 400;
-      color: var(--ink-soft);
-      line-height: 1.6;
+      color: var(--ink-mid);
+      line-height: 1.55;
     }
 
-    /* ── RIGHT PANEL (auth) ── */
+    /* ══════════════════════════
+       RIGHT PANEL — pure white
+    ══════════════════════════ */
     .right {
-      background: var(--white);
-      border-left: 1px solid var(--border-soft);
+      background: #ffffff;
+      border-left: 1px solid rgba(192,122,0,0.18);
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 72px 56px;
+      padding: 72px 52px;
       position: relative;
       opacity: 0;
-      animation: slideIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.2s forwards;
-    }
-
-    .auth-eyebrow {
-      font-size: 10.5px;
-      font-weight: 700;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      color: var(--amber);
-      margin-bottom: 8px;
+      animation: slideIn 0.8s cubic-bezier(0.22,1,0.36,1) 0.2s forwards;
     }
 
     .auth-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 34px;
-      font-weight: 600;
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 700;
       color: var(--ink);
-      margin-bottom: 32px;
-      line-height: 1.1;
+      margin-bottom: 28px;
+      line-height: 1.15;
     }
 
-    /* ── TABS ── */
+    /* Tabs */
     .tabs {
       display: flex;
-      background: var(--cream);
-      border: 1px solid var(--border-soft);
+      background: #f5f0e8;
+      border: 1px solid rgba(192,122,0,0.12);
       border-radius: 12px;
       padding: 4px;
       gap: 4px;
-      margin-bottom: 28px;
+      margin-bottom: 26px;
     }
 
     .tab {
@@ -290,10 +265,9 @@
       padding: 10px;
       border: none;
       background: transparent;
-      font-family: 'Syne', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.3px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      font-weight: 700;
       cursor: pointer;
       border-radius: 9px;
       color: var(--ink-soft);
@@ -301,19 +275,20 @@
     }
 
     .tab.active {
-      background: var(--white);
+      background: #ffffff;
       color: var(--ink);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      box-shadow: 0 2px 10px rgba(146,64,14,0.08);
     }
 
-    /* ── FORM ── */
-    .field { margin-bottom: 18px; }
+    /* Fields */
+    .field { margin-bottom: 16px; }
 
     .field label {
       display: block;
-      font-size: 10.5px;
-      font-weight: 700;
-      letter-spacing: 1px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
       text-transform: uppercase;
       color: var(--ink-mid);
       margin-bottom: 7px;
@@ -321,157 +296,156 @@
 
     .field input {
       width: 100%;
-      padding: 12px 16px;
-      font-family: 'Syne', sans-serif;
+      padding: 12px 15px;
+      font-family: 'DM Sans', sans-serif;
       font-size: 14px;
-      font-weight: 400;
+      font-weight: 500;
       color: var(--ink);
-      background: var(--cream);
-      border: 1px solid var(--border-soft);
-      border-radius: 10px;
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      background: #f9f6f0;
+      border: 1.5px solid #e8dfc8;
+      border-radius: var(--radius-sm);
       outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    .field input::placeholder {
+      color: #b0a080;
+      font-weight: 400;
     }
 
     .field input:focus {
-      background: var(--white);
-      border-color: var(--amber);
+      background: #ffffff;
+      border-color: var(--honey-dark);
       box-shadow: 0 0 0 3px rgba(192,122,0,0.1);
     }
 
     .field input.err {
-      border-color: #d9534f;
-      box-shadow: 0 0 0 3px rgba(217,83,79,0.08);
+      border-color: #dc2626;
+      box-shadow: 0 0 0 3px rgba(220,38,38,0.08);
     }
 
-    .field input::placeholder { color: var(--ink-soft); opacity: 0.6; }
-
     .errmsg {
-      font-size: 11px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11.5px;
       font-weight: 600;
-      color: #c0392b;
+      color: #dc2626;
       margin-top: 5px;
       display: none;
-      letter-spacing: 0.2px;
     }
     .errmsg.show { display: block; }
 
-    /* ── PASSWORD STRENGTH ── */
-    .strength { margin-top: 8px; display: none; }
+    /* Password strength */
+    .strength { margin-top: 7px; display: none; }
     .strength.show { display: block; }
     .strength-track {
       height: 4px;
-      background: var(--cream-dark);
+      background: #f0e8d0;
       border-radius: 4px;
       overflow: hidden;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
     }
-    .strength-bar {
+    .strength-fill {
       height: 100%;
       width: 0;
       border-radius: 4px;
-      transition: width 0.35s ease, background 0.35s ease;
+      transition: width 0.35s, background 0.35s;
     }
     .strength-lbl {
       font-size: 10.5px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 0.5px;
       text-transform: uppercase;
     }
 
-    /* ── SUBMIT BUTTON ── */
+    /* Submit button */
     .btn-submit {
       width: 100%;
       padding: 14px;
       background: var(--ink);
-      color: var(--white);
+      color: #ffffff;
       border: none;
-      border-radius: 10px;
-      font-family: 'Syne', sans-serif;
-      font-size: 14px;
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14.5px;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
       cursor: pointer;
       margin-top: 8px;
-      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
+      transition: background 0.22s, transform 0.15s, box-shadow 0.22s;
     }
 
     .btn-submit:hover {
-      background: var(--amber);
-      box-shadow: 0 6px 20px rgba(192,122,0,0.25);
-      transform: translateY(-1px);
+      background: var(--honey-dark);
+      box-shadow: 0 8px 24px rgba(192,122,0,0.28);
+      transform: translateY(-2px);
     }
 
     .btn-submit:active { transform: translateY(0); }
 
-    .btn-submit .arrow {
-      display: inline-block;
-      transition: transform 0.2s;
-    }
-    .btn-submit:hover .arrow { transform: translateX(3px); }
+    .btn-arrow { display: inline-block; transition: transform 0.2s; }
+    .btn-submit:hover .btn-arrow { transform: translateX(4px); }
 
-    /* ── DIVIDER ── */
-    .auth-divider {
+    /* Divider */
+    .divider {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin: 20px 0 16px;
+      gap: 10px;
+      margin: 18px 0 14px;
     }
-
-    .auth-divider::before, .auth-divider::after {
+    .divider::before, .divider::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: var(--border-soft);
+      background: #e8dfc8;
     }
-
-    .auth-divider span {
+    .divider span {
+      font-family: 'DM Sans', sans-serif;
       font-size: 11px;
       font-weight: 600;
       color: var(--ink-soft);
-      letter-spacing: 0.5px;
+      white-space: nowrap;
     }
 
-    /* ── GHOST BUTTON ── */
+    /* Ghost button */
     .btn-ghost {
       width: 100%;
       padding: 12px;
       background: transparent;
-      border: 1px solid var(--border-soft);
-      border-radius: 10px;
-      font-family: 'Syne', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
+      border: 1.5px solid #e8dfc8;
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      font-weight: 700;
       color: var(--ink-mid);
       cursor: pointer;
       transition: all 0.2s;
     }
     .btn-ghost:hover {
-      border-color: rgba(192,122,0,0.3);
-      color: var(--amber);
-      background: var(--amber-faint);
+      border-color: var(--honey-dark);
+      color: var(--honey-dark);
+      background: #fffbf0;
     }
 
-    /* ── SUCCESS TOAST ── */
+    /* Toast */
     .toast {
       display: none;
       align-items: center;
       gap: 10px;
       margin-top: 14px;
-      padding: 13px 16px;
+      padding: 12px 16px;
       background: #f0fdf4;
-      border: 1px solid rgba(34,197,94,0.25);
-      border-radius: 10px;
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
       font-size: 13px;
-      font-weight: 600;
-      color: #15803d;
+      font-weight: 700;
+      color: #166534;
     }
     .toast.show { display: flex; animation: rise 0.35s ease; }
-
     .toast-dot {
       width: 8px; height: 8px;
       background: #22c55e;
@@ -479,82 +453,65 @@
       flex-shrink: 0;
     }
 
-    /* ── FOOTER NOTE ── */
+    /* Footer */
     .auth-footer {
-      position: absolute;
-      bottom: 28px; left: 56px; right: 56px;
+      margin-top: 22px;
+      font-family: 'DM Sans', sans-serif;
       font-size: 11px;
-      color: var(--ink-soft);
+      color: #b0a080;
       text-align: center;
-      line-height: 1.6;
-      opacity: 0.7;
+      line-height: 1.7;
     }
 
-    /* ── ANIMATIONS ── */
+    /* Animations */
     @keyframes rise {
       from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
     @keyframes slideIn {
-      from { opacity: 0; transform: translateX(20px); }
+      from { opacity: 0; transform: translateX(24px); }
       to   { opacity: 1; transform: translateX(0); }
     }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 1100px) {
-      .page {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto;
-      }
-      .left {
-        padding: 60px 48px 48px;
-        text-align: center;
-      }
-      .left::after { display: none; }
-      .wordmark { justify-content: center; }
+    /* Responsive */
+    @media (max-width: 1080px) {
+      .page { grid-template-columns: 1fr; }
+      .left { padding: 80px 40px 48px; text-align: center; }
       .subtitle { margin-left: auto; margin-right: auto; }
       .stats { justify-content: center; }
-      .pillars { max-width: 600px; margin: 0 auto; }
+      .pillars { max-width: 580px; margin: 0 auto; }
       .right {
+        min-height: unset;
         border-left: none;
-        border-top: 1px solid var(--border-soft);
-        padding: 56px 48px;
+        border-top: 1px solid rgba(192,122,0,0.18);
+        padding: 56px 40px 72px;
         animation: none;
         opacity: 1;
       }
     }
 
-    @media (max-width: 640px) {
-      .left { padding: 48px 24px 40px; }
-      .headline h1 { font-size: 44px; }
+    @media (max-width: 600px) {
+      .left { padding: 60px 22px 40px; }
+      .headline h1 { font-size: 42px; }
       .pillars { grid-template-columns: 1fr; }
-      .right { padding: 40px 24px 60px; }
-      .auth-footer { left: 24px; right: 24px; }
-      .stats { gap: 24px; flex-wrap: wrap; }
+      .right { padding: 40px 22px 64px; }
+      .stats { gap: 20px; }
     }
   </style>
 </head>
 <body>
 
+<div class="bg"></div>
+<div class="bg-comb"></div>
+<div class="bg-bar"></div>
+
 <div class="page">
 
-  <!-- ── LEFT PANEL ── -->
+  <!-- ══ LEFT ══ -->
   <div class="left">
 
-    <div class="wordmark">
-      <div class="wordmark-hex">
-        <svg viewBox="0 0 38 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M19 2L35 11V29L19 38L3 29V11L19 2Z" fill="#fef3c7" stroke="#c07a00" stroke-width="1.5"/>
-          <path d="M19 10L27 15V25L19 30L11 25V15L19 10Z" fill="none" stroke="#c07a00" stroke-width="1" opacity="0.5"/>
-          <circle cx="19" cy="20" r="3" fill="#c07a00"/>
-        </svg>
-      </div>
-      <span class="wordmark-text">Kanasu Bee House</span>
-    </div>
-
     <div class="headline">
-      <h1>Kanasu <em>Bee House</em></h1>
+      <h1>Kanasu <span class="accent">Bee House</span></h1>
     </div>
 
     <p class="subtitle">Hybrid Acoustic–Vision AI Platform for Smart Apiculture</p>
@@ -564,12 +521,12 @@
         <span class="stat-val">24/7</span>
         <span class="stat-key">Monitoring</span>
       </div>
-      <div class="stat-divider"></div>
+      <div class="stat-sep"></div>
       <div class="stat">
         <span class="stat-val">99.9%</span>
         <span class="stat-key">Uptime</span>
       </div>
-      <div class="stat-divider"></div>
+      <div class="stat-sep"></div>
       <div class="stat">
         <span class="stat-val">Live</span>
         <span class="stat-key">AI Alerts</span>
@@ -577,24 +534,26 @@
     </div>
 
     <div class="pillars">
+
       <div class="pillar">
         <div class="pillar-icon">
-          <svg viewBox="0 0 18 18" fill="none">
-            <rect x="3" y="8" width="12" height="8" rx="2" stroke="#92400e" stroke-width="1.3"/>
-            <path d="M6 8V6a3 3 0 016 0v2" stroke="#92400e" stroke-width="1.3"/>
-            <circle cx="9" cy="12" r="1.5" fill="#92400e"/>
+          <svg viewBox="0 0 19 19" fill="none">
+            <rect x="3.5" y="8.5" width="12" height="8" rx="2" stroke="#92400e" stroke-width="1.4"/>
+            <path d="M6.5 8.5V6.5a3 3 0 016 0v2" stroke="#92400e" stroke-width="1.4"/>
+            <circle cx="9.5" cy="12.5" r="1.5" fill="#92400e"/>
           </svg>
         </div>
         <div class="pillar-title">Smart Sensors</div>
-        <div class="pillar-desc">Real-time hive temperature and humidity monitoring around the clock.</div>
+        <div class="pillar-desc">Real-time hive temperature &amp; humidity monitoring around the clock.</div>
       </div>
 
       <div class="pillar">
         <div class="pillar-icon">
-          <svg viewBox="0 0 18 18" fill="none">
-            <path d="M9 3C5.5 3 3 5.5 3 9s2.5 6 6 6 6-2.5 6-6" stroke="#92400e" stroke-width="1.3" stroke-linecap="round"/>
-            <path d="M12 3l3 3-3 3" stroke="#92400e" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="9" cy="9" r="2" fill="#92400e"/>
+          <svg viewBox="0 0 19 19" fill="none">
+            <circle cx="9.5" cy="9.5" r="5.5" stroke="#92400e" stroke-width="1.4"/>
+            <path d="M9.5 6.5v3l2 1.5" stroke="#92400e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14 4.5l2-2" stroke="#92400e" stroke-width="1.2" stroke-linecap="round"/>
+            <circle cx="15.5" cy="3" r="1.2" fill="#92400e"/>
           </svg>
         </div>
         <div class="pillar-title">Cloud Sync</div>
@@ -603,54 +562,53 @@
 
       <div class="pillar">
         <div class="pillar-icon">
-          <svg viewBox="0 0 18 18" fill="none">
-            <path d="M3 14L6 9.5 9 11.5 12 7 15 9" stroke="#92400e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="9" cy="5" r="2.5" stroke="#92400e" stroke-width="1.2"/>
+          <svg viewBox="0 0 19 19" fill="none">
+            <path d="M3 15L6.5 10 9.5 12.5 13 7 16 9.5" stroke="#92400e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="9.5" cy="4.5" r="2.5" stroke="#92400e" stroke-width="1.3"/>
           </svg>
         </div>
         <div class="pillar-title">AI Diagnosis</div>
-        <div class="pillar-desc">Machine learning that identifies colony stress before it escalates.</div>
+        <div class="pillar-desc">Machine learning identifying colony stress before it escalates.</div>
       </div>
 
       <div class="pillar">
         <div class="pillar-icon">
-          <svg viewBox="0 0 18 18" fill="none">
-            <path d="M9 2v2M9 14v2M2 9h2M14 9h2M4.2 4.2l1.4 1.4M12.4 12.4l1.4 1.4M4.2 13.8l1.4-1.4M12.4 5.6l1.4-1.4" stroke="#92400e" stroke-width="1.3" stroke-linecap="round"/>
-            <circle cx="9" cy="9" r="3" stroke="#92400e" stroke-width="1.2"/>
+          <svg viewBox="0 0 19 19" fill="none">
+            <path d="M9.5 2v2M9.5 15v2M2 9.5h2M15 9.5h2M4.4 4.4l1.4 1.4M13.2 13.2l1.4 1.4M4.4 14.6l1.4-1.4M13.2 5.8l1.4-1.4" stroke="#92400e" stroke-width="1.3" stroke-linecap="round"/>
+            <circle cx="9.5" cy="9.5" r="3" stroke="#92400e" stroke-width="1.3"/>
           </svg>
         </div>
         <div class="pillar-title">Early Alerts</div>
         <div class="pillar-desc">Acoustic analysis detecting disease before it spreads in the colony.</div>
       </div>
-    </div>
 
+    </div>
   </div>
 
-  <!-- ── RIGHT PANEL (AUTH) ── -->
+  <!-- ══ RIGHT (AUTH) — pure white ══ -->
   <div class="right">
 
-    <div class="auth-eyebrow" id="authEyebrow">Beekeeper Portal</div>
-    <h2 class="auth-title" id="authTitle">Welcome back</h2>
+    <h2 class="auth-title" id="authTitle">Welcome Back</h2>
 
     <div class="tabs">
-      <button class="tab active" id="tabLogin" onclick="showLogin()">Sign in</button>
-      <button class="tab" id="tabSignup" onclick="showSignup()">Create account</button>
+      <button class="tab active" id="tabLogin" onclick="showLogin()">Sign In</button>
+      <button class="tab" id="tabSignup" onclick="showSignup()">Sign Up</button>
     </div>
 
     <!-- LOGIN FORM -->
     <div id="viewLogin">
       <div class="field">
-        <label>Email address</label>
+        <label>Email Address</label>
         <input type="email" id="loginEmail" placeholder="you@example.com" oninput="clearErr(this)">
-        <div class="errmsg" id="loginEmailErr">Please enter a valid email address.</div>
+        <div class="errmsg" id="loginEmailErr">Enter a valid email address.</div>
       </div>
       <div class="field">
         <label>Password</label>
         <input type="password" id="loginPassword" placeholder="••••••••" oninput="clearErr(this)">
-        <div class="errmsg" id="loginPassErr">Password must be at least 8 characters.</div>
+        <div class="errmsg" id="loginPassErr">Minimum 8 characters required.</div>
       </div>
       <button class="btn-submit" onclick="doLogin()">
-        Sign in <span class="arrow">→</span>
+        Sign In <span class="btn-arrow">→</span>
       </button>
       <div class="toast" id="toastLogin">
         <span class="toast-dot"></span> Signed in — redirecting you now…
@@ -660,40 +618,39 @@
     <!-- SIGNUP FORM -->
     <div id="viewSignup" style="display:none">
       <div class="field">
-        <label>Full name</label>
+        <label>Full Name</label>
         <input type="text" id="signupName" placeholder="e.g. Sitha Ram" oninput="clearErr(this)">
         <div class="errmsg" id="signupNameErr">Full name is required.</div>
       </div>
       <div class="field">
-        <label>Email address</label>
+        <label>Email Address</label>
         <input type="email" id="signupEmail" placeholder="you@example.com" oninput="clearErr(this)">
-        <div class="errmsg" id="signupEmailErr">Please enter a valid email address.</div>
+        <div class="errmsg" id="signupEmailErr">Enter a valid email address.</div>
       </div>
       <div class="field">
-        <label>Create password</label>
-        <input type="password" id="signupPassword" placeholder="Min 8 chars, uppercase + symbol" oninput="checkStrength(this.value)">
+        <label>Create Password</label>
+        <input type="password" id="signupPassword" placeholder="Min 8 chars, uppercase &amp; symbol" oninput="checkStrength(this.value)">
         <div class="strength" id="strengthWrap">
           <div class="strength-track">
-            <div class="strength-bar" id="strengthFill"></div>
+            <div class="strength-fill" id="strengthFill"></div>
           </div>
           <span class="strength-lbl" id="strengthLabel"></span>
         </div>
-        <div class="errmsg" id="signupPassErr">Use 8+ chars with uppercase, number and symbol.</div>
+        <div class="errmsg" id="signupPassErr">Use 8+ chars with uppercase, number &amp; symbol.</div>
       </div>
       <button class="btn-submit" onclick="doSignup()">
-        Create account <span class="arrow">→</span>
+        Create Account <span class="btn-arrow">→</span>
       </button>
-      <div class="auth-divider"><span>Already have an account?</span></div>
-      <button class="btn-ghost" onclick="showLogin()">Sign in instead</button>
+      <div class="divider"><span>Already have an account?</span></div>
+      <button class="btn-ghost" onclick="showLogin()">Sign In Instead</button>
       <div class="toast" id="toastSignup">
         <span class="toast-dot"></span> Account created — redirecting you now…
       </div>
     </div>
 
-    <p class="auth-footer">Protected by Firebase Authentication &middot; End-to-end encrypted</p>
+    <p class="auth-footer">Protected by Firebase Authentication · End-to-end encrypted</p>
 
   </div>
-
 </div>
 
 <!-- Firebase SDKs -->
@@ -703,7 +660,6 @@
 <script src="firebase.js"></script>
 
 <script>
-  /* ── UTILITIES ── */
   function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
   function isStrongPassword(v) { return v.length >= 8 && /[A-Z]/.test(v) && /[0-9]/.test(v) && /[^A-Za-z0-9]/.test(v); }
 
@@ -718,37 +674,33 @@
     if (e) e.classList.remove('show');
   }
 
-  /* ── PASSWORD STRENGTH ── */
   function checkStrength(val) {
     const wrap  = document.getElementById('strengthWrap');
     const fill  = document.getElementById('strengthFill');
     const label = document.getElementById('strengthLabel');
     if (!val) { wrap.classList.remove('show'); return; }
     wrap.classList.add('show');
-    let score = 0;
-    if (val.length >= 8)          score++;
-    if (/[A-Z]/.test(val))        score++;
-    if (/[0-9]/.test(val))        score++;
-    if (/[^A-Za-z0-9]/.test(val)) score++;
-    const levels = [
-      { pct: '25%',  color: '#e24b4a', text: 'Weak'   },
-      { pct: '50%',  color: '#c07a00', text: 'Fair'   },
-      { pct: '75%',  color: '#639922', text: 'Good'   },
-      { pct: '100%', color: '#1d9e75', text: 'Strong' },
-    ];
-    const lvl = levels[Math.min(score - 1, 3)] || levels[0];
+    let s = 0;
+    if (val.length >= 8)          s++;
+    if (/[A-Z]/.test(val))        s++;
+    if (/[0-9]/.test(val))        s++;
+    if (/[^A-Za-z0-9]/.test(val)) s++;
+    const lvl = [
+      { pct: '25%',  color: '#dc2626', text: 'Weak'   },
+      { pct: '50%',  color: '#d97706', text: 'Fair'   },
+      { pct: '75%',  color: '#65a30d', text: 'Good'   },
+      { pct: '100%', color: '#16a34a', text: 'Strong' },
+    ][Math.max(s - 1, 0)];
     fill.style.width      = lvl.pct;
     fill.style.background = lvl.color;
     label.textContent     = lvl.text;
     label.style.color     = lvl.color;
   }
 
-  /* ── TAB SWITCHING ── */
   function showLogin() {
     document.getElementById('viewLogin').style.display  = 'block';
     document.getElementById('viewSignup').style.display = 'none';
-    document.getElementById('authTitle').textContent    = 'Welcome back';
-    document.getElementById('authEyebrow').textContent  = 'Beekeeper Portal';
+    document.getElementById('authTitle').textContent    = 'Welcome Back';
     document.getElementById('tabLogin').classList.add('active');
     document.getElementById('tabSignup').classList.remove('active');
   }
@@ -756,21 +708,18 @@
   function showSignup() {
     document.getElementById('viewLogin').style.display  = 'none';
     document.getElementById('viewSignup').style.display = 'block';
-    document.getElementById('authTitle').textContent    = 'Join the hive';
-    document.getElementById('authEyebrow').textContent  = 'New Account';
+    document.getElementById('authTitle').textContent    = 'Create Account';
     document.getElementById('tabSignup').classList.add('active');
     document.getElementById('tabLogin').classList.remove('active');
   }
 
-  /* ── LOGIN ── */
   function doLogin() {
     const emailEl = document.getElementById('loginEmail');
     const passEl  = document.getElementById('loginPassword');
     let ok = true;
-    if (!isValidEmail(emailEl.value))  { showErr(emailEl, 'loginEmailErr'); ok = false; }
-    if (passEl.value.length < 8)       { showErr(passEl,  'loginPassErr');  ok = false; }
+    if (!isValidEmail(emailEl.value)) { showErr(emailEl, 'loginEmailErr'); ok = false; }
+    if (passEl.value.length < 8)      { showErr(passEl,  'loginPassErr');  ok = false; }
     if (!ok) return;
-
     firebase.auth().signInWithEmailAndPassword(emailEl.value.trim(), passEl.value)
       .then(() => {
         document.getElementById('toastLogin').classList.add('show');
@@ -779,24 +728,20 @@
       .catch(err => alert(err.message));
   }
 
-  /* ── SIGNUP ── */
   function doSignup() {
     const nameEl  = document.getElementById('signupName');
     const emailEl = document.getElementById('signupEmail');
     const passEl  = document.getElementById('signupPassword');
     let ok = true;
-    if (!nameEl.value.trim())             { showErr(nameEl,  'signupNameErr'); ok = false; }
-    if (!isValidEmail(emailEl.value))     { showErr(emailEl, 'signupEmailErr'); ok = false; }
-    if (!isStrongPassword(passEl.value))  { showErr(passEl,  'signupPassErr'); ok = false; }
+    if (!nameEl.value.trim())            { showErr(nameEl,  'signupNameErr');  ok = false; }
+    if (!isValidEmail(emailEl.value))    { showErr(emailEl, 'signupEmailErr'); ok = false; }
+    if (!isStrongPassword(passEl.value)) { showErr(passEl,  'signupPassErr');  ok = false; }
     if (!ok) return;
-
     firebase.auth().createUserWithEmailAndPassword(emailEl.value.trim(), passEl.value)
-      .then(userCredential => {
-        return firebase.database().ref('users/' + userCredential.user.uid).set({
-          name:  nameEl.value.trim(),
-          email: emailEl.value.trim()
-        });
-      })
+      .then(uc => firebase.database().ref('users/' + uc.user.uid).set({
+        name:  nameEl.value.trim(),
+        email: emailEl.value.trim()
+      }))
       .then(() => {
         document.getElementById('toastSignup').classList.add('show');
         setTimeout(() => window.location.href = 'welcome.html', 1400);
