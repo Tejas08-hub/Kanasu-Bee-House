@@ -9,10 +9,11 @@
 
   <style>
     :root {
-      --honey:       #f4b400;
+      --honey:      #f4b400;
       --honey-dark:  #c07a00;
       --honey-deep:  #92400e;
       --honey-light: #fef3c7;
+      --pale-yellow: #fffbeb; /* Added for the requested background theme */
       --ink:         #1c1710;
       --ink-mid:     #4a4030;
       --ink-soft:    #8a7a60;
@@ -33,16 +34,15 @@
       overflow-x: hidden;
     }
 
-    /* ── HONEY BACKGROUND (left side only) ── */
+    /* ── PALE YELLOW BACKGROUND ── */
     .bg {
       position: fixed;
       inset: 0;
       z-index: 0;
-      background:
-        radial-gradient(ellipse 75% 55% at 40% 5%,  #fbbf24 0%, transparent 55%),
-        radial-gradient(ellipse 55% 45% at 5%  90%,  #f59e0b 0%, transparent 50%),
-        radial-gradient(ellipse 45% 40% at 75% 75%,  #fcd34d 0%, transparent 40%),
-        linear-gradient(155deg, #fde68a 0%, #fbbf24 25%, #f59e0b 55%, #d97706 80%, #b45309 100%);
+      background: 
+        radial-gradient(circle at 20% 20%, #fef3c7 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, #fde68a 0%, transparent 40%),
+        var(--pale-yellow); /* Pale yellow primary background */
     }
 
     /* Honeycomb SVG tile */
@@ -74,7 +74,7 @@
     }
 
     /* ══════════════════════════
-       LEFT PANEL
+        LEFT PANEL
     ══════════════════════════ */
     .left {
       padding: 88px 64px 88px 72px;
@@ -98,8 +98,9 @@
       color: var(--ink);
     }
 
+    /* Changed from Italics to Solid/Straight */
     .headline h1 .accent {
-      font-style: italic;
+      font-style: normal; 
       color: var(--honey-deep);
     }
 
@@ -157,7 +158,7 @@
     }
 
     .pillar {
-      background: rgba(255, 251, 240, 0.82);
+      background: rgba(255, 255, 255, 0.75);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 22px 20px;
@@ -226,7 +227,7 @@
     }
 
     /* ══════════════════════════
-       RIGHT PANEL — pure white
+        RIGHT PANEL — pure white
     ══════════════════════════ */
     .right {
       background: #ffffff;
@@ -507,7 +508,6 @@
 
 <div class="page">
 
-  <!-- ══ LEFT ══ -->
   <div class="left">
 
     <div class="headline">
@@ -585,7 +585,6 @@
     </div>
   </div>
 
-  <!-- ══ RIGHT (AUTH) — pure white ══ -->
   <div class="right">
 
     <h2 class="auth-title" id="authTitle">Welcome Back</h2>
@@ -595,7 +594,6 @@
       <button class="tab" id="tabSignup" onclick="showSignup()">Sign Up</button>
     </div>
 
-    <!-- LOGIN FORM -->
     <div id="viewLogin">
       <div class="field">
         <label>Email Address</label>
@@ -615,7 +613,6 @@
       </div>
     </div>
 
-    <!-- SIGNUP FORM -->
     <div id="viewSignup" style="display:none">
       <div class="field">
         <label>Full Name</label>
@@ -653,7 +650,6 @@
   </div>
 </div>
 
-<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
