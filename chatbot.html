@@ -189,11 +189,24 @@ font-size:14px;
 flex-shrink:0;
 }
 
+/* Status bar for server wake-up notice */
+.status-bar{
+display:none;
+text-align:center;
+font-size:12px;
+font-weight:600;
+padding:7px 14px;
+background:#fff8e1;
+border-top:1px solid #ffe082;
+color:#7a5800;
+flex-shrink:0;
+}
+.status-bar.show{ display:block; }
+
 /* MOBILE */
 @media(max-width:600px){
 .main-wrapper{
-padding:10px;
-padding-bottom:12px;
+padding:8px;
 }
 .chat-wrapper{
 border-radius:14px;
@@ -221,6 +234,7 @@ font-size:13px;
 }
 .input-container{
 padding:10px;
+padding-bottom:max(10px, env(safe-area-inset-bottom));
 gap:7px;
 }
 #send-btn{
@@ -241,18 +255,19 @@ KANASU <span style="color:var(--primary)">BEE HOUSE</span>
 </nav>
 
 <div class="main-wrapper">
-
 <div class="chat-wrapper">
 
-<div class="chat-title">
-KANASU BEE CHATBOT 
-</div>
+<div class="chat-title">KANASU BEE CHATBOT</div>
 
 <div id="chat-window">
 <div class="msg bot-msg">
-Hi, I'm Kanasu Bee..<br>
+Hi, I'm Kanasu Bee.. <br>
 How can I help you today about bee keeping?
 </div>
+</div>
+
+<div class="status-bar" id="statusBar">
+⏳ Server is waking up, please wait a moment...
 </div>
 
 <div class="input-container">
@@ -261,66 +276,81 @@ How can I help you today about bee keeping?
 </div>
 
 </div>
-
 </div>
 
 <script>
-const chatWindow=document.getElementById('chat-window');
-const userInput=document.getElementById('user-input');
-const sendBtn=document.getElementById('send-btn');
+const chatWindow = document.getElementById('chat-window');
+const userInput  = document.getElementById('user-input');
+const sendBtn    = document.getElementById('send-btn');
+const statusBar  = document.getElementById('statusBar');
 
-const SERVER_URL="https://kanasu-api.onrender.com/chat";
+const SERVER_URL = "https://kanasu-api.onrender.com/chat";
+
+let isWaiting = false;
 
 async function handleSend(){
-const text=userInput.value.trim();
-if(!text)return;
+  const text = userInput.value.trim();
+  if(!text || isWaiting) return;
 
-addMessage(text,'user-msg');
-userInput.value='';
+  addMessage(text, 'user-msg');
+  userInput.value = '';
+  isWaiting = true;
+  sendBtn.disabled = true;
+  sendBtn.style.opacity = '0.6';
 
-const typingDiv=document.createElement('div');
-typingDiv.className='msg bot-msg';
-typingDiv.id='typing';
-typingDiv.innerHTML=`
-<div class="typing-dots">
-<span></span><span></span><span></span>
-</div>
-`;
-chatWindow.appendChild(typingDiv);
-scrollToBottom();
+  const typingDiv = document.createElement('div');
+  typingDiv.className = 'msg bot-msg';
+  typingDiv.id = 'typing';
+  typingDiv.innerHTML = `<div class="typing-dots"><span></span><span></span><span></span></div>`;
+  chatWindow.appendChild(typingDiv);
+  scrollToBottom();
 
-try{
-const response=await fetch(SERVER_URL,{
-method:'POST',
-headers:{'Content-Type':'application/json'},
-body:JSON.stringify({message:text})
-});
+  /* Show status bar after 4s if still waiting — means server is cold-starting */
+  const wakeTimer = setTimeout(() => {
+    statusBar.classList.add('show');
+  }, 4000);
 
-const data=await response.json();
-document.getElementById('typing').remove();
-addMessage(data.reply||"I'm sorry, I couldn't process that.",'bot-msg');
+  try{
+    const response = await fetch(SERVER_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: text})
+    });
 
-}catch(err){
-document.getElementById('typing').remove();
-addMessage("Error: Could not connect to hive server.",'bot-msg');
+    clearTimeout(wakeTimer);
+    statusBar.classList.remove('show');
+
+    const data = await response.json();
+    document.getElementById('typing').remove();
+    addMessage(data.reply || "I'm sorry, I couldn't process that.", 'bot-msg');
+
+  } catch(err){
+    clearTimeout(wakeTimer);
+    statusBar.classList.remove('show');
+    document.getElementById('typing').remove();
+    addMessage("Server is waking up — please try again in 30 seconds. 🐝", 'bot-msg');
+  }
+
+  isWaiting = false;
+  sendBtn.disabled = false;
+  sendBtn.style.opacity = '1';
 }
-}
 
-function addMessage(text,className){
-const div=document.createElement('div');
-div.className=`msg ${className}`;
-div.innerText=text;
-chatWindow.appendChild(div);
-scrollToBottom();
+function addMessage(text, className){
+  const div = document.createElement('div');
+  div.className = `msg ${className}`;
+  div.innerText = text;
+  chatWindow.appendChild(div);
+  scrollToBottom();
 }
 
 function scrollToBottom(){
-chatWindow.scrollTop=chatWindow.scrollHeight;
+  chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
-sendBtn.addEventListener('click',handleSend);
-userInput.addEventListener('keypress',(e)=>{
-if(e.key==='Enter')handleSend();
+sendBtn.addEventListener('click', handleSend);
+userInput.addEventListener('keypress', (e) => {
+  if(e.key === 'Enter') handleSend();
 });
 </script>
 
