@@ -76,7 +76,7 @@
       max-width: 500px;
     }
 
-    /* ─── FEATURE BOXES (With Gold Borders) ─── */
+    /* ─── FEATURE BOXES ─── */
     .features {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -87,7 +87,6 @@
       background: #ffffff;
       padding: 32px;
       border-radius: var(--radius-card);
-      /* Professional Border */
       border: 2px solid var(--honey); 
       box-shadow: 0 4px 14px rgba(244,180,0,0.12);
       transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -96,7 +95,17 @@
       gap: 16px;
       position: relative;
       overflow: hidden;
+      
+      /* Staggered Animation Logic */
+      opacity: 0;
+      animation: fadeIn 0.6s ease-out forwards;
     }
+
+    /* Animation Delays for "One-by-One" effect */
+    .feature:nth-child(1) { animation-delay: 0.2s; }
+    .feature:nth-child(2) { animation-delay: 0.4s; }
+    .feature:nth-child(3) { animation-delay: 0.6s; }
+    .feature:nth-child(4) { animation-delay: 0.8s; }
 
     .feature:hover {
       transform: translateY(-8px);
@@ -235,10 +244,22 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
+    /* ─── RESPONSIVE / MOBILE ─── */
     @media (max-width: 1024px) {
       .container { grid-template-columns: 1fr; gap: 60px; text-align: center; }
+      .header h1 { margin: 0 auto 16px; }
+      .subtitle { margin: 0 auto; }
       .features { max-width: 700px; margin: 0 auto; }
       .auth-card { margin: 0 auto; }
+    }
+
+    @media (max-width: 640px) {
+      .page { padding: 20px 16px; }
+      .header h1 { font-size: 34px; }
+      /* Stacks techboxes vertically on mobile */
+      .features { grid-template-columns: 1fr; } 
+      .feature { padding: 24px; text-align: left; }
+      .auth-card { padding: 32px 24px; }
     }
   </style>
 </head>
@@ -356,7 +377,7 @@
 <script src="firebase.js"></script>
 
 <script>
-  /* ── All Logic Preserved Exactly ── */
+  /* All logic preserved exactly */
   function isValidEmail(val) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim()); }
   function isStrongPassword(val) { return val.length >= 8 && /[A-Z]/.test(val) && /[0-9]/.test(val) && /[^A-Za-z0-9]/.test(val); }
   function showError(inputEl, msgId) { inputEl.classList.add('invalid'); document.getElementById(msgId).classList.add('show'); }
