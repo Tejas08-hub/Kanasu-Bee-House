@@ -9,10 +9,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Render uses port 10000; this line detects it automatically
 const port = process.env.PORT || 10000;
 
-// Initialize the AI
+// Initialize the API
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 app.post('/chat', async (req, res) => {
@@ -20,20 +19,26 @@ app.post('/chat', async (req, res) => {
         const { message } = req.body;
         if (!message) return res.status(400).json({ error: "No message" });
 
-        // Fail-safe: Try the 1.5-flash model first
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        // TRY MODEL 1 (The newest 2026 stable flash)
+        let model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
         
-        const result = await model.generateContent(message);
-        const response = await result.response;
-        res.json({ reply: response.text() });
+        try {
+            const result = await model.generateContent(message);
+            const response = await result.response;
+            return res.json({ reply: response.text() });
+        } catch (firstError) {
+            console.log("Model 2.5 failed, trying 1.5 Pro fallback...");
+            
+            // TRY MODEL 2 (The most stable fallback)
+            model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+            const result = await model.generateContent(message);
+            const response = await result.response;
+            return res.json({ reply: response.text() });
+        }
 
     } catch (error) {
-        console.error("API Error:", error.message);
-        
-        // If the API key is missing or wrong, we'll see it in the Render logs
-        res.status(500).json({ 
-            reply: "The bees are still waking up. Please try again in a few seconds!" 
-        });
+        console.error("CRITICAL API ERROR:", error.message);
+        res.status(500).json({ reply: "The bees are resting. Please try again in 10 seconds!" });
     }
 });
 
