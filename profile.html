@@ -5,671 +5,917 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Profile | Kanasu Bee House</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="firebase.js"></script>
 
 <style>
+/* ════════════════════════════════════════════
+   TOKENS
+════════════════════════════════════════════ */
 :root {
-  --amber:       #E8A000;
-  --amber-light: #FFF3CC;
-  --amber-dark:  #B87D00;
-  --bg:          #FAFAF7;
+  --honey:       #F59E0B;
+  --honey-deep:  #D97706;
+  --honey-light: #FEF3C7;
+  --honey-pale:  #FFFBEB;
+  --amber:       #F59E0B22;
+  --comb:        #FDE68A;
+  --bg:          #FFFDF5;
   --surface:     #FFFFFF;
-  --border:      #EBEBEB;
-  --text-primary:#1A1A1A;
-  --text-secondary:#6B6B6B;
-  --text-muted:  #9E9E9E;
-  --success:     #2E7D32;
-  --error:       #C62828;
-  --radius-sm:   8px;
-  --radius-md:   14px;
-  --radius-lg:   20px;
-  --shadow-sm:   0 1px 4px rgba(0,0,0,0.06);
-  --shadow-md:   0 4px 16px rgba(0,0,0,0.08);
-  --shadow-lg:   0 8px 32px rgba(0,0,0,0.10);
+  --surface2:    #FAFAF7;
+  --border:      #F0EBD8;
+  --border2:     #E5DEC8;
+  --ink:         #1C1917;
+  --ink2:        #44403C;
+  --ink3:        #78716C;
+  --ink4:        #A8A29E;
+  --success:     #16A34A;
+  --success-bg:  #F0FDF4;
+  --warn:        #D97706;
+  --warn-bg:     #FFFBEB;
+  --danger:      #DC2626;
+  --danger-bg:   #FEF2F2;
+  --r-sm:  8px;
+  --r-md:  14px;
+  --r-lg:  20px;
+  --r-xl:  28px;
+  --r-full: 999px;
 }
 
-*, *::before, *::after {
-  margin: 0; padding: 0;
-  box-sizing: border-box;
-}
-
+/* ════════════════════════════════════════════
+   RESET & BASE
+════════════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   background: var(--bg);
-  color: var(--text-primary);
+  color: var(--ink);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
-/* ── TOPBAR ── */
+/* honeycomb bg pattern */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='52'%3E%3Cpath d='M30 2 L56 17 L56 47 L30 62 L4 47 L4 17Z' fill='none' stroke='%23F59E0B' stroke-width='0.4' opacity='0.12'/%3E%3C/svg%3E");
+  background-size: 60px 52px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ════════════════════════════════════════════
+   TOPBAR
+════════════════════════════════════════════ */
 .topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 28px;
-  height: 64px;
-  background: var(--surface);
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(255,253,245,.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 64px;
 }
-
-.brand {
-  font-family: 'Inter', serif;
-  font-size: 19px;
-  font-weight: 800;
-  letter-spacing: -0.3px;
-  color: var(--text-primary);
-}
-.brand span { color: var(--amber); }
-
 .back-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  padding: 7px 14px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--surface);
-  transition: all .18s ease;
-  text-decoration: none;
+  display: flex; align-items: center; gap: 7px;
+  background: none; border: 1.5px solid var(--border2);
+  color: var(--ink3); padding: 8px 16px; border-radius: var(--r-sm);
+  cursor: pointer; font-family: 'Montserrat', sans-serif;
+  font-size: 13px; font-weight: 700; letter-spacing: .3px;
+  transition: all .2s;
 }
-.back-btn:hover {
-  background: var(--bg);
-  color: var(--text-primary);
-  border-color: #ccc;
-}
-.back-btn svg { flex-shrink: 0; }
-
-/* ── LAYOUT ── */
-.page {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 32px 20px 60px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-/* ── SECTION HEADER ── */
-.section-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 22px;
-}
-.section-header .icon {
-  width: 34px; height: 34px;
-  background: var(--amber-light);
-  border-radius: var(--radius-sm);
+.back-btn:hover { border-color: var(--honey); color: var(--honey-deep); background: var(--honey-pale); }
+.topbar-brand { display: flex; align-items: center; gap: 10px; }
+.brand-hex {
+  width: 36px; height: 36px; background: var(--honey);
+  clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
   display: flex; align-items: center; justify-content: center;
-  font-size: 17px;
-  flex-shrink: 0;
+  font-size: 18px;
 }
-.section-header h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text-primary);
+.brand-text { font-size: 18px; font-weight: 900; letter-spacing: -.5px; }
+.brand-text em { color: var(--honey); font-style: normal; }
+.topbar-actions { display: flex; gap: 8px; align-items: center; }
+.btn-save {
+  background: var(--honey); color: white; border: none;
+  padding: 9px 20px; border-radius: var(--r-sm);
+  font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; display: none; transition: background .2s, transform .15s;
+  letter-spacing: .3px;
+}
+.btn-save:hover { background: var(--honey-deep); transform: translateY(-1px); }
+.btn-cancel {
+  background: none; border: 1.5px solid var(--border2); color: var(--ink3);
+  padding: 9px 18px; border-radius: var(--r-sm);
+  font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 600;
+  cursor: pointer; display: none; transition: all .2s;
+}
+.btn-cancel:hover { background: var(--surface2); }
+.btn-edit {
+  background: none; border: 1.5px solid var(--border2); color: var(--ink2);
+  padding: 9px 18px; border-radius: var(--r-sm);
+  font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all .2s;
+}
+.btn-edit:hover { border-color: var(--honey); color: var(--honey-deep); background: var(--honey-pale); }
+
+/* ════════════════════════════════════════════
+   PAGE GRID
+════════════════════════════════════════════ */
+.page {
+  position: relative; z-index: 1;
+  max-width: 1120px; margin: 36px auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  align-items: start;
 }
 
-/* ── CARD ── */
+/* ════════════════════════════════════════════
+   CARD BASE
+════════════════════════════════════════════ */
 .card {
   background: var(--surface);
-  border-radius: var(--radius-lg);
   border: 1px solid var(--border);
-  padding: 28px;
-  box-shadow: var(--shadow-sm);
-}
-
-/* ── PROFILE HERO ── */
-.profile-hero {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-
-.avatar-wrap {
-  position: relative;
-  flex-shrink: 0;
-}
-
-.profile-img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border: 3px solid var(--amber);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: var(--r-xl);
   overflow: hidden;
-  background: #f5f5f5;
-  font-weight: 600;
-  color: #888;
+  transition: box-shadow .2s;
+  animation: fadeUp .4s ease both;
+}
+.card:hover { box-shadow: 0 8px 32px rgba(245,158,11,.1); }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
 }
 
-.profile-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+/* staggered card animations */
+.sidebar > :nth-child(1) { animation-delay: .05s; }
+.sidebar > :nth-child(2) { animation-delay: .10s; }
+.main-col > :nth-child(1) { animation-delay: .10s; }
+.main-col > :nth-child(2) { animation-delay: .16s; }
+.main-col > :nth-child(3) { animation-delay: .22s; }
 
-.avatar-edit {
-  position: absolute;
-  bottom: 2px; right: 2px;
-  width: 28px; height: 28px;
-  background: var(--amber);
-  border-radius: 50%;
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 24px; border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+.card-title {
+  font-size: 13px; font-weight: 800; letter-spacing: .4px;
+  text-transform: uppercase; color: var(--ink2);
+  display: flex; align-items: center; gap: 8px;
+}
+.card-title-icon { font-size: 16px; }
+.card-body { padding: 24px; }
+
+/* ════════════════════════════════════════════
+   SIDEBAR — PROFILE CARD
+════════════════════════════════════════════ */
+.sidebar { display: flex; flex-direction: column; gap: 20px; position: sticky; top: 84px; }
+
+.profile-card { text-align: center; }
+.cover-strip {
+  height: 90px;
+  background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 40%, #FDE68A 100%);
+  position: relative; overflow: hidden;
+}
+.cover-strip::after {
+  content: '🍯🐝🌸🍯🐝🌸🍯🐝🌸🍯🐝🌸';
+  position: absolute; bottom: -4px; left: -4px; right: -4px;
+  font-size: 22px; letter-spacing: 2px; opacity: .15;
+  white-space: nowrap; overflow: hidden;
+}
+.profile-body { padding: 0 24px 24px; }
+
+.avatar-area { margin-top: -44px; margin-bottom: 14px; display: inline-block; position: relative; }
+.avatar {
+  width: 88px; height: 88px; border-radius: 50%;
+  border: 4px solid var(--surface);
+  background: var(--honey-light);
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  border: 2px solid white;
-  transition: background .18s;
+  font-size: 34px; overflow: hidden; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,.1);
+  transition: transform .2s;
 }
-.avatar-edit:hover { background: var(--amber-dark); }
-.avatar-edit svg { pointer-events: none; }
+.avatar:hover { transform: scale(1.04); }
+.avatar img { width: 100%; height: 100%; object-fit: cover; display: none; }
+.avatar-btn {
+  position: absolute; bottom: 2px; right: 2px;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--honey); border: 2px solid var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(245,158,11,.4);
+}
+.avatar-input { display: none; }
 
-.profile-info { flex: 1; min-width: 180px; }
-.profile-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 22px;
-  font-weight: 700;
-  line-height: 1.2;
+.p-name { font-size: 20px; font-weight: 900; letter-spacing: -.4px; margin-bottom: 3px; }
+.p-email { font-size: 12px; color: var(--ink4); margin-bottom: 10px; }
+.p-role {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--honey-pale); color: var(--honey-deep);
+  border: 1px solid var(--comb); border-radius: var(--r-full);
+  font-size: 11px; font-weight: 700; padding: 5px 12px;
+  margin-bottom: 18px;
 }
-.profile-email {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-top: 4px;
-}
-.profile-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
-}
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 11px;
-  border-radius: 99px;
-  font-size: 12px;
-  font-weight: 600;
-  background: var(--amber-light);
-  color: var(--amber-dark);
-  border: 1px solid #FADA7A;
-}
+.p-role-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
 
-/* ── FORM ── */
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
+.p-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border); border-radius: var(--r-md);
+  overflow: hidden; border: 1px solid var(--border);
+  margin-bottom: 18px;
 }
+.p-stat { background: var(--surface2); padding: 12px 6px; text-align: center; }
+.p-stat-num { font-size: 20px; font-weight: 900; color: var(--honey-deep); letter-spacing: -.5px; line-height: 1; margin-bottom: 3px; }
+.p-stat-lbl { font-size: 9px; font-weight: 700; color: var(--ink4); text-transform: uppercase; letter-spacing: .6px; }
 
-.form-group { display: flex; flex-direction: column; gap: 6px; }
-.form-group.full { grid-column: 1 / -1; }
+.p-meta { text-align: left; display: flex; flex-direction: column; gap: 9px; padding-top: 6px; border-top: 1px solid var(--border); }
+.p-meta-row { display: flex; align-items: center; gap: 9px; font-size: 12px; color: var(--ink3); }
+.p-meta-icon { font-size: 14px; width: 20px; text-align: center; opacity: .75; flex-shrink: 0; }
+.p-meta-val { font-weight: 600; color: var(--ink2); }
 
-.form-group label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .6px;
-  text-transform: uppercase;
-  color: var(--text-muted);
+/* ════════════════════════════════════════════
+   SIDEBAR — QUICK NAV
+════════════════════════════════════════════ */
+.nav-card { overflow: hidden; }
+.nav-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 20px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background .12s; text-decoration: none; color: var(--ink);
 }
+.nav-item:last-child { border-bottom: none; }
+.nav-item:hover { background: var(--honey-pale); }
+.nav-left { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; }
+.nav-icon { font-size: 16px; width: 22px; text-align: center; }
+.nav-chip {
+  font-size: 10px; font-weight: 800; padding: 2px 8px;
+  border-radius: var(--r-full); background: var(--honey-light); color: var(--honey-deep);
+}
+.nav-chevron { color: var(--ink4); font-size: 16px; }
+.nav-danger { color: var(--danger); }
 
-input, select, textarea {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-primary);
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 10px 13px;
-  width: 100%;
-  transition: border-color .18s, box-shadow .18s;
-  outline: none;
+/* ════════════════════════════════════════════
+   MAIN COL
+════════════════════════════════════════════ */
+.main-col { display: flex; flex-direction: column; gap: 20px; }
+
+/* ─── field grid ─── */
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field-full  { grid-column: 1 / -1; }
+
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+.field-label {
+  font-size: 10px; font-weight: 800; color: var(--ink4);
+  text-transform: uppercase; letter-spacing: .6px;
 }
-input:focus, select:focus, textarea:focus {
-  border-color: var(--amber);
-  box-shadow: 0 0 0 3px rgba(232,160,0,.12);
-  background: #fff;
+.field-val {
+  font-size: 13px; font-weight: 600; color: var(--ink);
+  padding: 10px 14px; background: var(--surface2);
+  border-radius: var(--r-sm); border: 1.5px solid transparent; min-height: 40px;
 }
-textarea { resize: vertical; line-height: 1.55; }
-select { appearance: none; cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6B6B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+.field-in {
+  font-size: 13px; font-weight: 600; color: var(--ink);
+  padding: 10px 14px; background: var(--surface);
+  border-radius: var(--r-sm); border: 1.5px solid var(--border2);
+  width: 100%; font-family: 'Montserrat', sans-serif;
+  outline: none; transition: border-color .15s, box-shadow .15s; display: none;
+}
+.field-in:focus { border-color: var(--honey); box-shadow: 0 0 0 3px rgba(245,158,11,.12); }
+
+select.field-in {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A8A29E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 13px center;
+  background-position: right 14px center;
   padding-right: 36px;
-}
-
-/* ── SAVE BUTTON ── */
-.btn-save {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 28px;
-  background: var(--amber);
-  color: white;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  border: none;
-  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background .18s, transform .1s;
-  min-width: 150px;
-}
-.btn-save:hover { background: var(--amber-dark); }
-.btn-save:active { transform: scale(.98); }
-.btn-save.saved { background: var(--success); }
-
-.form-footer {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
 }
 
-.save-status {
-  font-size: 13px;
-  color: var(--text-secondary);
-  opacity: 0;
-  transition: opacity .3s;
-}
-.save-status.visible { opacity: 1; }
+textarea.field-in { resize: vertical; min-height: 90px; }
 
-/* ── FIELD STATUS CARD ── */
-.status-card {
-  background: linear-gradient(135deg, #FFFBEC 0%, #FFF4CC 100%);
-  border: 1px solid #FADA7A;
-  border-radius: var(--radius-lg);
-  padding: 28px;
-  box-shadow: var(--shadow-sm);
+/* ─── HIVE LIST ─── */
+.hive-list { display: flex; flex-direction: column; gap: 10px; }
+.hive-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 16px; border: 1.5px solid var(--border);
+  border-radius: var(--r-md); cursor: pointer;
+  transition: border-color .15s, box-shadow .15s;
+  text-decoration: none; color: inherit;
+}
+.hive-row:hover { border-color: var(--comb); box-shadow: 0 0 0 3px rgba(245,158,11,.07); }
+.hive-hex {
+  width: 42px; height: 42px; background: var(--honey-light);
+  clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.hive-body { flex: 1; min-width: 0; }
+.hive-name { font-size: 13px; font-weight: 700; }
+.hive-sub { font-size: 11px; color: var(--ink4); margin-top: 1px; }
+.hive-right { flex-shrink: 0; text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.dot-on  { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+.dot-off { width: 7px; height: 7px; border-radius: 50%; background: var(--border2); }
+.htag {
+  font-size: 10px; font-weight: 800; padding: 2px 8px;
+  border-radius: var(--r-full); text-transform: uppercase; letter-spacing: .3px;
+}
+.htag-ok  { background: var(--success-bg); color: var(--success); }
+.htag-bad { background: var(--danger-bg);  color: var(--danger); }
+.htag-unk { background: var(--surface2);   color: var(--ink4); }
+
+/* ─── HIVE CREDENTIALS ─── */
+.hive-creds-section {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+.hive-creds-title {
+  font-size: 11px; font-weight: 800; color: var(--ink3);
+  text-transform: uppercase; letter-spacing: .5px;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 6px;
+}
+.hive-creds-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+.hive-cred-item {
+  background: var(--honey-pale);
+  border: 1px solid var(--comb);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+}
+.hive-cred-label {
+  font-size: 9px; font-weight: 800; color: var(--honey-deep);
+  text-transform: uppercase; letter-spacing: .6px;
+  margin-bottom: 4px;
+}
+.hive-cred-val {
+  font-size: 13px; font-weight: 700; color: var(--ink);
+  word-break: break-all;
+}
+.hive-cred-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--success-bg); color: var(--success);
+  border: 1px solid #bbf7d0; border-radius: var(--r-full);
+  font-size: 10px; font-weight: 700; padding: 3px 10px;
+  margin-bottom: 10px;
 }
 
-.status-card input,
-.status-card select,
-.status-card textarea {
-  background: white;
-  border-color: #F0D060;
+/* ─── NOTIFICATIONS ─── */
+.notif-list { display: flex; flex-direction: column; }
+.notif-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0; border-bottom: 1px solid var(--border);
 }
-.status-card input:focus,
-.status-card select:focus,
-.status-card textarea:focus {
-  border-color: var(--amber);
-  box-shadow: 0 0 0 3px rgba(232,160,0,.15);
+.notif-row:last-child { border-bottom: none; }
+.notif-title { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+.notif-desc  { font-size: 11px; color: var(--ink4); }
+.toggle { position: relative; width: 42px; height: 24px; background: var(--border2); border-radius: 12px; cursor: pointer; transition: background .22s; flex-shrink: 0; }
+.toggle.on { background: var(--honey); }
+.toggle::after { content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%; background: white; top: 3px; left: 3px; transition: left .22s; box-shadow: 0 1px 4px rgba(0,0,0,.18); }
+.toggle.on::after { left: 21px; }
+
+/* ─── PRIMARY BTN ─── */
+.btn-primary {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 13px 20px;
+  background: var(--honey); color: white; border: none;
+  border-radius: var(--r-md); font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 800; cursor: pointer; letter-spacing: .3px;
+  transition: background .2s, transform .15s, box-shadow .2s;
+}
+.btn-primary:hover { background: var(--honey-deep); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245,158,11,.35); }
+
+/* ─── TOAST ─── */
+.toast-wrap { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; }
+.toast {
+  background: var(--ink); color: white;
+  padding: 11px 22px; border-radius: var(--r-md);
+  font-size: 13px; font-weight: 700; letter-spacing: .2px;
+  box-shadow: 0 8px 28px rgba(0,0,0,.22);
+  animation: toastIn .25s ease;
+  pointer-events: auto;
+}
+@keyframes toastIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+
+/* ─── EMPTY STATE ─── */
+.empty-state {
+  text-align: center; padding: 32px 20px;
+  color: var(--ink4);
+}
+.empty-state-icon { font-size: 36px; margin-bottom: 10px; }
+.empty-state-text { font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--ink3); }
+.empty-state-sub  { font-size: 11px; font-weight: 500; }
+.empty-state a    { color: var(--honey-deep); font-weight: 700; }
+
+/* ════════════════════════════════════════════
+   RESPONSIVE — MOBILE FIRST
+════════════════════════════════════════════ */
+@media (max-width: 860px) {
+  .page {
+    grid-template-columns: 1fr;
+    margin: 16px auto;
+    padding: 0 12px;
+    gap: 16px;
+  }
+  .sidebar {
+    position: static;
+    gap: 14px;
+  }
+  .topbar {
+    padding: 0 14px;
+    height: 56px;
+  }
+  .brand-text { font-size: 15px; }
+  .back-btn { padding: 7px 12px; font-size: 12px; }
+  .btn-edit, .btn-save, .btn-cancel { padding: 7px 14px; font-size: 12px; }
 }
 
-/* ── TOAST ── */
-#toast {
-  position: fixed;
-  bottom: 28px;
-  right: 28px;
-  padding: 12px 20px;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-  background: #1A1A1A;
-  box-shadow: var(--shadow-lg);
-  z-index: 999;
-  transform: translateY(16px);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .25s, transform .25s;
-}
-#toast.show { opacity: 1; transform: translateY(0); }
-#toast.success { background: var(--success); }
-#toast.error   { background: var(--error); }
+@media (max-width: 560px) {
+  .field-grid { grid-template-columns: 1fr; }
+  .hive-creds-grid { grid-template-columns: 1fr; }
+  .p-stats { grid-template-columns: repeat(3, 1fr); }
+  .topbar-brand .brand-text { display: none; }
+  .page { padding: 0 10px; }
 
-/* ── MOBILE ── */
-@media (max-width: 640px) {
-  .topbar { padding: 0 16px; }
-  .page { padding: 20px 14px 48px; gap: 18px; }
-  .card, .status-card { padding: 20px; }
-  .grid { grid-template-columns: 1fr; }
-  .profile-hero { gap: 18px; }
-  .profile-name { font-size: 19px; }
-  .form-footer { flex-direction: column; align-items: stretch; }
-  .btn-save { width: 100%; justify-content: center; }
-  #toast { right: 14px; left: 14px; bottom: 18px; text-align: center; }
+  .hive-row {
+    padding: 11px 12px;
+    gap: 10px;
+  }
+  .hive-hex {
+    width: 36px; height: 36px; font-size: 15px;
+  }
+  .card-body { padding: 16px; }
+  .card-header { padding: 14px 16px; }
 }
 </style>
 </head>
-
 <body>
 
-<!-- TOPBAR -->
+<!-- ══ TOPBAR ══ -->
 <div class="topbar">
-  <a class="back-btn" onclick="goBack()">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    Dashboard
-  </a>
-  <div class="brand">Kanasu <span>Bee House</span></div>
+  <button class="back-btn" onclick="goBack()">← Dashboard</button>
+  <div class="topbar-brand">
+    <span class="brand-text">Kanasu <em>Bee House</em></span>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn-cancel" id="cancelBtn" onclick="cancelEdit()">Cancel</button>
+    <button class="btn-save"   id="saveBtn"   onclick="saveAllProfile()">Save changes</button>
+    <button class="btn-edit"   id="editBtn"   onclick="enterEditMode()">Edit profile</button>
+  </div>
 </div>
 
 <div class="page">
 
-  <!-- PROFILE CARD -->
-  <div class="card">
-    <div class="profile-hero">
+  <!-- ══════════════ SIDEBAR ══════════════ -->
+  <aside class="sidebar">
 
-      <div class="avatar-wrap">
-        <div id="profileDisplay" class="profile-img">
-  Profile
-</div>
-        <div class="avatar-edit" title="Change photo" onclick="document.getElementById('imgUpload').click()">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-            <path d="M9 2l2 2-7 7H2v-2L9 2z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/>
-          </svg>
+    <!-- Profile card -->
+    <div class="card profile-card">
+      <div class="cover-strip"></div>
+      <div class="profile-body">
+        <div class="avatar-area">
+          <div class="avatar" id="avatarEl" onclick="document.getElementById('imgUpload').click()">
+            <span id="avatarEmoji">🧑‍🌾</span>
+            <img id="profileDisplay" alt="Profile photo" />
+          </div>
+          <div class="avatar-btn" onclick="document.getElementById('imgUpload').click()">📷</div>
+          <input type="file" id="imgUpload" class="avatar-input" accept="image/*" onchange="handleAvatarUpload(this)" />
         </div>
-        <input type="file" id="imgUpload" accept="image/*" style="display:none;">
-      </div>
+        <div class="p-name" id="displayName">Beekeeper</div>
+        <div class="p-email" id="displayEmail">Loading…</div>
+        <div class="p-role"><span class="p-role-dot"></span>Active Beekeeper</div>
 
-      <div class="profile-info">
-        <div class="profile-name" id="displayName">Beekeeper</div>
-        <div class="profile-email" id="displayEmail">Loading…</div>
-        <div class="profile-meta">
-          <span class="badge" id="badgeHoney">🍯 Wild Honey</span>
-          <span class="badge" id="badgeLocation">📍 —</span>
-          <span class="badge" id="badgeExp">⏳ — yrs exp</span>
+        <div class="p-stats">
+          <div class="p-stat">
+            <div class="p-stat-num" id="statHives">—</div>
+            <div class="p-stat-lbl">Hives</div>
+          </div>
+          <div class="p-stat">
+            <div class="p-stat-num" id="statHealth">A+</div>
+            <div class="p-stat-lbl">Health</div>
+          </div>
+          <div class="p-stat">
+            <div class="p-stat-num" id="statRank">Pro</div>
+            <div class="p-stat-lbl">Rank</div>
+          </div>
+        </div>
+
+        <div class="p-meta">
+          <div class="p-meta-row"><span class="p-meta-icon">📍</span><span id="metaLocation" class="p-meta-val">Not set</span></div>
+          <div class="p-meta-row"><span class="p-meta-icon">🍯</span><span id="metaHoney" class="p-meta-val">Not set</span></div>
+          <div class="p-meta-row"><span class="p-meta-icon">📅</span><span id="metaJoined" class="p-meta-val">—</span></div>
         </div>
       </div>
-
-    </div>
-  </div>
-
-  <!-- BEEKEEPER DETAILS -->
-  <div class="card">
-    <div class="section-header">
-      <div class="icon">🍯</div>
-      <h2>Beekeeper Details</h2>
     </div>
 
-    <div class="grid">
-
-      <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" id="fullName" placeholder="Your full name">
+    <!-- Quick nav -->
+    <div class="card nav-card">
+      <div class="nav-item" onclick="document.getElementById('sec-profile').scrollIntoView({behavior:'smooth'})">
+        <div class="nav-left"><span class="nav-icon">🧑‍🌾</span>Profile Details</div>
+        <span class="nav-chevron">›</span>
       </div>
-
-      <div class="form-group">
-        <label>Phone Number</label>
-        <input type="tel" id="phone" placeholder="+91 00000 00000">
+      <div class="nav-item" onclick="document.getElementById('sec-hives').scrollIntoView({behavior:'smooth'})">
+        <div class="nav-left"><span class="nav-icon">🍯</span>My Hives</div>
+        <span class="nav-chip" id="hiveNavChip">0</span>
       </div>
-
-      <div class="form-group">
-        <label>Location</label>
-        <input type="text" id="userLocation" placeholder="City, State">
+      <div class="nav-item" onclick="document.getElementById('sec-notifs').scrollIntoView({behavior:'smooth'})">
+        <div class="nav-left"><span class="nav-icon">🔔</span>Notifications</div>
+        <span class="nav-chevron">›</span>
       </div>
-
-      <div class="form-group">
-        <label>Honey Specialty</label>
-        <select id="honeyType">
-          <option>Wild Honey</option>
-          <option>Forest Honey</option>
-          <option>Multifloral</option>
-        </select>
+      <div class="nav-item nav-danger" onclick="confirmLogout()" style="color:var(--danger)">
+        <div class="nav-left" style="color:var(--danger)"><span class="nav-icon">🚪</span>Log Out</div>
       </div>
-
-      <div class="form-group">
-        <label>Flower / Pollen Source</label>
-        <select id="flowerSource">
-          <option>Wild Forest</option>
-          <option>Coffee Blossom</option>
-          <option>Mustard Fields</option>
-          <option>Eucalyptus</option>
-          <option>Multifloral</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Years of Experience</label>
-        <input type="number" id="experience" placeholder="e.g. 5" min="0">
-      </div>
-
-      <div class="form-group">
-        <label>Active Bee Colonies</label>
-        <input type="number" id="hives" placeholder="e.g. 12" min="0">
-      </div>
-
-      <div class="form-group">
-        <label>Honey Production (kg / year)</label>
-        <input type="number" id="production" placeholder="e.g. 200" min="0">
-      </div>
-
-      <div class="form-group">
-        <label>Annual Revenue (₹)</label>
-        <input type="text" id="revenue" placeholder="e.g. 1,50,000">
-      </div>
-
-      <div class="form-group">
-        <label>Certifications</label>
-        <input type="text" id="certifications" placeholder="e.g. FSSAI, Organic India">
-      </div>
-
-      <div class="form-group full">
-        <label>Beekeeper Bio</label>
-        <textarea id="bio" rows="3" placeholder="A short description about you and your beekeeping journey…"></textarea>
-      </div>
-
     </div>
 
-    <div class="form-footer">
-      <span class="save-status" id="saveStatus">All changes saved</span>
-      <button class="btn-save" onclick="updateProfile()" id="saveBtn">
-        <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
-          <path d="M2 8l4 4 7-8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        Save Profile
-      </button>
-    </div>
-  </div>
+  </aside>
 
-  <!-- FIELD STATUS -->
-  <div class="status-card">
-    <div class="section-header">
-      <div class="icon">🐝</div>
-      <h2>Field Status Update</h2>
-    </div>
+  <!-- ══════════════ MAIN ══════════════ -->
+  <div class="main-col">
 
-    <div class="grid">
-
-      <div class="form-group">
-        <label>Hive Condition</label>
-        <select id="hiveCondition">
-          <option value="">— Select —</option>
-          <option>Excellent</option>
-          <option>Good</option>
-          <option>Needs Attention</option>
-          <option>Critical</option>
-        </select>
+    <!-- ── Beekeeper Profile Details ── -->
+    <div class="card" id="sec-profile">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">🧑‍🌾</span>Beekeeper Profile Details</div>
       </div>
+      <div class="card-body">
+        <div class="field-grid">
 
-      <div class="form-group">
-        <label>Last Inspection Date</label>
-        <input type="date" id="lastInspection">
+          <div class="field-group">
+            <div class="field-label">Full Name</div>
+            <div class="field-val" id="nameDisplay">—</div>
+            <input class="field-in" id="nameInput" type="text" placeholder="Your full name" />
+          </div>
+          <div class="field-group">
+            <div class="field-label">Phone Number</div>
+            <div class="field-val" id="phoneDisplay">—</div>
+            <input class="field-in" id="phoneInput" type="tel" placeholder="+91 98765 43210" />
+          </div>
+          <div class="field-group">
+            <div class="field-label">Location (Region)</div>
+            <div class="field-val" id="locationDisplay">—</div>
+            <input class="field-in" id="userLocation" type="text" placeholder="City, State" />
+          </div>
+          <div class="field-group">
+            <div class="field-label">Honey Specialty</div>
+            <div class="field-val" id="honeyDisplay">—</div>
+            <select class="field-in" id="honeyType">
+              <option>Wild Honey</option>
+              <option>Forest Honey</option>
+              <option>Multifloral</option>
+              <option>Monofloral</option>
+              <option>Stingless Bee Honey</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Active Bee Colonies</div>
+            <div class="field-val" id="hivesDisplay">—</div>
+            <input class="field-in" id="hives" type="number" placeholder="Total hive boxes" />
+          </div>
+          <div class="field-group">
+            <div class="field-label">Annual Revenue (₹)</div>
+            <div class="field-val" id="revenueDisplay">—</div>
+            <input class="field-in" id="revenue" type="text" placeholder="0.00" />
+          </div>
+          <div class="field-group field-full">
+            <div class="field-label">Beekeeper Biography</div>
+            <div class="field-val" id="bioDisplay" style="min-height:70px">—</div>
+            <textarea class="field-in" id="bioInput" rows="3" placeholder="Tell us about your apiary journey…"></textarea>
+          </div>
+
+        </div>
       </div>
-
-      <div class="form-group full">
-        <label>Status Notes</label>
-        <textarea id="activity" rows="3" placeholder="e.g. Hive 3 inspected — honey flow good, queen sighted, no signs of disease."></textarea>
-      </div>
-
     </div>
 
-    <div class="form-footer">
-      <button class="btn-save" onclick="saveActivity()" id="statusBtn">
-        <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
-          <path d="M7.5 1v7M4 5l3.5 3.5L11 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        Update Status
-      </button>
+    <!-- ── My Hives ── -->
+    <div class="card" id="sec-hives">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">🍯</span>My Hives</div>
+        <a href="welcome.html" style="font-size:12px;font-weight:700;color:var(--honey-deep);text-decoration:none;">Manage →</a>
+      </div>
+      <div class="card-body">
+        <div class="hive-list" id="hiveList">
+          <div style="text-align:center;padding:24px;color:var(--ink4);font-size:13px;">Loading hives…</div>
+        </div>
+        <!-- Hive credentials section — only shown when hives with credentials exist -->
+        <div class="hive-creds-section" id="hiveCreds" style="display:none">
+          <div class="hive-creds-title">🔐 Hive Credentials</div>
+          <div id="hiveCredsList"></div>
+        </div>
+      </div>
     </div>
-  </div>
 
-</div>
+    <!-- ── Notifications ── -->
+    <div class="card" id="sec-notifs">
+      <div class="card-header">
+        <div class="card-title"><span class="card-title-icon">🔔</span>Notification Preferences</div>
+      </div>
+      <div class="card-body" style="padding-top:4px;padding-bottom:4px">
+        <div class="notif-list">
+          <div class="notif-row">
+            <div>
+              <div class="notif-title">Sensor Alert Toasts</div>
+              <div class="notif-desc">Pop-ups for temperature, humidity, weight &amp; gas anomalies</div>
+            </div>
+            <div class="toggle on" id="togAlerts" onclick="togglePref(this,'notif_alerts')"></div>
+          </div>
+          <div class="notif-row">
+            <div>
+              <div class="notif-title">Sound Threshold Warnings</div>
+              <div class="notif-desc">Notify when hive dB exceeds your set threshold</div>
+            </div>
+            <div class="toggle on" id="togSound" onclick="togglePref(this,'notif_sound')"></div>
+          </div>
+          <div class="notif-row">
+            <div>
+              <div class="notif-title">Gas &amp; Pesticide Detection</div>
+              <div class="notif-desc">Critical alerts when gas sensor triggers</div>
+            </div>
+            <div class="toggle on" id="togGas" onclick="togglePref(this,'notif_gas')"></div>
+          </div>
+          <div class="notif-row">
+            <div>
+              <div class="notif-title">Queen Status Updates</div>
+              <div class="notif-desc">Notify on queen-loss detection from ML analysis</div>
+            </div>
+            <div class="toggle" id="togQueen" onclick="togglePref(this,'notif_queen')"></div>
+          </div>
+          <div class="notif-row">
+            <div>
+              <div class="notif-title">Weekly Hive Report</div>
+              <div class="notif-desc">Summary of all hive activity delivered weekly</div>
+            </div>
+            <div class="toggle on" id="togReport" onclick="togglePref(this,'notif_report')"></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<!-- TOAST -->
-<div id="toast"></div>
+    <div style="text-align:center;padding:8px 0 20px;font-size:11px;color:var(--ink4);font-weight:600;letter-spacing:.4px">
+      KANASU BEE HOUSE · V1.0 · MADE WITH 🍯
+    </div>
+
+  </div><!-- /.main-col -->
+</div><!-- /.page -->
+
+<div class="toast-wrap" id="toastWrap"></div>
 
 <script>
+/* ═══════════════════════════════
+   FIREBASE + AUTH
+═══════════════════════════════ */
 const auth = firebase.auth();
 const db   = firebase.database();
 let currentUser = null;
 
 auth.onAuthStateChanged(user => {
-  if (!user) {
-    window.location.href = "index.html";
-  } else {
-    currentUser = user;
-    document.getElementById("displayEmail").innerText = user.email;
-    loadUserData(user.uid);
-  }
+  if (!user) { window.location.href = "index.html"; return; }
+  currentUser = user;
+  document.getElementById("displayEmail").innerText = user.email || "—";
+  loadUserData(user.uid);
+  loadHives();
 });
 
+/* ═══════════════════════════════
+   LOAD USER DATA
+═══════════════════════════════ */
 function loadUserData(uid) {
   db.ref("users/" + uid).on("value", snap => {
-    const d = snap.val();
-    if (!d) return;
+    const d = snap.val() || {};
 
-    setValue("displayName",    d.name            || "Beekeeper");
-    setValue("fullName",       d.name            || "");
-    setValue("honeyType",      d.honeyType       || "Wild Honey");
-    setValue("revenue",        d.totalRevenue    || "");
-    setValue("hives",          d.totalHives      || "");
-    setValue("userLocation",   d.location        || "");
-    setValue("experience",     d.experience      || "");
-    setValue("production",     d.production      || "");
-    setValue("flowerSource",   d.flowerSource    || "Wild Forest");
-    setValue("phone",          d.phone           || "");
-    setValue("bio",            d.bio             || "");
-    setValue("certifications", d.certifications  || "");
-    setValue("activity",       d.activity        || "");
-    setValue("hiveCondition",  d.hiveCondition   || "");
-    setValue("lastInspection", d.lastInspection  || "");
+    const name = d.name || "";
+    document.getElementById("displayName").innerText  = name || "Beekeeper";
 
-    document.getElementById("badgeHoney").textContent    = "🍯 " + (d.honeyType  || "—");
-    document.getElementById("badgeLocation").textContent = "📍 " + (d.location   || "—");
-    document.getElementById("badgeExp").textContent      = "⏳ " + (d.experience ? d.experience + " yrs exp" : "—");
+    setField("nameDisplay",     "nameInput",     name);
+    setField("phoneDisplay",    "phoneInput",    d.phone    || "");
+    setField("locationDisplay", "userLocation",  d.location || "");
+    setField("hivesDisplay",    "hives",         d.totalHives || "");
+    setField("revenueDisplay",  "revenue",       d.totalRevenue || "");
+    setField("bioDisplay",      "bioInput",      d.bio || "");
 
-    if (d.profileImageBase64) {
-      document.getElementById("profileDisplay").innerHTML =
-  `<img src="${d.profileImageBase64}">`;
-    }
+    // honey type
+    const honeyVal = d.honeyType || "Wild Honey";
+    setField("honeyDisplay", "honeyType", honeyVal);
+    document.getElementById("honeyType").value = honeyVal;
+
+    // sidebar meta
+    document.getElementById("metaLocation").innerText = d.location  || "Not set";
+    document.getElementById("metaHoney").innerText    = d.honeyType || "Not set";
+    document.getElementById("statHives").innerText    = d.totalHives || "—";
+
+    // joined date
+    const joined = d.joinedAt || Date.now();
+    if (!d.joinedAt) db.ref("users/" + uid).update({ joinedAt: joined });
+    const dt = new Date(joined);
+    document.getElementById("metaJoined").innerText = "Joined " + dt.toLocaleDateString("en-IN",{month:"short",year:"numeric"});
+
+    // toggles
+    [["notif_alerts","togAlerts"],["notif_sound","togSound"],["notif_gas","togGas"],
+     ["notif_queen","togQueen"],["notif_report","togReport"]].forEach(([k,id])=>{
+      const v = localStorage.getItem(k);
+      const el = document.getElementById(id);
+      if (v === "off") el.classList.remove("on");
+      else if (v === "on") el.classList.add("on");
+    });
   });
 }
 
-function setValue(id, val) {
-  const el = document.getElementById(id);
-  if (el) el.value = val;
+function setField(displayId, inputId, val) {
+  const dEl = document.getElementById(displayId);
+  const iEl = document.getElementById(inputId);
+  if (dEl) dEl.innerText = val || "—";
+  if (iEl && iEl.tagName !== "SELECT") iEl.value = val;
 }
 
-async function updateProfile() {
+/* ═══════════════════════════════
+   EDIT MODE
+═══════════════════════════════ */
+function enterEditMode() {
+  document.querySelectorAll(".field-val").forEach(e => e.style.display = "none");
+  document.querySelectorAll(".field-in").forEach(e => e.style.display = "block");
+  document.getElementById("editBtn").style.display   = "none";
+  document.getElementById("saveBtn").style.display   = "block";
+  document.getElementById("cancelBtn").style.display = "block";
+}
+function cancelEdit() {
+  document.querySelectorAll(".field-in").forEach(e => e.style.display = "none");
+  document.querySelectorAll(".field-val").forEach(e => e.style.display = "");
+  document.getElementById("editBtn").style.display   = "";
+  document.getElementById("saveBtn").style.display   = "none";
+  document.getElementById("cancelBtn").style.display = "none";
+  if (currentUser) loadUserData(currentUser.uid);
+}
+
+/* ═══════════════════════════════
+   SAVE PROFILE
+═══════════════════════════════ */
+async function saveAllProfile() {
   const btn = document.getElementById("saveBtn");
-  btn.textContent = "Saving…";
-  btn.disabled = true;
-
+  btn.innerText = "Saving…"; btn.disabled = true;
   try {
-    const name = document.getElementById("fullName").value.trim();
-    await db.ref("users/" + currentUser.uid).update({
-      name:           name,
-      honeyType:      document.getElementById("honeyType").value,
-      totalRevenue:   document.getElementById("revenue").value,
-      totalHives:     document.getElementById("hives").value,
-      location:       document.getElementById("userLocation").value,
-      experience:     document.getElementById("experience").value,
-      production:     document.getElementById("production").value,
-      flowerSource:   document.getElementById("flowerSource").value,
-      phone:          document.getElementById("phone").value,
-      bio:            document.getElementById("bio").value,
-      certifications: document.getElementById("certifications").value,
-    });
-
-    if (name) document.getElementById("displayName").innerText = name;
-    document.getElementById("badgeHoney").textContent    = "🍯 " + document.getElementById("honeyType").value;
-    document.getElementById("badgeLocation").textContent = "📍 " + (document.getElementById("userLocation").value || "—");
-    document.getElementById("badgeExp").textContent      = "⏳ " + (document.getElementById("experience").value ? document.getElementById("experience").value + " yrs exp" : "—");
-
-    showStatus("saveStatus");
-    showToast("Profile saved successfully", "success");
-  } catch (err) {
-    showToast("Failed to save. Please try again.", "error");
+    const payload = {
+      name:         document.getElementById("nameInput").value.trim(),
+      phone:        document.getElementById("phoneInput").value.trim(),
+      location:     document.getElementById("userLocation").value.trim(),
+      honeyType:    document.getElementById("honeyType").value,
+      totalHives:   document.getElementById("hives").value,
+      totalRevenue: document.getElementById("revenue").value,
+      bio:          document.getElementById("bioInput").value.trim(),
+    };
+    await db.ref("users/" + currentUser.uid).update(payload);
+    cancelEdit();
+    toast("Profile updated successfully ✓");
+  } catch(e) {
+    toast("Error saving profile");
   }
-
-  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 8l4 4 7-8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Save Profile`;
-  btn.disabled = false;
+  btn.innerText = "Save changes"; btn.disabled = false;
 }
 
-async function saveActivity() {
-  const btn = document.getElementById("statusBtn");
-  btn.textContent = "Updating…";
-  btn.disabled = true;
-
-  try {
-    await db.ref("users/" + currentUser.uid).update({
-      activity:       document.getElementById("activity").value,
-      hiveCondition:  document.getElementById("hiveCondition").value,
-      lastInspection: document.getElementById("lastInspection").value,
-    });
-    showToast("Field status updated 🐝", "success");
-  } catch (err) {
-    showToast("Failed to update status.", "error");
-  }
-
-  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1v7M4 5l3.5 3.5L11 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Update Status`;
-  btn.disabled = false;
-}
-
-document.getElementById("imgUpload").addEventListener("change", function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-
+/* ═══════════════════════════════
+   AVATAR UPLOAD
+═══════════════════════════════ */
+function handleAvatarUpload(input) {
+  const file = input.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onloadend = function() {
-    const base64String = reader.result;
-    db.ref("users/" + currentUser.uid).update({ profileImageBase64: base64String })
-      .then(() => {
-        document.getElementById("profileDisplay").src = base64String;
-        showToast("Profile photo updated", "success");
-      });
+    const b64 = reader.result;
+    const img = document.getElementById("profileDisplay");
+    img.src = b64; img.style.display = "block";
+    document.getElementById("avatarEmoji").style.display = "none";
+    if (currentUser) db.ref("users/" + currentUser.uid).update({ profileImageBase64: b64 });
+    toast("Profile photo updated 📷");
   };
   reader.readAsDataURL(file);
-});
-
-function goBack() {
-  window.location.href = "welcome.html";
 }
 
-function showToast(msg, type = "") {
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.className = "show " + type;
-  setTimeout(() => { t.className = ""; }, 3000);
+/* ═══════════════════════════════
+   HIVES FROM FIREBASE
+   Only shows hive credentials for hives that have a hiveId / credentials set
+═══════════════════════════════ */
+function loadHives() {
+  try {
+    firebase.database().ref("hives").once("value", snap => renderHives(snap.val())).catch(()=>renderHives(null));
+  } catch{ renderHives(null); }
 }
 
-function showStatus(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.classList.add("visible");
-  setTimeout(() => el.classList.remove("visible"), 3000);
+function renderHives(data) {
+  const list = document.getElementById("hiveList");
+  const credsSection = document.getElementById("hiveCreds");
+  const credsList = document.getElementById("hiveCredsList");
+
+  if (!data || !Object.keys(data).length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">🍯</div>
+        <div class="empty-state-text">No hives registered yet</div>
+        <div class="empty-state-sub">Head to the dashboard to <a href="welcome.html">add your first hive →</a></div>
+      </div>`;
+    document.getElementById("hiveNavChip").innerText = "0";
+    credsSection.style.display = "none";
+    return;
+  }
+
+  const ids = Object.keys(data);
+  document.getElementById("hiveNavChip").innerText = ids.length;
+  document.getElementById("statHives").innerText   = ids.length;
+
+  // Render hive rows
+  list.innerHTML = ids.map(id => {
+    const h = data[id];
+    const name   = h.name || id;
+    const temp   = h.sensors?.temperature != null ? h.sensors.temperature + "°C" : "--";
+    const humid  = h.sensors?.humidity    != null ? h.sensors.humidity    + "%" : "--";
+    const status = h.sound_ml?.status || "Unknown";
+    const online = h.sensors?.temperature != null;
+    const tagClass = status === "Healthy" ? "htag-ok" : (["Unknown","--"].includes(status)) ? "htag-unk" : "htag-bad";
+    return `<a class="hive-row" href="dashboard.html?hive=${id}">
+      <div class="hive-hex">🍯</div>
+      <div class="hive-body">
+        <div class="hive-name">${name}</div>
+        <div class="hive-sub">Temp: ${temp} &nbsp;·&nbsp; Humidity: ${humid}</div>
+      </div>
+      <div class="hive-right">
+        <div class="${online?'dot-on':'dot-off'}"></div>
+        <span class="htag ${tagClass}">${status}</span>
+      </div>
+      <div class="nav-chevron">›</div>
+    </a>`;
+  }).join("");
+
+  // Only show credentials section for hives that actually have hiveId or credentials stored
+  const hivesWithCreds = ids.filter(id => {
+    const h = data[id];
+    return h.hiveId || h.credentials || h.deviceId || h.apiKey || h.token;
+  });
+
+  if (hivesWithCreds.length > 0) {
+    credsSection.style.display = "block";
+    credsList.innerHTML = hivesWithCreds.map(id => {
+      const h = data[id];
+      const hiveName = h.name || id;
+      const hiveId   = h.hiveId || h.deviceId || id;
+      const apiKey   = h.apiKey  || h.token || null;
+      const credRows = [];
+
+      credRows.push(`
+        <div class="hive-cred-item">
+          <div class="hive-cred-label">Hive ID</div>
+          <div class="hive-cred-val">${hiveId}</div>
+        </div>`);
+
+      if (apiKey) {
+        credRows.push(`
+          <div class="hive-cred-item">
+            <div class="hive-cred-label">API Key / Token</div>
+            <div class="hive-cred-val" style="font-size:11px;letter-spacing:.5px">${apiKey}</div>
+          </div>`);
+      }
+
+      return `
+        <div style="margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+            <span class="hive-cred-badge">✅ Registered</span>
+            <span style="font-size:12px;font-weight:700;color:var(--ink2)">${hiveName}</span>
+          </div>
+          <div class="hive-creds-grid">${credRows.join("")}</div>
+        </div>`;
+    }).join("");
+  } else {
+    credsSection.style.display = "none";
+  }
+}
+
+/* ═══════════════════════════════
+   TOGGLES
+═══════════════════════════════ */
+function togglePref(el, key) {
+  el.classList.toggle("on");
+  localStorage.setItem(key, el.classList.contains("on") ? "on" : "off");
+}
+
+/* ═══════════════════════════════
+   TOAST
+═══════════════════════════════ */
+function toast(msg) {
+  const c = document.getElementById("toastWrap");
+  const t = document.createElement("div"); t.className = "toast"; t.innerText = msg;
+  c.appendChild(t);
+  setTimeout(()=>{ t.style.cssText += "opacity:0;transition:opacity .3s"; setTimeout(()=>t.remove(),300); }, 2800);
+}
+
+/* ═══════════════════════════════
+   NAV + MISC
+═══════════════════════════════ */
+function goBack() { window.location.href = "welcome.html"; }
+function confirmLogout() {
+  if (confirm("Log out of Kanasu Bee House?")) {
+    auth.signOut().then(()=>window.location.href="index.html");
+  }
 }
 </script>
-
 </body>
 </html>
