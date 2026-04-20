@@ -40,8 +40,8 @@ Kanasu Bee House enables early detection of hive stress, disease, and environmen
 
 Links
 
-Live Demo: [Add your hosted link]
-GitHub Repository: [Add your repository link]
+Live Demo: https://tejas08-hub.github.io/Kanasu-Bee-House/
+GitHub Repository: https://github.com/Tejas08-hub/Kanasu-Bee-House
 
 Acknowledgment
 
