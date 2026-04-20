@@ -17,7 +17,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 // 2. UPDATED: Use the 2026 stable model "gemini-2.5-flash"
 // This model is faster, smarter, and doesn't trigger the 404 error
 const model = genAI.getGenerativeModel({
-    model: "gemini-2.5-flash"
+    model: "gemini-1.5-flash"
 });
 
 app.post('/chat', async(req, res) => {
