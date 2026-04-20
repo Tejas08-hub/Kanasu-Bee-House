@@ -9,13 +9,13 @@ Kanasu Bee House is an AI-driven beehive monitoring system that combines acousti
 
 The system moves beyond traditional sensor-based monitoring by integrating multi-modal intelligence (sound + image) to provide actionable insights for beekeepers.
 
-Key Features
+Key Features 
 AI & Analytics
 Acoustic machine learning using RMS-based feature extraction
 Image analysis using Convolutional Neural Networks (CNN)
 Hybrid decision system combining audio and visual outputs
 Bee Health Score generation for simplified interpretation
-Web Dashboard
+Web Dashboard 
 Real-time data monitoring
 Graphical analytics and visualization
 Bee Scan AI for instant health detection
