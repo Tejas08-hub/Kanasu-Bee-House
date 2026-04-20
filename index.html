@@ -480,12 +480,12 @@
     ══════════════════════════════════════ */
     @media (max-width: 600px) {
       .page {
-        padding: 28px 16px 48px;
+        padding: 28px 18px 52px;
         align-items: flex-start;
       }
 
       .container {
-        gap: 24px;
+        gap: 28px;
         width: 100%;
       }
 
@@ -504,43 +504,57 @@
       .header h1  { font-size: 26px; }
       .subtitle   { font-size: 13.5px; text-align: center; }
 
-      /* TWO columns on mobile — square tiles */
+      /* ONE card per row — full width, tall */
       .features {
         width: 100%;
         max-width: 100%;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 14px;
+        grid-template-columns: 1fr;
+        gap: 16px;
       }
 
       .feature {
-        padding: 26px 18px 24px;
+        padding: 30px 26px 28px;
         border-radius: 20px;
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0;
+        flex-direction: row;
+        align-items: center;
+        gap: 22px;
         width: 100%;
-        min-height: 180px;
+        min-height: 110px;
       }
 
       .feature-icon {
-        width: 54px; height: 54px;
-        margin-bottom: 16px;
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        margin-bottom: 0;
         flex-shrink: 0;
-        border-radius: 14px;
       }
 
-      .feature-icon img { width: 30px; height: 30px; }
+      .feature-icon img { width: 34px; height: 34px; }
+
+      .feature-text {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
 
       .feature h3 {
-        font-size: 11.5px;
-        letter-spacing: 0.7px;
-        margin-bottom: 8px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 1.1px;
+        text-transform: uppercase;
+        color: #9a6f00;
+        margin-bottom: 6px;
       }
 
       .feature p {
-        font-size: 13px;
-        line-height: 1.6;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14.5px;
+        font-weight: 500;
+        color: #2e2614;
+        line-height: 1.65;
       }
 
       .auth {
@@ -549,7 +563,7 @@
       }
 
       .auth-card {
-        padding: 24px 18px 30px;
+        padding: 28px 20px 32px;
         border-radius: 24px;
         max-width: 100%;
         width: 100%;
@@ -572,17 +586,17 @@
        VERY SMALL  ≤ 380px
     ══════════════════════════════════════ */
     @media (max-width: 380px) {
-      .page { padding: 20px 12px 40px; }
+      .page { padding: 20px 14px 44px; }
       .header h1  { font-size: 22px; }
-      .auth-card  { padding: 20px 14px 24px; border-radius: 20px; }
+      .auth-card  { padding: 22px 16px 26px; border-radius: 20px; }
       .tabs button { font-size: 12px; padding: 10px 6px; }
       .btn { padding: 14px; font-size: 14px; }
-      .features { gap: 10px; }
-      .feature { padding: 20px 14px 18px; min-height: 160px; border-radius: 16px; }
-      .feature-icon { width: 46px; height: 46px; margin-bottom: 12px; }
-      .feature-icon img { width: 26px; height: 26px; }
-      .feature h3 { font-size: 10.5px; margin-bottom: 6px; }
-      .feature p  { font-size: 12px; }
+      .features { gap: 12px; }
+      .feature { padding: 24px 20px 22px; gap: 18px; }
+      .feature-icon { width: 56px; height: 56px; border-radius: 14px; }
+      .feature-icon img { width: 30px; height: 30px; }
+      .feature h3 { font-size: 10px; letter-spacing: 1px; }
+      .feature p  { font-size: 13.5px; }
     }
   </style>
 </head>
